@@ -6,4 +6,4 @@
                     terpisah dari kuis), berakhiran /exec. Kosong = MODE UJI: form tampil,
                     tetapi isinya tidak dikirim.
    MATERI         : jangan diubah ("optimum").                          */
-window.OPTIMUM_CONFIG={ENDPOINT:"",SARAN_ENDPOINT:"",MATERI:"optimum"};
+window.OPTIMUM_CONFIG={ENDPOINT:"",SARAN_ENDPOINT:"https://script.google.com/macros/s/AKfycbz6DsPIc0KQbdPFWrIoEtfa-1GJjCx753Og2kN9LGnblgu68qrBmVujrk8OGkjj_cmtmQ/exec",MATERI:"optimum"};
