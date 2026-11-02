@@ -59,7 +59,7 @@ function panelSelesai(){
 function tampilPenyelesaian(){
   var pn=L.el.panel,lama=pn.querySelector('.penyelesaian');if(lama)lama.remove();
   if(!PL.Penyelesaian)return;
-  var bl;try{bl=PL.Penyelesaian.langkah(L.S.Q,L.S.s);}catch(err){if(window.console)console.warn('penyelesaian',err);return;}
+  var bl;try{bl=PL.Penyelesaian.langkah(L.S.Q,L.S.s,{pt:L.S.s===0?null:(L.S.pt||L.S.uji)});}catch(err){if(window.console)console.warn('penyelesaian',err);return;}
   if(!bl||!bl.length)return;
   var fb=pn.querySelector('.fb');if(!fb)return;
   fb.insertAdjacentHTML('afterend',PL.Penyelesaian.html(bl));
@@ -70,14 +70,14 @@ function periksa(a,r){
   if(r.ok){
     S.solved=true;L.tandai(r);L.kunciSemua();
     var hh=L.el.panel.querySelector('.hints');if(hh)hh.hidden=true;
-    L.fb('ok','Tepat! '+(S.s<S.Q.st.length-1?'Lanjut ke langkah berikutnya.':'Soal ini selesai.'));
+    L.fb('ok','Tepat! '+(S.s<S.Q.st.length-1?'Lanjut ke langkah berikutnya.':'Soal ini selesai.')+L.teksSederhana());
     tampilPenyelesaian();
     PL.Plus.say(S.s<S.Q.st.length-1?'benar':'selesai');
     L.tombol('<button class="btn primary" data-aksi="lanjut">'+(S.s<S.Q.st.length-1?'Langkah berikutnya ➜':'Lihat pembahasan ➜')+'</button>');
     L.renderBidang();L.renderProgres();
   }else{
     S.tries++;L.tandai(r);S.lw={a:a,r:r};
-    L.fb('bad','Belum tepat. '+(L.curS().k==='form'&&r.items.some(Boolean)?'Bagian yang hijau sudah benar. ':'')+'Baca petunjuk, lalu coba lagi.');
+    L.fb('bad','Belum tepat. '+L.pesanTitikUji(r)+(L.curS().k==='form'&&r.items.some(Boolean)?'Bagian yang hijau sudah benar. ':'')+'Baca petunjuk, lalu coba lagi.');
     if(S.hints<2)L.tambahPetunjuk(false);else L.renderHints(); /* membuka gerbang petunjuk rinci */
     L.tombolDiMana();
     if(S.tries>=2&&!L.el.panel.querySelector('[data-aksi="kunci"]'))L.tambahTombol('<button class="btn ghost" data-aksi="kunci">🔑 Lihat jawaban</button>');
