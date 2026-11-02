@@ -70,15 +70,15 @@ function periksa(a,r){
     PL.Plus.say(pts>0?'benar':'salah');
   }else{
     L.S.tries=K.g.tries;L.tandai(r);
-    L.fb('bad','Belum tepat. Kamu punya <b>satu kesempatan lagi</b> untuk langkah ini.');
+    L.fb('bad','Belum tepat. '+L.pesanTitikUji(r)+'Kamu punya <b>satu kesempatan lagi</b> untuk langkah ini.');
     PL.Plus.say('salah');L.renderKartu();
   }
 }
 function tampilSesudah(){
   var A=K.after;if(!A)return;
   var akhir=K.g.complete;
-  if(A.pts===2)L.fb('ok','✔ Benar pada percobaan pertama, <b>+2 poin</b>.');
-  else if(A.pts===1)L.fb('ok','✔ Benar pada percobaan kedua, <b>+1 poin</b>.');
+  if(A.pts===2)L.fb('ok','✔ Benar pada percobaan pertama, <b>+2 poin</b>.'+L.teksSederhana());
+  else if(A.pts===1)L.fb('ok','✔ Benar pada percobaan kedua, <b>+1 poin</b>.'+L.teksSederhana());
   else L.fb('bad','✗ Belum tepat dua kali, jadi <b>0 poin</b>. Jawaban yang benar adalah <b>'+L.teksKunci()+'</b>.');
   var soalBaru=!akhir&&K.g.s===0;
   L.tombol('<button class="btn primary" data-aksi="lanjut">'+(akhir?'Selesai, kirim skor ➜':soalBaru?'Soal berikutnya ➜':'Langkah berikutnya ➜')+'</button>');

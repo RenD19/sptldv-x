@@ -44,7 +44,7 @@ function barisSub(a,b,P){
   var suku=[],hasil=[];
   if(a!==0){suku.push((a===1?'':tn(a)+' \\cdot ')+tk(P.x));hasil.push(a*P.x);}
   if(b!==0){suku.push((b===1?'':tn(b)+' \\cdot ')+tk(P.y));hasil.push(b*P.y);}
-  var b1=suku.join(' + '),v=a*P.x+b*P.y,br=['&= '+b1];
+  var b1=suku.join(' + ').replace(/ \+ -/g,' - '),v=a*P.x+b*P.y,br=['&= '+b1];
   if(hasil.length>1&&!(a===1&&b===1))br.push('&= '+hasil.map(function(h,i){return i?(h<0?'- '+tn(-h):'+ '+tn(h)):tn(h);}).join(' '));
   if(hasil.length>1||(a!==1&&a!==0)||(b!==1&&b!==0))br.push('&= '+tn(v));
   return {br:br,v:v};
@@ -169,9 +169,13 @@ function blokSudut(Q,cs){
 
 /* ---------- penyelesaian per varian: [langkah 1, langkah 2, langkah 3] ---------- */
 var PENY={
-'2Ma':function(Q){
-  var St=Q.st,k=Q.sys[0],T=titikDekat(Q.sys,Q.pl)||St[1].cond.ok;
-  return [blokDuaTitik(St[0].it[0]),null,[blokUji(k,T,'Uji titik')]];
+'2Ma':function(Q,ctx){
+  /* titik pilihan siswa bila ada dan sah; bila tidak, titik di DP yang paling ringan dihitung */
+  var St=Q.st,k=Q.sys[0],T=ctx&&ctx.pt&&C.judgePt(St[1].cond,ctx.pt)?ctx.pt:(titikDekat(Q.sys,Q.pl)||St[1].cond.ok);
+  var r=barisSub(k.a,k.b,T);
+  var sub={judul:'Substitusi titik '+ptTeks(T)+' ke '+C.lin(k.a,k.b),tex:[linTex(k.a,k.b)+' '+r.br[0]].concat(r.br.slice(1))};
+  var tanda={judul:'Bandingkan hasil uji dengan ruas kanan',tex:[tn(r.v)+' &'+OP[k.op]+' '+tn(k.c)+'\\quad'+teks('(benar)'),linTex(k.a,k.b)+' &'+OP[k.op]+' '+tn(k.c)]};
+  return [blokDuaTitik(St[0].it[0]),[sub],[tanda]];
 },
 '2Mb':function(Q){
   var St=Q.st,T=C.findInside(Q.sys,Q.pl);T={x:T.x,y:T.y};
@@ -241,9 +245,9 @@ function optimum(Q){
   return [blokSudut(Q,cs),o?[blokFBanyak(o,cs)]:null,null];
 }
 
-function langkah(Q,s){
+function langkah(Q,s,ctx){
   var f=PENY[Q.t+Q.l+(Q.v||'')];if(!f)return [];
-  var semua=f(Q);if(!semua||!semua[s])return [];
+  var semua=f(Q,ctx);if(!semua||!semua[s])return [];
   return semua[s].filter(function(b){return b&&b.tex&&b.tex.length;}).map(function(b){
     /* baris yang sama berturut-turut cukup ditulis sekali */
     var t=[];b.tex.forEach(function(x){var y=x.replace(/\\quad\\text\{[^}]*\}$/,'');if(!t.length||t[t.length-1].replace(/\\quad\\text\{[^}]*\}$/,'')!==y)t.push(x);});

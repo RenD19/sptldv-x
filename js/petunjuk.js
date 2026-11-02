@@ -242,9 +242,10 @@ var LANJUT={
     ['Periksa hasilmu → substitusikan '+ptS(P0)+' dan '+ptS(P1)+' ke persamaanmu. Keduanya harus menghasilkan ruas kanan yang sama.',
      'Bentuk sederhananya memiliki koefisien x = '+nm(k.a)+' dan koefisien y = '+nm(k.b)+'. Tentukan ruas kanannya dengan substitusi salah satu titik.'],
     ['Titik (0, 0) sering paling mudah dihitung, asalkan tidak terletak pada garis.',
-     pada?'Titik (0, 0) terletak pada garis, jadi tidak boleh dipakai. Pilih titik lain di daerah hijau.':dO?'Titik (0, 0) berada di daerah hijau dan tidak pada garis, jadi boleh dipilih.':'Titik (0, 0) tidak berada di daerah hijau. Pilih titik di sisi seberang garis dari (0, 0).'],
+     pada?'Titik (0, 0) terletak pada garis, jadi tidak boleh dipakai. Pilih titik lain di daerah hijau.':dO?'Titik (0, 0) berada di daerah hijau dan tidak pada garis, jadi boleh dipilih.':'Titik (0, 0) tidak berada di daerah hijau. Pilih titik di sisi seberang garis dari (0, 0).',
+     'Contoh substitusi dengan titik '+ptS(ok)+' → '+PL.U.subRapi(k.a,k.b,ok.x,ok.y)+' = '+nm(val(k,ok))+'. Hitung dengan cara yang sama untuk titik pilihanmu.'],
     [TIP_GARIS+' Garis pada gambar '+kata(k.op)+'.',
-     'Contoh dengan titik '+ptS(ok)+' di DP → '+sub(k.a,k.b,ok)+' = '+nm(val(k,ok))+'. Bandingkan dengan '+nm(k.c)+' → hasilnya lebih '+(val(k,ok)>k.c?'besar':'kecil')+', gabungkan dengan jenis garis.']
+     'Bandingkan hasil ujimu dengan '+nm(k.c)+' → karena titiknya di DP, hasilnya lebih '+(val(k,ok)>k.c?'besar':'kecil')+'. Gabungkan dengan jenis garis.']
   ];
 },
 '2Mb':function(Q){

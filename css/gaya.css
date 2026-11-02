@@ -433,3 +433,10 @@ body[data-mode="kuis"] #plusWrap{display:none}
 .saran-status.bad{background:#fdecec;color:var(--red)}
 .saran-aksi{justify-content:flex-end;gap:8px;margin-top:6px}
 .saran-uji{font-size:.82rem;margin-top:4px}
+
+/* titik uji: isian nilai, hasil uji pada langkah berikutnya, dan bentuk paling sederhana */
+.ptnil{margin-top:6px}
+.num.ptv.bad{border-color:#dc2626;background:#fef2f2}
+.num.ptv.ok{border-color:#16a34a;background:#ecfdf3}
+.hasil-uji{margin:.4em 0;padding:6px 10px;border-left:4px solid var(--blue);border-radius:6px;background:#f5f8ff}
+.fb-sederhana{margin-top:6px;font-weight:400}

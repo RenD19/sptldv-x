@@ -7,7 +7,7 @@
    ============================================================ */
 var CORE=(function(){
 'use strict';
-var VERSI='2026-11-01.3';
+var VERSI='2026-11-02.1';
 var OPS=['<','≤','>','≥'];
 var MAKS_COBA=2;          /* percobaan per langkah di Kuis: benar ke-1 = 2 poin, ke-2 = 1 poin, salah dua kali = 0 */
 var NSOAL=14,NLANGKAH=3;   /* NLANGKAH = banyak langkah paling banyak per soal; 3M-a hanya 2 langkah */
@@ -137,7 +137,7 @@ function inBox(p,B){return !!p&&typeof p==='object'&&isInt(p.x)&&isInt(p.y)&&p.x
 function valid(Q,s,a){
   var S=Q.st[s];
   if(S.k==='form')return Array.isArray(a)&&a.length===S.it.length&&S.it.every(function(it,i){return validItem(it,a[i]);});
-  if(S.k==='pt')return inBox(a,Q.pl);
+  if(S.k==='pt')return inBox(a,Q.pl)&&(!S.nil||(isNum(a.v)&&Math.abs(a.v)<1e12));
   if(S.k==='pts'){
     if(!Array.isArray(a)||a.length<1||a.length>16)return false;
     if(!a.every(function(p){return inBox(p,Q.pl);}))return false;
@@ -145,6 +145,7 @@ function valid(Q,s,a){
   }
   return false;
 }
+function nilaiUji(S,p){return S.nil.a*p.x+S.nil.b*p.y;}
 function judgePt(c,p){
   if(c.k==='in')return holdsAll(c.s,p.x,p.y)&&!onAnyLine(c.s,p.x,p.y);
   if(c.k==='at')return c.p.some(function(q){return samePt(q,p);});
@@ -154,7 +155,13 @@ function judgePt(c,p){
 function judge(Q,s,a){
   var S=Q.st[s];
   if(S.k==='form'){var r=S.it.map(function(it,i){return judgeItem(it,a[i]);});return {ok:r.every(Boolean),items:r};}
-  if(S.k==='pt')return {ok:judgePt(S.cond,a)};
+  if(S.k==='pt'){
+    var ptOk=judgePt(S.cond,a);
+    if(!S.nil)return {ok:ptOk};
+    /* titik uji + nilai: nilai dibandingkan dengan hasil substitusi titik pilihan siswa */
+    var nilOk=isNum(a.v)&&Math.abs(a.v-nilaiUji(S,a))<1e-9;
+    return {ok:ptOk&&nilOk,ptOk:ptOk,nilOk:nilOk};
+  }
   var kurang=S.key.filter(function(p){return !a.some(function(q){return samePt(p,q);});});
   var lebih=a.filter(function(p){return !S.key.some(function(q){return samePt(p,q);});});
   return {ok:!kurang.length&&!lebih.length,kurang:kurang,lebih:lebih};
@@ -167,13 +174,19 @@ function keyAns(Q,s){
     if(it.t==='ineq')return [it.key.a,it.key.b,it.key.c,it.key.op];
     return it.key;
   });
-  if(S.k==='pt')return S.cond.k==='at'?{x:S.cond.p[0].x,y:S.cond.p[0].y}:{x:S.cond.ok.x,y:S.cond.ok.y};
+  if(S.k==='pt'){
+    var kp=S.cond.k==='at'?{x:S.cond.p[0].x,y:S.cond.p[0].y}:{x:S.cond.ok.x,y:S.cond.ok.y};
+    if(S.nil)kp.v=nilaiUji(S,kp);
+    return kp;
+  }
   return S.key.map(function(p){return {x:p.x,y:p.y};});
 }
 
 /* ---------- pembentuk soal ---------- */
 function F(nm,q,it,h,v,lay){return {nm:nm,k:'form',q:q,it:it,h:h||[],v:v||{},lay:lay||''};}
 function P(nm,q,cond,h,v){return {nm:nm,k:'pt',q:q,cond:cond,h:h||[],v:v||{}};}
+/* pilih titik sekaligus isi nilai hasil substitusinya dalam satu langkah; nil={a,b,lab} */
+function PN(nm,q,cond,h,v,nil){var S=P(nm,q,cond,h,v);S.nil=nil;return S;}
 function PS(nm,q,key,h,v){return {nm:nm,k:'pts',q:q,key:key,h:h||[],v:v||{}};}
 function pg(lab,o,key){return {t:'pg',lab:lab,o:o,key:key};}
 function num(lab,key,u){return {t:'num',lab:lab,key:key,u:u||''};}
@@ -312,6 +325,15 @@ function quad(rng){
   }
   return {A:6,B:6,P:4,Q:4,l1:L(2,1,12,'≤'),l2:L(1,2,12,'≤'),m:12};
 }
+/* titik kisi di dalam DP (bukan pada garis) yang paling dekat ke O, agar contoh hitungnya ringan */
+function ptDekat(sys,B){
+  var best=null;
+  for(var x=B.x0;x<=B.x1;x++)for(var y=B.y0;y<=B.y1;y++){
+    if(!holdsAll(sys,x,y)||onAnyLine(sys,x,y))continue;
+    var d=Math.abs(x)+Math.abs(y);if(!best||d<best.d)best={x:x,y:y,d:d};
+  }
+  return best?{x:best.x,y:best.y}:inPt(sys,B);
+}
 function g2M(rng,v){
   if(v==='a'){
     var p=ri(rng,2,8)*(rng()<.3?-1:1),q=ri(rng,2,8)*(rng()<.3?-1:1),op=pick(rng,OPS),k=norm(L(q,p,p*q,op));
@@ -320,8 +342,8 @@ function g2M(rng,v){
       soal:'Garis batas DP (hijau) melalui ('+nm(p)+', 0) dan (0, '+nm(q)+'). Tentukan pertidaksamaannya.',
       st:[F('Persamaan garis','BUAT persamaan garis melalui kedua titik dalam bentuk ax + by = c.',[eqI('Persamaan garis',k,[{x:p,y:0},{x:0,y:q}])],
             ['Rumus dua titik adalah (y − y₁)/(y₂ − y₁) = (x − x₁)/(x₂ − x₁).','Dengan titik ('+nm(p)+', 0) dan (0, '+nm(q)+') → '+nm(q)+'x + '+nm(p)+'y = '+nm(p*q)+', lalu sederhanakan.'],vv),
-          P('Titik uji','UJI: klik satu titik kisi di dalam DP, bukan pada garis.',{k:'in',s:[k],ok:inPt([k],FULL)},['Pilih titik di daerah hijau yang mudah dihitung.'],vv),
-          F('Tanda','TULIS tanda dari jenis garis dan hasil uji.',[pg(lin(k.a,k.b)+' … '+nm(k.c),OPS.slice(),OPS.indexOf(k.op))],['Garis '+(isSolid(op)?'penuh → ≤ atau ≥':'putus-putus → &lt; atau &gt;')+'.','Substitusikan titik di DP, lalu bandingkan dengan '+nm(k.c)+'.'],vv)],
+          PN('Titik uji','UJI: klik satu titik kisi di dalam DP, bukan pada garis, lalu substitusikan titik itu.',{k:'in',s:[k],ok:ptDekat([k],FULL)},['Pilih titik di daerah hijau yang mudah dihitung.','Substitusikan x dan y titik pilihanmu ke '+lin(k.a,k.b)+', lalu hitung hasilnya.'],vv,{a:k.a,b:k.b,lab:'Nilai '+lin(k.a,k.b)+' di titik itu ='}),
+          F('Tanda','TULIS tanda dari jenis garis dan hasil uji.',[pg(lin(k.a,k.b)+' … '+nm(k.c),OPS.slice(),OPS.indexOf(k.op))],['Garis '+(isSolid(op)?'penuh → ≤ atau ≥':'putus-putus → &lt; atau &gt;')+'.','Bandingkan hasil ujimu dengan '+nm(k.c)+'.'],vv)],
       vz:vv,bahas:['Persamaan garisnya '+eqS(k)+'.','Garis '+(isSolid(op)?'penuh':'putus-putus')+' dan hasil uji titik di DP → '+ineqS(k)+'.']});
   }
   var d=quad(rng),B=boxQ1(d.m,1),l1=d.l1,l2=d.l2;
@@ -726,7 +748,8 @@ function wrongAns(Q,s){
   }
   if(S.k==='pt'){
     var B=Q.pl,cs=[[B.x0,B.y0],[B.x1,B.y0],[B.x1,B.y1],[B.x0,B.y1],[0,0]];
-    for(var i=0;i<cs.length;i++){var p={x:cs[i][0],y:cs[i][1]};if(!judgePt(S.cond,p))return p;}
+    for(var i=0;i<cs.length;i++){var p={x:cs[i][0],y:cs[i][1]};if(!judgePt(S.cond,p)){if(S.nil)p.v=nilaiUji(S,p);return p;}}
+    if(S.nil){a.v=a.v+1;return a;}
     return {x:B.x0,y:B.y0};
   }
   return a.concat([{x:Q.pl.x0,y:Q.pl.y0}]);

@@ -16,6 +16,14 @@ U.esc=function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').re
 U.nm=CORE.nm;U.rp=CORE.rp;U.ptS=CORE.ptS;U.ineqS=CORE.ineqS;U.eqS=CORE.eqS;U.lin=CORE.lin;U.Lq=CORE.L;
 U.frac=function(v){var w=Math.floor(v+1e-9),r=v-w;if(Math.abs(r)<1e-9)return CORE.nm(w);var f={'0.333':'⅓','0.667':'⅔','0.5':'½','0.25':'¼','0.75':'¾'}[(Math.round(r*1000)/1000).toString()];return f?(w?CORE.nm(w):'')+f:CORE.nm(Math.round(v*100)/100);};
 U.seed=function(){return Math.floor(Math.random()*2147483646)+1;};
+/* tulisan substitusi tanpa "(0) + −1(0)": koefisien 1 tidak ditulis dan tanda minus menjadi pengurangan */
+U.subRapi=function(a,b,x,y){
+  function suku(c,v){var m=Math.abs(c);return m===1?(v<0?'('+CORE.nm(v)+')':CORE.nm(v)):CORE.nm(m)+'('+CORE.nm(v)+')';}
+  var h='';
+  if(a!==0)h=(a<0?'−':'')+suku(a,x);
+  if(b!==0)h+=(h===''?(b<0?'−':''):(b<0?' − ':' + '))+suku(b,y);
+  return h;
+};
 var esc=U.esc,nm=U.nm,ptS=U.ptS,lin=U.lin,Lq=U.Lq,frac=U.frac;
 var COL=PL.COL=['#1d4ed8','#c2410c','#7e22ce','#0f766e'];
 var MKC={k:'#1b2a41',g:'#15803d',r:'#b91c1c',b:'#c2410c',o:'#b45309',c:'#92400e'};
@@ -368,11 +376,11 @@ PL.Langkah=function(sec,opsi){
   var q=function(s){return sec.querySelector(s);};
   var el={meta:q('.meta'),ask:q('.ask'),prog:q('.prog'),stepText:q('.steptext'),panel:q('.panel'),svg:q('svg.bidang'),cap:q('.cap')};
   var bidang=PL.Bidang(el.svg,el.cap);
-  var S={Q:null,s:0,ans:[],lock:[],pt:null,sel:[],tries:0,solved:false,hints:0,lw:null,gsK:0,tahap:'kerja',selesai:false};
+  var S={Q:null,s:0,ans:[],lock:[],pt:null,ptV:'',uji:null,sel:[],tries:0,solved:false,hints:0,lw:null,gsK:0,tahap:'kerja',selesai:false};
   var pq=function(s){return el.panel.querySelector(s);};
   function curS(){return S.Q&&S.Q.st[S.s];}
   function reset(){
-    var St=curS();S.ans=[];S.lock=[];S.pt=null;S.sel=[];S.tries=0;S.solved=false;S.hints=0;S.lw=null;
+    var St=curS();S.ans=[];S.lock=[];S.pt=null;S.ptV='';S.sel=[];S.tries=0;S.solved=false;S.hints=0;S.lw=null;
     if(St&&St.k==='form')St.it.forEach(function(it){S.ans.push(it.t==='eq'?['','','']:it.t==='ineq'?['','','',null]:it.t==='num'?'':null);S.lock.push(false);});
     if(St&&St.v&&St.v.gs)S.gsK=0;
   }
@@ -389,7 +397,12 @@ PL.Langkah=function(sec,opsi){
   }
   function collect(){
     var St=curS();
-    if(St.k==='pt')return S.pt?{x:S.pt.x,y:S.pt.y}:null;
+    if(St.k==='pt'){
+      if(!S.pt)return null;
+      if(!St.nil)return {x:S.pt.x,y:S.pt.y};
+      var nv=parseNum(S.ptV,false);
+      return isNaN(nv)?null:{x:S.pt.x,y:S.pt.y,v:nv};
+    }
     if(St.k==='pts')return S.sel.length?S.sel.map(function(p){return {x:p.x,y:p.y};}):null;
     var out=[],bad=false;
     St.it.forEach(function(it,i){
@@ -471,12 +484,13 @@ PL.Langkah=function(sec,opsi){
   function panelLangkah(){
     var Q=S.Q,St=curS(),h='';
     h+='<h2>Langkah '+(S.s+1)+' · '+esc(St.nm)+'</h2><p>'+St.q+'</p>';
+    if(S.uji&&S.uji.Q===Q&&S.uji.s===S.s-1)h+='<p class="hasil-uji">Hasil ujimu di titik <b>'+ptS(S.uji)+'</b> adalah '+esc(U.subRapi(S.uji.a,S.uji.b,S.uji.x,S.uji.y))+' = <b>'+nm(S.uji.v)+'</b>.</p>';
     if(St.k==='form'){
       if(St.lay==='tbl')h+='<table class="tbl ftbl"><tr><th>Titik sudut</th><th>Nilai f</th></tr>'+St.it.map(function(it,i){return itemHTML(it,i,St);}).join('')+'</table>';
       else if(St.lay==='xy')h+=xyTable();
       else h+=St.it.map(function(it,i){return itemHTML(it,i,St);}).join('');
       if(St.it.some(function(it){return it.t==='eq'||it.t==='ineq';}))h+='<p class="muted">Tulis koefisien negatif dengan tanda minus, misalnya −7. Bentuk yang dikalikan atau disederhanakan juga diterima.</p>';
-    }else if(St.k==='pt')h+='<p class="state ptstate">Titik pilihanmu '+(S.pt?'<b>'+ptS(S.pt)+'</b>':'<span class="muted">belum ada</span>')+'</p><p class="muted">Ketuk satu titik kisi pada bidang koordinat.</p>';
+    }else if(St.k==='pt')h+='<p class="state ptstate">Titik pilihanmu '+(S.pt?'<b>'+ptS(S.pt)+'</b>':'<span class="muted">belum ada</span>')+'</p><p class="muted">Ketuk satu titik kisi pada bidang koordinat.</p>'+(St.nil?'<div class="trow ptnil"><label class="nrow"><span>'+esc(St.nil.lab)+'</span> <span class="nin"><input class="num vin ptv" inputmode="decimal" autocomplete="off" value="'+esc(S.ptV)+'"'+(S.solved?' disabled':'')+' aria-label="'+esc(St.nil.lab)+'"></span></label></div>':'');
     else h+='<p class="state selstate">'+selText()+'</p><p class="muted">Ketuk titik yang ditandai jingga pada bidang untuk memilih atau membatalkan.</p>';
     if(St.v&&St.v.gs)h+='<div class="gsbox"><label><b>Garis selidik</b>, k = <span class="gsV">'+nm(S.gsK)+'</span><input type="range" class="gsr" min="0" max="'+gsMax(Q)+'" step="1" value="'+S.gsK+'"></label></div>';
     h+='<ul class="hints" hidden></ul><div class="fb" hidden></div><div class="actions row">'+(opsi.petunjuk?'<button class="btn ghost" data-aksi="petunjuk">💡 Petunjuk</button>':'')+'<button class="btn primary" data-aksi="periksa">Periksa</button></div>';
@@ -510,6 +524,7 @@ PL.Langkah=function(sec,opsi){
   el.panel.addEventListener('input',function(e){
     var inp=e.target;
     if(inp.classList.contains('gsr')){S.gsK=+inp.value;var gv=pq('.gsV');if(gv)gv.textContent=nm(S.gsK);renderBidang();return;}
+    if(inp.classList.contains('ptv')){S.ptV=inp.value;inp.classList.remove('bad');return;}
     if(!inp.classList.contains('num')||inp.dataset.i===undefined)return;
     var i=+inp.dataset.i;
     if(inp.dataset.j!==undefined){S.ans[i][+inp.dataset.j]=inp.value;pratinjau(i);}else S.ans[i]=inp.value;
@@ -578,7 +593,9 @@ tb.textContent=habis?'💡 Semua petunjuk sudah dibuka'
 }
    
   function tandai(r){
-    var St=curS();if(St.k!=='form')return;
+    var St=curS();
+    if(St.k==='pt'&&St.nil){var pv=pq('.ptv');if(pv){pv.classList.toggle('ok',r.ok);pv.classList.toggle('bad',!!r.ptOk&&!r.nilOk);}return;}
+    if(St.k!=='form')return;
     r.items.forEach(function(ok,i){
       var row=el.panel.querySelector('.trow[data-i="'+i+'"], tr[data-i="'+i+'"]');
       if(ok){S.lock[i]=true;if(row){row.classList.add('ok');row.classList.remove('bad');row.querySelectorAll('button,input').forEach(function(x){x.disabled=true;});}}
@@ -589,12 +606,13 @@ tb.textContent=habis?'💡 Semua petunjuk sudah dibuka'
   function kunciSemua(){el.panel.querySelectorAll('.trow button, .trow input, tr input').forEach(function(x){x.disabled=true;});var b=pq('[data-aksi="periksa"]');if(b)b.disabled=true;}
   function isiKunci(){
     var St=curS(),k=CORE.keyAns(S.Q,S.s);
-    if(St.k==='pt')S.pt=k;
+    if(St.k==='pt'){S.pt={x:k.x,y:k.y};if(St.nil){S.ptV=String(k.v);simpanUji(k);}}
     else if(St.k==='pts')S.sel=k;
     else St.it.forEach(function(it,i){S.ans[i]=it.t==='pg'?k[i]:it.t==='num'?(it.u==='rp'?nm(k[i]):String(k[i])):k[i].slice(0,3).map(String).concat(it.t==='ineq'?[k[i][3]]:[]);S.lock[i]=true;});
   }
   function teksKunci(){
     var St=curS(),k=CORE.keyAns(S.Q,S.s);
+    if(St.k==='pt'&&St.nil)return 'titik di dalam DP, misalnya '+ptS(k)+', dengan nilai '+nm(k.v);
     if(St.k==='pt')return St.cond.k==='at'?ptS(k):'titik di dalam DP, misalnya '+ptS(k);
     if(St.k==='pts')return k.map(ptS).join(', ');
     return St.it.map(function(it,i){var a=k[i];
@@ -605,9 +623,31 @@ tb.textContent=habis?'💡 Semua petunjuk sudah dibuka'
   }
   function tombol(html){var a=pq('.actions');if(a){a.innerHTML=html;var b=a.querySelector('.btn.primary');if(b&&b.focus)b.focus({preventScroll:true});}}
   function tambahTombol(html){var a=pq('.actions');if(a)a.insertAdjacentHTML('beforeend',html);}
+  /* simpan hasil titik uji agar dapat ditampilkan pada langkah berikutnya */
+  function simpanUji(a){var St=curS();S.uji={Q:S.Q,s:S.s,x:a.x,y:a.y,v:a.v,a:St.nil.a,b:St.nil.b};}
+  /* titik uji: sebutkan bagian mana yang belum tepat */
+  function pesanTitikUji(r){
+    var St=curS();if(!St||!St.nil||r.ok)return '';
+    return r.ptOk?'Titiknya sudah tepat, tetapi hasil hitungnya belum. Hitung ulang substitusinya. ':'Titiknya belum tepat. ';
+  }
+  /* jawaban benar: tampilkan bentuk paling sederhana dari persamaan atau pertidaksamaan siswa */
+  function teksSederhana(){
+    var St=curS(),a=collect();if(!St||St.k!=='form'||!a)return '';
+    var h='';
+    St.it.forEach(function(it,i){
+      if(it.t!=='eq'&&it.t!=='ineq')return;
+      var j=a[i],isEq=it.t==='eq',n=CORE.norm(Lq(j[0],j[1],j[2],isEq?'=':j[3]));
+      var f=n.a?j[0]/n.a:j[1]/n.b;
+      if(f===1)h+='<div class="fb-sederhana">Jawabanmu sudah dalam bentuk paling sederhana.</div>';
+      else h+='<div class="fb-sederhana">Bentuk paling sederhana dari jawabanmu adalah <b>'+(isEq?U.eqS(n):esc(U.ineqS(n)))+'</b> (kedua ruas dibagi '+nm(f)+(!isEq&&f<0?', tanda dibalik':'')+').</div>';
+    });
+    return h;
+  }
   function periksa(){
     if(S.solved)return;
     var a=collect(),St=curS();
+    if(a===null&&St.k==='pt'&&St.nil&&S.pt){fb('info','Isi nilai hasil substitusi titikmu dulu.');return;}
+    if(a!==null&&St.k==='pt'&&St.nil&&CORE.judge(S.Q,S.s,a).ok)simpanUji(a);
     if(a===null||!CORE.valid(S.Q,S.s,a)){fb('info',St.k==='pt'?'Ketuk satu titik pada bidang dulu.':St.k==='pts'?'Pilih titik pada bidang dulu.':'Lengkapi semua isian dulu (isi 0 bila koefisiennya nol).');return;}
     opsi.periksa(a,CORE.judge(S.Q,S.s,a));
   }
@@ -636,6 +676,8 @@ tb.textContent=habis?'💡 Semua petunjuk sudah dibuka'
       else msg='Pilihan pada baris ini belum tepat. Baca lagi soalnya.';
     }else if(St.k==='pt'){
       var p=w.a;t={pt:[p.x,p.y]};
+      if(St.nil&&w.r.ptOk){var vi=pq('.ptv');if(vi)t={el:vi};msg='Titiknya sudah tepat. Substitusikan x = '+nm(p.x)+' dan y = '+nm(p.y)+' ke '+lin(St.nil.a,St.nil.b)+', lalu hitung ulang.';}
+      else
       if(St.cond.k==='at')msg='Titik '+ptS(p)+' bukan titik yang dimaksud. Hitung nilai f di setiap titik sudut, lalu bandingkan.';
       else{var Li=onLineIdx(St.cond.s,p);if(Li>=0)msg='Titik '+ptS(p)+' terletak tepat pada garis '+U.ineqS(St.cond.s[Li])+'. Pilih titik yang tidak terletak pada garis.';
         else{var v=violated(St.cond.s,p);msg='Titik '+ptS(p)+' tidak memenuhi '+U.ineqS(St.cond.s[v])+'. Pilih titik di sisi yang benar.';}}
@@ -684,7 +726,7 @@ tb.textContent=habis?'💡 Semua petunjuk sudah dibuka'
 
   return {S:S,el:el,bidang:bidang,curS:curS,muat:muat,reset:reset,collect:collect,
     panelLangkah:panelLangkah,renderKartu:renderKartu,renderProgres:renderProgres,renderBidang:renderBidang,kosong:kosong,
-    fb:fb,tandai:tandai,kunciSemua:kunciSemua,isiKunci:isiKunci,teksKunci:teksKunci,tombol:tombol,tambahTombol:tambahTombol,
+    fb:fb,tandai:tandai,kunciSemua:kunciSemua,isiKunci:isiKunci,teksKunci:teksKunci,teksSederhana:teksSederhana,pesanTitikUji:pesanTitikUji,tombol:tombol,tambahTombol:tambahTombol,
     tambahPetunjuk:tambahPetunjuk,renderHints:renderHints,bukaSemuaPetunjuk:bukaSemuaPetunjuk,tombolDiMana:tombolDiMana,periksa:periksa,
     panduan:function(){var St=curS();if(!St)return null;return St.k==='pt'?'Titiknya harus di sisi yang benar, ya':St.k==='pts'?'Periksa lagi pojok-pojok DP, ya':'Periksa isian yang berwarna merah, ya';}};
 };
