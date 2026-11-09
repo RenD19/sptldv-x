@@ -7,7 +7,7 @@
    ============================================================ */
 var CORE=(function(){
 'use strict';
-var VERSI='2026-11-01.3';
+var VERSI='2026-11-02.1';
 var OPS=['<','≤','>','≥'];
 var MAKS_COBA=2;          /* percobaan per langkah di Kuis: benar ke-1 = 2 poin, ke-2 = 1 poin, salah dua kali = 0 */
 var NSOAL=14,NLANGKAH=3;   /* NLANGKAH = banyak langkah paling banyak per soal; 3M-a hanya 2 langkah */
