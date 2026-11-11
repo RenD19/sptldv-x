@@ -1,18 +1,29 @@
 # Program Linear: dari Contoh Kontekstual ke Nilai Optimum
 
-Media pembelajaran Matematika Kelas X (Fase E), terbagi menjadi dua halaman:
+Media pembelajaran Matematika Kelas X (Fase E) untuk bab Sistem Pertidaksamaan Linear Dua Variabel,
+terdiri atas tiga materi berurutan dan satu halaman kuis:
 
-- **`index.html`** (halaman materi): tab **Belajar**, **Latihan Mandiri**, dan tombol **💬 Kritik & Saran**.
-- **`kuis.html`** (halaman kuis): **Kuis** saja. Skor disetor ke Google Sheet lewat Google Apps Script.
+| No. | Halaman | Isi | Bagian berskor |
+|---|---|---|---|
+| 1 | **`sistem-ptldv.html`** | Daerah Penyelesaian SPtLDV: tab **Belajar**, **Latihan Mandiri**, **Kuis** | Kuis (server sendiri) |
+| 2 | **`balik-ptldv.html`** | Menyusun Sistem Pertidaksamaan dari Daerah Penyelesaian: tab **Belajar**, **Latihan Mandiri**, **Kuis** | Kuis (server sendiri) |
+| 3 | **`index.html`** | Contoh Kontekstual ke Nilai Optimum: tab **Belajar**, **Latihan Mandiri**, tombol **💬 Kritik & Saran** | tidak ada |
+| – | **`kuis.html`** | Kuis Nilai Optimum saja | Kuis (server kuis optimum) |
 
-Halaman materi tidak menautkan ke kuis, jadi guru membagikan tautan kuis sendiri saat kuis dimulai.
+Ketiga halaman materi memiliki **menu urutan materi** yang sama di kepala halaman
+(1 Daerah Penyelesaian · 2 Menyusun dari DP · 3 Nilai Optimum); halaman yang sedang dibuka ditandai biru.
+Bila latihan/kuis berskor sedang berjalan atau skor belum terkirim, siswa diminta konfirmasi sebelum pindah halaman lewat menu.
+
+Halaman materi tidak menautkan ke `kuis.html`, jadi guru membagikan tautan kuis sendiri saat kuis dimulai.
 
 ## Isi folder
 
 ```
-media-nilai-optimum/
-├── index.html            halaman MATERI: tab Belajar + Latihan Mandiri + Kritik & Saran
-├── kuis.html             halaman KUIS: tab Kuis saja
+sptldv-x/
+├── sistem-ptldv.html     MATERI 1: Daerah Penyelesaian (file mandiri: CSS + JS + CORE + maskot Plus di dalamnya)
+├── balik-ptldv.html      MATERI 2: Menyusun dari DP (file mandiri: CSS + JS + CORE + maskot Plus di dalamnya)
+├── index.html            MATERI 3: Nilai Optimum, tab Belajar + Latihan Mandiri + Kritik & Saran
+├── kuis.html             halaman KUIS Nilai Optimum: tab Kuis saja
 ├── .nojekyll             berkas kosong; membuat GitHub Pages menyajikan file apa adanya
 ├── README.md             berkas ini
 ├── PANDUAN-APPS-SCRIPT.md  panduan lengkap memasang kedua server Apps Script
@@ -49,6 +60,12 @@ media-nilai-optimum/
 | Perilaku tombol atau alur satu tab | `js/belajar.js`, `js/latihan.js`, atau `js/kuis.js` |
 | Aturan kuis (batas waktu, percobaan, PIN) | `server/Code.gs`, bagian `KONFIG` (lalu salin ke Apps Script) |
 | Soal, kunci, cara menilai | `js/core.js` **lalu** tempel ulang ke `core.gs` di Apps Script (lihat "Aturan penting") |
+| Menu urutan materi (nama, urutan, tautan) | blok `<nav class="nav-materi">` di **ketiga** halaman materi: `sistem-ptldv.html`, `balik-ptldv.html`, `index.html` |
+| Tampilan menu urutan materi | `css/gaya.css` (bagian `.nav-materi`) **dan** salinannya di `<style>` `sistem-ptldv.html` serta `balik-ptldv.html` |
+| Apa pun di Materi 1 atau Materi 2 (teks, soal, alamat server) | langsung di `sistem-ptldv.html` atau `balik-ptldv.html` (tidak memakai `css/` dan `js/`) |
+| Teks tab Belajar Materi 1 / Materi 2 | data `EX` di `sistem-ptldv.html` / `balik-ptldv.html` (cari `var EX=[`); contoh kontekstual di `CK_A` … `CK_E` |
+| Pilihan tipe dan level Latihan Mandiri | objek `PAGE` di masing-masing halaman |
+| Mesin tab Belajar, maskot Plus, soal LOTS/HOTS, petunjuk, 🔑, penyelesaian | blok `MODUL BERSAMA` — isinya **sama persis** di kedua halaman; ubah di keduanya |
 
 Setiap tab memakai wadahnya sendiri (`#tab-belajar`, `#tab-latihan`, `#tab-kuis`).
 Mode aktif ditulis di `<body data-mode="belajar|latihan|kuis">`, jadi aturan khusus satu mode cukup ditulis seperti ini:
@@ -60,6 +77,23 @@ Mode aktif ditulis di `<body data-mode="belajar|latihan|kuis">`, jadi aturan khu
 }
 ```
 
+## Tab Belajar dan Latihan Mandiri di Materi 1 dan Materi 2
+
+Kedua halaman memakai format yang sama dengan Materi 3 (`index.html`):
+
+- **Belajar**: menu bagian bergrup, "Layar x dari y · langkah a dari b", bagian muncul bertahap bersama maskot Plus,
+  tabel uji titik dapat diketuk untuk menandai titiknya di grafik.
+  - Materi 1: konsep A–C (garis batas, daerah penyelesaian, DP sistem) + contoh kontekstual A–C + rangkuman + 6 kasus "temukan kesalahan".
+  - Materi 2: konsep D–E (dari Rangkuman 2) + contoh kontekstual D–E + rangkuman + 9 kasus "temukan kesalahan".
+  - Contoh kontekstual A–E bersumber dari PDF *Pembahasan Contoh Kontekstual SPtLDV* (sama dengan Bagian 1 di `index.html`).
+- **Latihan Mandiri** (tanpa skor, tidak ke server): pilih **Tipe** dan **Level** mengikuti dokumen *Susunan Kategori Soal*.
+  - Materi 1 = Tipe 1 · Menggambar DP; Materi 2 = Tipe 2 · Sistem dari DP.
+  - **MOTS** memakai alur langkah interaktif (tabel titik, geser titik, arsir; atau dua titik, persamaan, uji titik, tanda).
+  - **LOTS** dan **HOTS** berupa soal langkah singkat (pilihan, isian, ketuk titik), diadaptasi dari `js/core.js`.
+  - Bantuan: 💡 Petunjuk bertahap (petunjuk paling rinci terbuka setelah mencoba sekali), 📍 Di mana salahku?,
+    🔑 Lihat jawaban setelah 2 kali salah, penyelesaian bertahap (KaTeX), dan panel "🎉 Soal selesai" berisi pembahasan.
+- **Kuis** tidak berubah: CORE, jejak jawaban, dan server sama seperti sebelumnya (kode `cek` halaman tetap).
+
 ## Menerbitkan di GitHub Pages (tanpa perintah terminal)
 
 1. **Buat akun** di https://github.com (gratis), lalu masuk.
@@ -69,8 +103,8 @@ Mode aktif ditulis di `<body data-mode="belajar|latihan|kuis">`, jadi aturan khu
    - Klik **Create repository**.
 3. **Unggah file.** Di halaman repositori, klik **uploading an existing file**
    (atau **Add file → Upload files**).
-   - Buka folder `media-nilai-optimum` di komputer, pilih **semua isinya**
-     (`index.html`, `kuis.html`, `.nojekyll`, folder `css`, `js`, `server`, `README.md`, dan `PANDUAN-APPS-SCRIPT.md`),
+   - Buka folder `sptldv-x` di komputer, pilih **semua isinya**
+     (`index.html`, `kuis.html`, `sistem-ptldv.html`, `balik-ptldv.html`, `.nojekyll`, folder `css`, `js`, `server`, `README.md`, dan `PANDUAN-APPS-SCRIPT.md`),
      lalu seret ke halaman GitHub. Jangan menyeret folder induknya, agar `index.html` berada di akar repositori.
    - Bila `.nojekyll` tidak ikut (file berawalan titik kadang tersembunyi), buat sendiri:
      **Add file → Create new file**, beri nama `.nojekyll`, biarkan kosong, lalu **Commit**.
@@ -80,17 +114,25 @@ Mode aktif ditulis di `<body data-mode="belajar|latihan|kuis">`, jadi aturan khu
    - Branch: **main**, folder **/ (root)** → **Save**.
 5. **Tunggu 1–2 menit**, lalu muat ulang halaman Settings → Pages.
    Alamatnya muncul seperti `https://namaakun.github.io/nilai-optimum/`.
-   - Materi: `https://namaakun.github.io/nilai-optimum/` (bisa juga `…/#latihan` untuk langsung ke Latihan Mandiri)
-   - Kuis: `https://namaakun.github.io/nilai-optimum/kuis.html`
+   - Materi 1: `https://namaakun.github.io/nilai-optimum/sistem-ptldv.html`
+   - Materi 2: `https://namaakun.github.io/nilai-optimum/balik-ptldv.html`
+   - Materi 3: `https://namaakun.github.io/nilai-optimum/` (bisa juga `…/#latihan` untuk langsung ke Latihan Mandiri)
+   - Kuis Nilai Optimum: `https://namaakun.github.io/nilai-optimum/kuis.html`
 
 ## Menghubungkan ke Google Sheet
 
-Ada **dua** server Apps Script yang terpisah, masing-masing dengan Google Sheet sendiri:
+Ada **empat** server Apps Script yang terpisah, masing-masing dengan Google Sheet sendiri:
 
-| Server | File di Apps Script | Diisi ke `js/config.js` |
+| Server | File di Apps Script | Alamat diisi ke |
 |---|---|---|
-| Kuis | `Code.gs` (dari `server/Code.gs`) **+** `core.gs` (dari `js/core.js`) | `ENDPOINT` |
-| Kritik & saran | `Code.gs` (dari `server/Saran.gs`) | `SARAN_ENDPOINT` |
+| Kuis Nilai Optimum | `Code.gs` (dari `server/Code.gs`) **+** `core.gs` (dari `js/core.js`) | `js/config.js` → `ENDPOINT` |
+| Kritik & saran | `Code.gs` (dari `server/Saran.gs`) | `js/config.js` → `SARAN_ENDPOINT` |
+| Kuis Materi 1 (`MATERI:"sistem"`) | proyek Apps Script milik `sistem-ptldv.html` (tidak disimpan di repositori ini) | `sistem-ptldv.html`, bagian `PENGATURAN` (`window.PTLDV_CONFIG`) |
+| Kuis Materi 2 (`MATERI:"balik"`) | proyek Apps Script milik `balik-ptldv.html` (tidak disimpan di repositori ini) | `balik-ptldv.html`, bagian `PENGATURAN` (`window.PTLDV_CONFIG`) |
+
+Alamat server Materi 1 dan Materi 2 sudah terisi dan tidak berubah karena dipindah ke GitHub Pages.
+Bila suatu saat CORE di `sistem-ptldv.html` atau `balik-ptldv.html` diubah, `Code.gs` server masing-masing juga harus diperbarui
+(kedua halaman ini menyimpan CORE di dalam file HTML-nya sendiri).
 
 Langkah demi langkah ada di **[PANDUAN-APPS-SCRIPT.md](PANDUAN-APPS-SCRIPT.md)**. Setelah selesai, `js/config.js` berisi:
 
@@ -123,6 +165,10 @@ Halaman masuk kuis juga menampilkan **"✔ Halaman dan server cocok"** bila kedu
   (misalnya `?v=2026-11-01.6` → `?v=2026-11-05.1` pada semua baris `<link>` dan `<script>`).
   Tanpa ini, peramban siswa bisa tetap memakai salinan lama.
   Cara cepat di GitHub: buka `index.html` → pensil → tekan Ctrl+F untuk mencari `?v=` → ubah semuanya → Commit.
+  `sistem-ptldv.html` dan `balik-ptldv.html` tidak memakai penanda versi karena semua isinya ada di satu file.
+- Skor tertunda tiap materi disimpan di peramban dengan kunci terpisah
+  (`ptldv-skor-tertunda-sistem`, `ptldv-skor-tertunda-balik`, `optimum-skor-tertunda-optimum`), jadi ketiganya tidak saling menimpa
+  meskipun berada di satu situs GitHub Pages.
 - Urutan `<script>` jangan diubah:
   - `index.html`: `config → core → komponen → petunjuk → penyelesaian → belajar-data → belajar → latihan → saran → main`
   - `kuis.html`: `config → core → komponen → kuis → main`
@@ -141,5 +187,6 @@ Jalankan keduanya setiap kali `core.js`, `petunjuk.js`, atau `penyelesaian.js` d
 
 ## Mencoba di komputer sendiri
 
-Klik dua kali `index.html` (materi) atau `kuis.html` (kuis). Keduanya berjalan langsung dari folder tanpa server.
+Klik dua kali `sistem-ptldv.html`, `balik-ptldv.html`, `index.html` (materi) atau `kuis.html` (kuis).
+Semuanya berjalan langsung dari folder tanpa server, dan menu urutan materi berpindah antarhalaman di folder yang sama.
 Rumus KaTeX memerlukan internet; tanpa internet, rumus tampil sebagai teks biasa.

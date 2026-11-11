@@ -22,6 +22,19 @@ header p{margin:0;color:var(--mut);font-size:.9rem}
 .tab{border:0;background:transparent;font:inherit;font-weight:600;padding:9px 14px;border-radius:9px;color:var(--mut);cursor:pointer;min-height:44px}
 .tab.on{background:#fff;color:var(--blue);box-shadow:0 1px 3px rgba(0,0,0,.15)}
 [hidden]{display:none!important}
+/* menu urutan materi (index.html, sistem-ptldv.html, balik-ptldv.html) */
+.nav-materi{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.nav-materi a{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:3px 12px 3px 5px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--mut);font-size:.85rem;font-weight:600;line-height:1.2;text-decoration:none}
+.nav-materi a b{display:inline-grid;place-items:center;flex:none;width:24px;height:24px;border-radius:50%;background:#dde6f5;color:var(--blue);font-size:.75rem}
+.nav-materi a:hover{border-color:var(--blue);color:var(--blue)}
+.nav-materi a:focus-visible{outline:3px solid #93c5fd;outline-offset:2px}
+.nav-materi a[aria-current="page"]{background:var(--blue);border-color:var(--blue);color:#fff;cursor:default}
+.nav-materi a[aria-current="page"] b{background:#fff}
+@media (min-width:860px) and (min-height:500px){
+  .nav-materi{margin-top:0;gap:4px}
+  .nav-materi a{min-height:24px;padding:1px 9px 1px 3px;font-size:.76rem;gap:4px}
+  .nav-materi a b{width:18px;height:18px;font-size:.68rem}
+}
 
 }
 
@@ -196,7 +209,7 @@ span[data-tex]:not(.eq):has(>.katex){display:inline-block;max-width:100%;overflo
 @media (max-width:859px){.layout>*{min-width:0}}
 /* ===== Tampilan ringkas PC/laptop: satu layar, tanpa gulir halaman ===== */
 @media (min-width:860px) and (min-height:500px){
-  body{--res:calc(var(--plus-w)*.93 + 50px);--ps:clamp(300px,min(calc(100vh - 88px - var(--res)),calc(100vw - 480px)),640px)}
+  body{--res:calc(var(--plus-w)*.93 + 50px);--ps:clamp(300px,min(calc(100vh - 120px - var(--res)),calc(100vw - 480px)),640px)}
   body.plus-off{--res:0px}
   html,body{height:100%}
   body{overflow:hidden;font-size:15px;line-height:1.45}

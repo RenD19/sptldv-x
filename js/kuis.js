@@ -70,15 +70,15 @@ function periksa(a,r){
     PL.Plus.say(pts>0?'benar':'salah');
   }else{
     L.S.tries=K.g.tries;L.tandai(r);
-    L.fb('bad','Belum tepat. Kamu punya <b>satu kesempatan lagi</b> untuk langkah ini.');
+    L.fb('bad','Belum tepat. '+L.pesanTitikUji(r)+'Kamu punya <b>satu kesempatan lagi</b> untuk langkah ini.');
     PL.Plus.say('salah');L.renderKartu();
   }
 }
 function tampilSesudah(){
   var A=K.after;if(!A)return;
   var akhir=K.g.complete;
-  if(A.pts===2)L.fb('ok','✔ Benar pada percobaan pertama, <b>+2 poin</b>.');
-  else if(A.pts===1)L.fb('ok','✔ Benar pada percobaan kedua, <b>+1 poin</b>.');
+  if(A.pts===2)L.fb('ok','✔ Benar pada percobaan pertama, <b>+2 poin</b>.'+L.teksSederhana());
+  else if(A.pts===1)L.fb('ok','✔ Benar pada percobaan kedua, <b>+1 poin</b>.'+L.teksSederhana());
   else L.fb('bad','✗ Belum tepat dua kali, jadi <b>0 poin</b>. Jawaban yang benar adalah <b>'+L.teksKunci()+'</b>.');
   var soalBaru=!akhir&&K.g.s===0;
   L.tombol('<button class="btn primary" data-aksi="lanjut">'+(akhir?'Selesai, kirim skor ➜':soalBaru?'Soal berikutnya ➜':'Langkah berikutnya ➜')+'</button>');
@@ -100,7 +100,33 @@ function mulaiWaktu(){hentiWaktu();tmrId=setInterval(function(){
 function hentiWaktu(){if(tmrId)clearInterval(tmrId);tmrId=null;}
 
 /* ---------- koneksi ke server (Google Apps Script) ---------- */
+/* SEB memicu preflight CORS yang tidak bisa dijawab Apps Script, sehingga jawaban fetch terblokir.
+   Di SEB (atau dengan ?kirim=form saat menguji) data dikirim lewat formulir ke iframe tersembunyi;
+   server membalas lewat postMessage. Di peramban biasa tetap memakai fetch. */
+function pakaiForm(){return /\bSEB\b/.test(navigator.userAgent)||/[?&]kirim=form\b/.test(location.search);}
+function serverForm(obj){
+  return new Promise(function(terima,tolak){
+    var rid='r'+Date.now().toString(36)+Math.random().toString(36).slice(2,12),tm=null;
+    var fr=document.createElement('iframe'),fm=document.createElement('form');
+    fr.name='kirim-'+rid;fr.title='Pengiriman data kuis';fr.setAttribute('aria-hidden','true');fr.tabIndex=-1;fr.style.display='none';
+    fm.method='POST';fm.action=CONFIG.ENDPOINT;fm.target=fr.name;fm.acceptCharset='UTF-8';fm.style.display='none';
+    [['transport','form'],['rid',rid],['asal',location.origin],['payload',JSON.stringify(obj)]].forEach(function(p){
+      var i=document.createElement('input');i.type='hidden';i.name=p[0];i.value=p[1];fm.appendChild(i);
+    });
+    function bersih(){clearTimeout(tm);window.removeEventListener('message',dengar);if(fr.parentNode)fr.parentNode.removeChild(fr);if(fm.parentNode)fm.parentNode.removeChild(fm);}
+    function dengar(ev){
+      if(!/^https:\/\/(script\.google\.com|([a-z0-9-]+\.)*[a-z0-9-]*script\.googleusercontent\.com)$/.test(ev.origin))return;
+      var d=ev.data;if(!d||d.optimumRid!==rid)return;
+      bersih();terima(d.data);
+    }
+    window.addEventListener('message',dengar);
+    tm=setTimeout(function(){bersih();var e=new Error('Waktu habis');e.name='AbortError';tolak(e);},30000);
+    document.body.appendChild(fr);document.body.appendChild(fm);
+    fm.submit();
+  });
+}
 function server(obj){
+  if(pakaiForm())return serverForm(obj);
   var ctl=('AbortController' in window)?new AbortController():null,tm=null;
   if(ctl)tm=setTimeout(function(){ctl.abort();},30000);
   return fetch(CONFIG.ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(obj),signal:ctl?ctl.signal:undefined})
