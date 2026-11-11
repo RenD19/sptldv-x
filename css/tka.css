@@ -1,0 +1,113 @@
+/* ==========================================================================
+   tka.css · halaman Latihan TKA (tka.html)
+   Memakai token dari css/token.css dan komponen dari css/gaya.css
+   (kartu, tombol, chip, catatan, umpan balik). File ini tidak berlapis (@layer),
+   jadi aturannya menang atas gaya.css.
+   ========================================================================== */
+/* halaman ini boleh digulir di PC (gaya.css mengunci tinggi layar untuk halaman materi) */
+@media (min-width:860px) and (min-height:500px){
+  html,body{height:auto}
+  body[data-halaman="tka"]{overflow:auto;font-size:16px;line-height:1.55}
+  body[data-halaman="tka"] .wrap{height:auto;display:block;max-width:1180px;padding:12px 18px 40px}
+  body[data-halaman="tka"] header{margin-bottom:12px}
+  body[data-halaman="tka"] .card{padding:14px 18px;margin-bottom:12px;border-radius:var(--r-l)}
+  body[data-halaman="tka"] .btn{min-height:44px;padding:8px 18px}
+  body[data-halaman="tka"] .chip{min-height:40px;padding:6px 14px}
+}
+body[data-halaman="tka"] .wrap{padding-bottom:40px}
+.tka-awal{max-width:760px}
+.tka-awal h2{margin-bottom:2px}
+.tka-bentuk{margin:8px 0 12px;padding-left:20px}
+.tka-bentuk li{margin:.2em 0}
+.tka-awal .lvl{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:10px 0}
+.tka-awal .lvl>b{flex:0 0 72px}
+.tka-awal .lvl .chips{margin:0}
+
+/* bar nomor soal dan waktu */
+.tka-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px}
+@media (min-width:860px){.tka-bar{position:sticky;top:0;z-index:5}}
+@media (max-width:520px){.tka-nomor .nomor{width:36px;height:36px}}
+.tka-info{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px}
+.tag{display:inline-block;padding:2px 10px;border-radius:var(--r-pill);background:var(--blue-100);color:var(--blue);font-size:var(--fs-xs);font-weight:700}
+.tka-waktu{font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink)}
+.tka-waktu.mepet{color:var(--red)}
+.tka-nomor{display:flex;flex-wrap:wrap;gap:6px}
+.tka-nomor .nomor{position:relative;width:40px;height:40px;border-radius:var(--r-s);border:2px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:700;cursor:pointer;font-variant-numeric:tabular-nums}
+.tka-nomor .nomor.isi{background:var(--blue-100);border-color:var(--blue-100)}
+.tka-nomor .nomor.benar{background:var(--ok-bg);border-color:var(--ok-line);color:var(--ok-ink)}
+.tka-nomor .nomor.salah{background:var(--bad-bg);border-color:var(--bad-line);color:var(--bad-ink)}
+.tka-nomor .nomor.kini{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+.tka-nomor .nomor.ragu::after{content:"";position:absolute;top:-4px;right:-4px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--card)}
+.tka-nomor .nomor:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+/* stimulus dan soal: berdampingan di layar lebar (seperti tampilan TKA) */
+.tka-isi{display:grid;gap:12px}
+@media (min-width:960px){
+  .tka-isi.bergrup{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:start}
+  .tka-isi.bergrup .tka-stimulus{position:sticky;top:96px;max-height:calc(100vh - 110px);overflow:auto}
+  .tka-isi:not(.bergrup) .tka-soal{max-width:820px}
+}
+.tka-isi .card{margin-bottom:0}
+.tka-stimulus h3{margin:0;display:inline}
+.tka-stimulus summary{cursor:pointer;display:block;list-style:none}
+.tka-stimulus summary::-webkit-details-marker{display:none}
+.tka-stimulus summary::after{content:"Tampilkan bacaan ▾";display:block;margin-top:2px;font-size:var(--fs-s);font-weight:700;color:var(--blue)}
+.tka-stimulus[open] summary::after{content:"Sembunyikan bacaan ▴"}
+.tka-stimulus summary .muted{display:block;font-size:var(--fs-s)}
+.tka-stimulus p{max-width:68ch}
+.tka-dp{display:block;width:100%;max-width:320px;margin:8px auto 0}
+.tka-dp .kisi{stroke:var(--line);stroke-width:1}
+.tka-dp .sumbu{stroke:var(--ink);stroke-width:1.6}
+.tka-dp .batas{stroke:var(--blue);stroke-width:2.2}
+.tka-dp .angka{font:11px system-ui,sans-serif;fill:var(--ink-2)}
+.tka-dp .lbs{font:italic 700 13px system-ui,sans-serif;fill:var(--ink)}
+.tka-dp .lbg{font:700 12px system-ui,sans-serif;fill:var(--blue);paint-order:stroke;stroke:var(--card);stroke-width:3px}
+
+.tka-tanya{margin:0 0 6px;font-size:var(--fs-l);max-width:70ch}
+.tka-petunjuk{margin:0 0 10px;color:var(--mut);font-size:var(--fs-s);font-weight:600}
+/* pilihan jawaban: label utuh dapat diketuk */
+.tka-opsi{display:grid;gap:8px}
+.tka-opsi .sol{display:flex;align-items:flex-start;gap:10px;min-height:48px;padding:10px 12px;cursor:pointer;border:2px solid var(--line);border-radius:var(--r-s);background:var(--card);color:var(--ink);text-align:left}
+.tka-opsi .sol:hover{border-color:var(--blue)}
+.tka-opsi .sol.on{border-color:var(--blue);background:var(--blue-100)}
+.tka-opsi .sol input{width:20px;height:20px;margin:2px 0 0;flex:none;accent-color:var(--blue)}
+.tka-opsi .sol .huruf{flex:none;width:1.4em;color:var(--mut)}
+.tka-opsi .sol:has(input:focus-visible){outline:3px solid var(--focus);outline-offset:2px}
+.tka-opsi .sol.kunci{border-color:var(--ok-line);background:var(--ok-bg)}
+.tka-opsi .sol.keliru{border-color:var(--bad-line);background:var(--bad-bg)}
+.tka-opsi .sol:has(input:disabled){cursor:default}
+/* tabel Benar/Salah */
+.tka-kat{width:100%;border-collapse:collapse;margin:4px 0}
+.tka-kat th,.tka-kat td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:middle}
+.tka-kat th{background:var(--blue-100);font-size:var(--fs-s)}
+.tka-kat th:not(:first-child),.tka-kat td.pilih{width:78px;text-align:center}
+.tka-kat td.pilih label{display:grid;place-items:center;min-height:44px;cursor:pointer}
+.tka-kat td.pilih input{width:22px;height:22px;accent-color:var(--blue);cursor:pointer}
+.tka-kat tr.ok td{background:var(--ok-bg)}
+.tka-kat tr.bad td{background:var(--bad-bg)}
+@media (max-width:520px){.tka-kat th,.tka-kat td{padding:6px;font-size:var(--fs-s)}.tka-kat th:not(:first-child),.tka-kat td.pilih{width:58px}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* keyakinan */
+.tka-yakin{border:0;margin:12px 0 0;padding:0}
+.tka-yakin legend{font-weight:700;font-size:var(--fs-m);padding:0;margin-bottom:2px}
+.tka-yakin .chips{margin:4px 0 0}
+.tka-yakin:disabled .chip{opacity:.7;cursor:default}
+.tka-aksi{align-items:center}
+.tka-tunggu{font-size:var(--fs-s)}
+.btn.ghost.on{border-color:var(--accent);background:var(--hint-bg)}
+.tka-umpan .penyelesaian p{margin:.3em 0}
+.tka-tugas{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:var(--fs-s)}
+.tka-tugas .tag{background:var(--hint-bg);color:var(--amber);border:1px solid var(--hint-line)}
+
+/* hasil */
+.tka-hasil{max-width:860px}
+.tka-skor{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:8px 0 4px}
+.tka-skor>div{border:1px solid var(--line);border-radius:var(--r-m);padding:10px 14px;background:var(--blue-50)}
+.tka-skor p{margin:2px 0 0}
+.tka-skor .score{font-size:2.4rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.tka-latih{padding-left:20px}
+.tka-latih li{margin:.4em 0}
+.tka-bahas{border:1px solid var(--line);border-radius:var(--r-m);padding:6px 12px;margin:6px 0;background:var(--card)}
+.tka-bahas[open]{background:var(--blue-50)}
+.tka-bahas summary{font-weight:700;color:var(--ink)}
+.tka-bahas p{margin:.4em 0;max-width:72ch}
