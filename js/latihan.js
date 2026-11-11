@@ -25,6 +25,10 @@ function namaRumus(h){return PL.Petunjuk?PL.Petunjuk.namaRumus(h):h;}
 var TIPE_LATIHAN=[2,3,4];
 var LEVEL_TIPE={2:'MH',3:'LMH',4:'LMH'};
 function acakDari(a){return a[Math.floor(Math.random()*a.length)];}
+/* Latihan tanpa bantuan (seperti TKA): menyembunyikan 💡 Petunjuk dan 📍 Di mana salahku? */
+function tanpaBantuan(){try{return localStorage.getItem('latihanTanpaBantuan')==='1';}catch(_){return false;}}
+function setTanpaBantuan(v){try{localStorage.setItem('latihanTanpaBantuan',v?'1':'0');}catch(_){}document.body.classList.toggle('tanpa-bantuan',!!v);}
+document.body.classList.toggle('tanpa-bantuan',tanpaBantuan());
 function soalBaru(){
   var calon=(pick.t==='C'?TIPE_LATIHAN:[pick.t]).filter(function(t){return pick.l==='C'||LEVEL_TIPE[t].indexOf(pick.l)>=0;});
   if(!calon.length){pick.l='C';calon=pick.t==='C'?TIPE_LATIHAN:[pick.t];}
@@ -41,17 +45,18 @@ function render(){
   if(PL.kuis)PL.kuis.pendNotice(L.el.panel);
 }
 function panelIntro(){
-  var Q=L.S.Q,h='<h2>Pilih soal</h2><p class="muted">Pilih tipe dan level. Setiap tekan 🎲 menghasilkan soal baru.</p>';
+  var Q=L.S.Q,h='<h2>Pilih soal</h2><p class="muted">Pilih tipe dan level. Tekan 🎲 Soal baru untuk mengganti soal.</p>';
   h+='<div class="lvl"><b>Tipe soal</b><div class="chips">'+[['2','2 · Sistem dari DP'],['3','3 · Kasus kontekstual'],['4','4 · Nilai maks/min'],['C','Campuran']].map(function(o){return '<button class="chip'+(String(pick.t)===o[0]?' on':'')+'" data-aksi="tipe" data-v="'+o[0]+'">'+o[1]+'</button>';}).join('')+'</div></div>';
-  h+='<div class="lvl"><b>Level</b><div class="chips">'+[['L','LOTS'],['M','MOTS'],['H','HOTS'],['C','Campuran']].map(function(o){var mati=o[0]!=='C'&&pick.t!=='C'&&LEVEL_TIPE[pick.t].indexOf(o[0])<0;return '<button class="chip'+(pick.l===o[0]?' on':'')+'" data-aksi="level" data-v="'+o[0]+'"'+(mati?' disabled title="Level ini tidak tersedia untuk tipe yang dipilih"':'')+'>'+o[1]+'</button>';}).join('')+'</div></div>';
-  h+='<div class="row"><button class="btn" data-aksi="acak">🎲 Soal acak</button></div>';
-  h+='<div class="note"><p>Soal di atas termasuk <b>'+esc(Q.jd)+' · '+esc(Q.lv)+'</b> dengan kata kerja <i>'+esc(Q.kko)+'</i>.</p><p>Di Latihan kamu boleh mencoba berulang kali, membuka 💡 Petunjuk, dan memakai 📍 Di mana salahku?</p></div>';
-  h+='<div class="row"><button class="btn primary" data-aksi="mulai">Mulai ➜</button></div>';
+  h+='<div class="lvl"><b>Level</b><div class="chips">'+[['L','Dasar'],['M','Terapan'],['H','Menantang'],['C','Campuran']].map(function(o){var mati=o[0]!=='C'&&pick.t!=='C'&&LEVEL_TIPE[pick.t].indexOf(o[0])<0;return '<button class="chip'+(pick.l===o[0]?' on':'')+'" data-aksi="level" data-v="'+o[0]+'"'+(mati?' disabled title="Level ini tidak tersedia untuk tipe yang dipilih"':'')+'>'+o[1]+'</button>';}).join('')+'</div></div>';
+  h+='<div class="lvl"><b>Bantuan</b><div class="chips">'+[['1','Dengan bantuan'],['0','Tanpa bantuan (seperti TKA)']].map(function(o){var on=(o[0]==='0')===tanpaBantuan();return '<button class="chip'+(on?' on':'')+'" data-aksi="bantuan" data-v="'+o[0]+'" aria-pressed="'+on+'">'+o[1]+'</button>';}).join('')+'</div></div>';
+  h+='<div class="row"><button class="btn" data-aksi="acak">🎲 Soal baru</button></div>';
+  h+='<div class="note"><p>Soal di atas termasuk <b>'+esc(Q.jd)+' · '+esc(PL.lv(Q.lv))+'</b><span class="guru-saja"> ('+esc(Q.lv)+', kata kerja <i>'+esc(Q.kko)+'</i>)</span>.</p>'+(tanpaBantuan()?'<p>Mode <b>tanpa bantuan</b>. 💡 Petunjuk dan 📍 Di mana salahku? disembunyikan, seperti saat TKA. 🔑 Lihat jawaban tetap muncul setelah dua kali salah.</p>':'<p>Di Latihan kamu boleh mencoba berulang kali, membuka 💡 Petunjuk, dan memakai 📍 Di mana salahku?</p>')+'</div>';
+  h+='<div class="row"><button class="btn primary" data-aksi="mulai">Mulai soal</button></div>';
   L.el.panel.innerHTML=h;
 }
 function panelSelesai(){
   L.el.panel.innerHTML='<h2>🎉 Soal selesai</h2><h3>Pembahasan</h3><ol class="sum">'+L.S.Q.bahas.map(function(b){return '<li>'+b+'</li>';}).join('')+'</ol>'
-    +'<div class="row"><button class="btn primary" data-aksi="acak">Soal berikutnya ➜</button><button class="btn" data-aksi="ulangi">↺ Ulangi soal ini</button><button class="btn ghost" data-aksi="ke-kuis">Kuis ➜</button></div>';
+    +'<div class="row"><button class="btn primary" data-aksi="acak">Soal berikutnya</button><button class="btn" data-aksi="ulangi">↺ Ulangi soal</button><button class="btn ghost" data-aksi="ke-kuis">Buka Kuis</button></div>';
 }
 /* ---------- Penyelesaian bertahap ----------
    Setelah jawaban benar atau 🔑 Lihat jawaban, langkah yang memerlukan teknik aljabar
@@ -73,7 +78,7 @@ function periksa(a,r){
     L.fb('ok','Tepat! '+(S.s<S.Q.st.length-1?'Lanjut ke langkah berikutnya.':'Soal ini selesai.'));
     tampilPenyelesaian();
     PL.Plus.say(S.s<S.Q.st.length-1?'benar':'selesai');
-    L.tombol('<button class="btn primary" data-aksi="lanjut">'+(S.s<S.Q.st.length-1?'Langkah berikutnya ➜':'Lihat pembahasan ➜')+'</button>');
+    L.tombol('<button class="btn primary" data-aksi="lanjut">'+(S.s<S.Q.st.length-1?'Langkah berikutnya':'Lihat pembahasan')+'</button>');
     L.renderBidang();L.renderProgres();
   }else{
     S.tries++;L.tandai(r);S.lw={a:a,r:r};
@@ -89,12 +94,13 @@ function lihatKunci(){
   L.bukaSemuaPetunjuk(); /* semua petunjuk dibuka agar siswa bisa belajar dari kesalahan */
   L.fb('info','🔑 Jawaban yang benar adalah <b>'+L.teksKunci()+'</b>. Pelajari, lalu lanjutkan.');
   tampilPenyelesaian();
-  L.tombol('<button class="btn primary" data-aksi="lanjut">'+(S.s<S.Q.st.length-1?'Langkah berikutnya ➜':'Lihat pembahasan ➜')+'</button>');L.renderBidang();
+  L.tombol('<button class="btn primary" data-aksi="lanjut">'+(S.s<S.Q.st.length-1?'Langkah berikutnya':'Lihat pembahasan')+'</button>');L.renderBidang();
 }
 function lanjut(){var S=L.S;if(S.s<S.Q.st.length-1){S.s++;L.reset();render();}else{tahap='selesai';render();PL.Plus.say('selesai');}}
 function aksi(a,b){
   if(a==='tipe'){pick.t=b.dataset.v==='C'?'C':+b.dataset.v;if(pick.t!=='C'&&pick.l!=='C'&&LEVEL_TIPE[pick.t].indexOf(pick.l)<0)pick.l='C';soalBaru();}
   else if(a==='level'){pick.l=b.dataset.v;soalBaru();}
+    else if(a==='bantuan'){setTanpaBantuan(b.dataset.v==='0');render();}
   else if(a==='acak')soalBaru();
   else if(a==='mulai'){tahap='kerja';L.S.s=0;L.reset();render();PL.Plus.say('sapa');}
   else if(a==='lanjut')lanjut();
@@ -107,7 +113,7 @@ PL.TAB.latihan={
   init:function(){
     sec=$('#tab-latihan');
     L=PL.Langkah(sec,{petunjuk:true,diManaSalah:true,pratinjau:true,ubahPetunjuk:namaRumus,petunjukLanjut:petunjukLanjut,gerbangPetunjuk:GERBANG_PETUNJUK,periksa:periksa,aksi:aksi,
-      meta:function(){var Q=L.S.Q;return esc(Q.jd+' · '+Q.lv+(Q.ls?' · khusus Latihan':''));}});
+      meta:function(){var Q=L.S.Q;return esc(Q.jd+' · '+PL.lv(Q.lv)+(Q.ls?' · khusus Latihan':''));}});
     this.bidang=L.bidang;this.panduan=L.panduan;this.L=L;
     /* tombol di kartu soal (di luar panel) */
     sec.querySelector('.kartu').addEventListener('click',function(e){

@@ -70,24 +70,24 @@ function periksa(a,r){
     PL.Plus.say(pts>0?'benar':'salah');
   }else{
     L.S.tries=K.g.tries;L.tandai(r);
-    L.fb('bad','Belum tepat. Kamu punya <b>satu kesempatan lagi</b> untuk langkah ini.');
+    L.fb('bad','Belum tepat. '+L.pesanTitikUji(r)+'Kamu punya <b>satu kesempatan lagi</b> untuk langkah ini.');
     PL.Plus.say('salah');L.renderKartu();
   }
 }
 function tampilSesudah(){
   var A=K.after;if(!A)return;
   var akhir=K.g.complete;
-  if(A.pts===2)L.fb('ok','✔ Benar pada percobaan pertama, <b>+2 poin</b>.');
-  else if(A.pts===1)L.fb('ok','✔ Benar pada percobaan kedua, <b>+1 poin</b>.');
+  if(A.pts===2)L.fb('ok','✔ Benar pada percobaan pertama, <b>+2 poin</b>.'+L.teksSederhana());
+  else if(A.pts===1)L.fb('ok','✔ Benar pada percobaan kedua, <b>+1 poin</b>.'+L.teksSederhana());
   else L.fb('bad','✗ Belum tepat dua kali, jadi <b>0 poin</b>. Jawaban yang benar adalah <b>'+L.teksKunci()+'</b>.');
   var soalBaru=!akhir&&K.g.s===0;
-  L.tombol('<button class="btn primary" data-aksi="lanjut">'+(akhir?'Selesai, kirim skor ➜':soalBaru?'Soal berikutnya ➜':'Langkah berikutnya ➜')+'</button>');
+  L.tombol('<button class="btn primary" data-aksi="lanjut">'+(akhir?'Selesai, kirim skor':soalBaru?'Soal berikutnya':'Langkah berikutnya')+'</button>');
 }
 function lanjut(){K.after=null;if(K.g.complete){selesai();return;}sinkron();render();}
 function selesai(){setTahap('hasil');hentiWaktu();render();kirimSkor();}
 function meta(){
   var g=K.g||{score:0,max:0,done:0,p:0},p=Math.min(CORE.NSOAL-1,g.p),Q=L.S.Q;
-  return (K.sess&&K.sess.nama?esc(K.sess.nama)+' · ':'')+'Soal '+(p+1)+' dari '+CORE.NSOAL+' · '+esc(Q.jd)+' · '+esc(Q.lv)+' · Skor '+g.score+' / '+g.max
+  return (K.sess&&K.sess.nama?esc(K.sess.nama)+' · ':'')+'Soal '+(p+1)+' dari '+CORE.NSOAL+' · '+esc(Q.jd)+' · '+esc(PL.lv(Q.lv))+' · Skor '+g.score+' / '+g.max
     +' · <span class="tmr">⏱ '+sisa()+'</span>'+(CONFIG.ENDPOINT?' · <span class="svb">'+svTeks()+'</span>':' · <span class="muted">mode uji</span>');
 }
 /* ---------- waktu ---------- */
@@ -100,13 +100,39 @@ function mulaiWaktu(){hentiWaktu();tmrId=setInterval(function(){
 function hentiWaktu(){if(tmrId)clearInterval(tmrId);tmrId=null;}
 
 /* ---------- koneksi ke server (Google Apps Script) ---------- */
+/* SEB memicu preflight CORS yang tidak bisa dijawab Apps Script, sehingga jawaban fetch terblokir.
+   Di SEB (atau dengan ?kirim=form saat menguji) data dikirim lewat formulir ke iframe tersembunyi;
+   server membalas lewat postMessage. Di peramban biasa tetap memakai fetch. */
+function pakaiForm(){return /\bSEB\b/.test(navigator.userAgent)||/[?&]kirim=form\b/.test(location.search);}
+function serverForm(obj){
+  return new Promise(function(terima,tolak){
+    var rid='r'+Date.now().toString(36)+Math.random().toString(36).slice(2,12),tm=null;
+    var fr=document.createElement('iframe'),fm=document.createElement('form');
+    fr.name='kirim-'+rid;fr.title='Pengiriman data kuis';fr.setAttribute('aria-hidden','true');fr.tabIndex=-1;fr.style.display='none';
+    fm.method='POST';fm.action=CONFIG.ENDPOINT;fm.target=fr.name;fm.acceptCharset='UTF-8';fm.style.display='none';
+    [['transport','form'],['rid',rid],['asal',location.origin],['payload',JSON.stringify(obj)]].forEach(function(p){
+      var i=document.createElement('input');i.type='hidden';i.name=p[0];i.value=p[1];fm.appendChild(i);
+    });
+    function bersih(){clearTimeout(tm);window.removeEventListener('message',dengar);if(fr.parentNode)fr.parentNode.removeChild(fr);if(fm.parentNode)fm.parentNode.removeChild(fm);}
+    function dengar(ev){
+      if(!/^https:\/\/(script\.google\.com|([a-z0-9-]+\.)*[a-z0-9-]*script\.googleusercontent\.com)$/.test(ev.origin))return;
+      var d=ev.data;if(!d||d.optimumRid!==rid)return;
+      bersih();terima(d.data);
+    }
+    window.addEventListener('message',dengar);
+    tm=setTimeout(function(){bersih();var e=new Error('Waktu habis');e.name='AbortError';tolak(e);},30000);
+    document.body.appendChild(fr);document.body.appendChild(fm);
+    fm.submit();
+  });
+}
 function server(obj){
+  if(pakaiForm())return serverForm(obj);
   var ctl=('AbortController' in window)?new AbortController():null,tm=null;
   if(ctl)tm=setTimeout(function(){ctl.abort();},30000);
   return fetch(CONFIG.ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(obj),signal:ctl?ctl.signal:undefined})
     .then(function(r){if(tm)clearTimeout(tm);return r.json();});
 }
-function pesanJaringan(err){return err&&err.name==='AbortError'?'Server tidak merespons (waktu habis). Coba lagi.':'Tidak dapat terhubung ke server. Periksa internet, lalu coba lagi.';}
+function pesanJaringan(err){return err&&err.name==='AbortError'?'Penyimpanan nilai tidak menjawab (waktu habis). Periksa internet, lalu tekan tombolnya lagi.':'Belum tersambung ke penyimpanan nilai. Periksa internet, lalu coba lagi.';}
 var PKEY='optimum-skor-tertunda-'+CONFIG.MATERI,GKEY='optimum-progres-'+CONFIG.MATERI;
 function simpanTertunda(o){try{localStorage.setItem(PKEY,JSON.stringify(o));}catch(e){}}
 function ambilTertunda(){try{var x=localStorage.getItem(PKEY);return x?JSON.parse(x):null;}catch(e){return null;}}
@@ -135,34 +161,35 @@ function ping(){
     .catch(function(){hasilPing=null;var e=sec.querySelector('.lgCek');if(e)e.innerHTML=teksCek(true);});
 }
 function teksCek(err){
-  if(err)return '<span class="badc">⚠ Server belum dapat dihubungi.</span>';
-  if(hasilPing==='ok')return '<span class="okc">✔ Halaman dan server cocok (versi '+esc(CORE.VERSI)+').</span>';
-  if(hasilPing==='beda')return '<span class="badc">⚠ Versi halaman berbeda dengan server. Beri tahu gurumu.</span>';
-  if(hasilPing==='gagal')return '<span class="badc">⚠ Server menjawab tidak normal.</span>';
-  return '<span class="muted">⏳ Memeriksa server…</span>';
+  if(err)return '<span class="badc">⚠ Belum tersambung ke penyimpanan nilai. Periksa internet, lalu muat ulang halaman ini.</span>';
+  if(hasilPing==='ok')return '<span class="okc">✔ Siap. Halaman dan penyimpanan nilai cocok (versi '+esc(CORE.VERSI)+').</span>';
+  if(hasilPing==='beda')return '<span class="badc">⚠ Halaman ini versi lama. Muat ulang halaman; bila pesan ini tetap muncul, beri tahu gurumu.</span>';
+  if(hasilPing==='gagal')return '<span class="badc">⚠ Penyimpanan nilai sedang bermasalah. Tunggu sebentar, lalu muat ulang halaman. Bila tetap muncul, beri tahu gurumu.</span>';
+  return '<span class="muted">⏳ Menyambungkan ke penyimpanan nilai…</span>';
 }
 function panelMasuk(){
   var pend=ambilTertunda();
   L.el.panel.innerHTML='<h2>Kuis · Masuk</h2>'
-    +'<div class="note"><p>Kuis berisi <b>'+CORE.NSOAL+' soal</b> (setiap soal 2–3 langkah). Setiap langkah boleh dicoba <b>dua kali</b>. Benar pada percobaan pertama mendapat 2 poin, pada percobaan kedua 1 poin.</p>'
-    +'<p>Skor <b>disetor ke gurumu</b> dan dihitung ulang oleh server dari jawabanmu, jadi kerjakan sendiri. Jawabanmu <b>tersimpan otomatis</b>. Jika halaman tertutup atau kamu pindah tab, masuk lagi (dalam batas waktu) untuk melanjutkan.</p></div>'
+    +'<div class="note"><ul class="poin"><li><b>'+CORE.NSOAL+' soal</b>, setiap soal 2–3 langkah. Tiap langkah boleh dicoba <b>dua kali</b>; benar pada percobaan pertama 2 poin, pada percobaan kedua 1 poin.</li>'
+    +'<li>Skor <b>dikirim ke gurumu</b> dan dihitung ulang dari jawabanmu, jadi kerjakan sendiri.</li>'
+    +'<li>Jawaban <b>tersimpan otomatis</b>. Bila halaman tertutup, masuk lagi sebelum waktu habis untuk melanjutkan.</li></ul></div>'
     +'<p class="lgCek">'+teksCek()+'</p>'
     +(pend?'<div class="rule">Ada skor yang <b>belum terkirim</b> dari kuis sebelumnya. <button class="btn" data-aksi="kirim-tertunda">Kirim sekarang</button></div>':'')
     +'<div class="form"><div class="two"><label>Kelas<input id="lgKelas" autocomplete="off" placeholder="mis. AL FATTAH" maxlength="20"></label>'
-    +'<label>No. absen<input id="lgAbsen" type="number" inputmode="numeric" min="1" max="99" placeholder="mis.1"></label></div>'
+    +'<label>No. absen<input id="lgAbsen" type="number" inputmode="numeric" min="1" max="99" placeholder="mis. 12"></label></div>'
     +'<label>PIN<input id="lgPin" type="password" autocomplete="off" placeholder="dari gurumu" maxlength="20"></label>'
     +'<label>Nama atau inisial <small>(isi hanya bila gurumu belum menyiapkan daftar siswa)</small><input id="lgNama" autocomplete="off" maxlength="40"></label></div>'
     +'<div class="fb lgMsg" hidden></div>'
-    +'<div class="row"><button class="btn primary" data-aksi="masuk">Masuk kuis ➜</button></div>';
+    +'<div class="row"><button class="btn primary" data-aksi="masuk">Masuk kuis</button></div>';
 }
 function pesanMasuk(kind,html){var e=sec.querySelector('.lgMsg');if(!e)return;e.hidden=false;e.className='fb lgMsg '+kind;e.innerHTML=html;}
 function masuk(btn){
   var kelas=$('#lgKelas').value.trim(),absen=$('#lgAbsen').value.trim(),pin=$('#lgPin').value,nama=$('#lgNama').value.trim();
   if(!kelas||!absen){pesanMasuk('info','Isi kelas dan nomor absen.');return;}
-  btn.disabled=true;pesanMasuk('info','⏳ Menghubungi server…');
+  btn.disabled=true;pesanMasuk('info','⏳ Menyambungkan…');
   server({action:'start',materi:CONFIG.MATERI,kelas:kelas,absen:absen,pin:pin,nama:nama,cek:CORE.cek()})
     .then(function(res){
-      if(!res||!res.ok){btn.disabled=false;pesanMasuk('bad',esc((res&&res.pesan)||'Gagal masuk.'));return;}
+      if(!res||!res.ok){btn.disabled=false;pesanMasuk('bad',esc((res&&res.pesan)||'Belum bisa masuk. Periksa kelas, nomor absen, dan PIN, lalu coba lagi.'));return;}
       var jj=Array.isArray(res.jejak)?res.jejak:[],loc=ambilLokal(res.token);
       var pre=loc&&loc.length>jj.length&&JSON.stringify(loc.slice(0,jj.length))===JSON.stringify(jj);
       mulaiKuis(res.seed,{token:res.token,nama:res.nama,lanjut:!!res.lanjut,sisaDetik:res.sisaDetik},pre?loc:jj);
@@ -189,7 +216,7 @@ function kirim(body,n){
   tampil({state:'sending',n:n});
   server(body).then(function(res){
     if(res&&res.ok){hapusTertunda();hapusLokal();if(!basi())tampil({state:'ok',res:res});}
-    else{var f=fatal(res);if(f)hapusTertunda();gagal((res&&res.pesan)||'Server menolak skor.',!f);}
+    else{var f=fatal(res);if(f)hapusTertunda();gagal((res&&res.pesan)||'Skor belum diterima. Tunjukkan layar ini ke gurumu.',!f);}
   }).catch(function(err){gagal(pesanJaringan(err),true);});
 }
 function kirimTertunda(){
@@ -213,12 +240,12 @@ function pendNotice(el){
     b.disabled=true;msg.innerHTML='⏳ Mengirim skor tertunda…';
     server(p).then(function(res){
       if(res&&res.ok){hapusTertunda();d.className='fb ok';d.innerHTML='✔ Skor tertunda sudah terkirim ('+res.skor+' dari '+res.maks+').'+(res.ulang?' (Skor ini sudah pernah dikirim sebelumnya.)':'');}
-      else if(fatal(res)){hapusTertunda();d.className='fb bad';d.innerHTML=esc((res&&res.pesan)||'Server menolak skor.');}
+      else if(fatal(res)){hapusTertunda();d.className='fb bad';d.innerHTML=esc((res&&res.pesan)||'Skor belum diterima. Tunjukkan layar ini ke gurumu.');}
       else{msg.innerHTML='⚠ '+esc((res&&res.pesan)||'Gagal mengirim.');b.disabled=false;}
     }).catch(function(err){msg.innerHTML='⚠ '+esc(pesanJaringan(err));b.disabled=false;});
   };
 }
-var RLAB={T2:'Tipe 2 · Sistem dari DP',T3:'Tipe 3 · Kasus kontekstual',T4:'Tipe 4 · Nilai maksimum/minimum',LOTS:'LOTS',MOTS:'MOTS',HOTS:'HOTS'};
+var RLAB={T2:'Tipe 2 · Sistem dari DP',T3:'Tipe 3 · Kasus kontekstual',T4:'Tipe 4 · Nilai maksimum/minimum',LOTS:'Level Dasar',MOTS:'Level Terapan',HOTS:'Level Menantang'};
 function panelHasil(){
   var snd=K.send||{state:'off'},ok=snd.state==='ok',g=K.g,s=g.score,m=g.max,rin=g.rinci,miss;
   if(ok){s=snd.res.skor;m=snd.res.maks;rin=snd.res.rinci||rin;miss=snd.res.perluDiperkuat||[];}
@@ -226,10 +253,10 @@ function panelHasil(){
   var pct=m?Math.round(100*s/m):0;
   var pesan=pct>=90?'Luar biasa! Kamu sudah mahir menentukan nilai optimum.':pct>=70?'Bagus! Sedikit lagi kamu akan mahir.':'Ayo belajar lagi pelan-pelan di tab Belajar dan Latihan Mandiri, lalu coba lagi.';
   var h='<h2>Kuis selesai</h2><div class="score">'+s+'<small> / '+m+'</small></div><p><b>Nilai '+pct+'</b></p>';
-  if(snd.state==='sending')h+='<div class="fb info">⏳ '+(snd.wait?'Pengiriman gagal. Mencoba lagi otomatis ('+snd.n+' dari '+AUTO_JEDA.length+')…':'Mengirim skor ke server…'+(snd.n?' (percobaan ulang '+snd.n+' dari '+AUTO_JEDA.length+')':''))+'</div>';
-  else if(ok)h+='<div class="fb ok">✔ Skor dihitung ulang oleh server dari jawabanmu dan sudah tercatat untuk gurumu.'+(snd.res.ulang?' (Skor ini sudah pernah dikirim sebelumnya.)':'')+'</div>';
+  if(snd.state==='sending')h+='<div class="fb info">⏳ '+(snd.wait?'Pengiriman gagal. Mencoba lagi otomatis ('+snd.n+' dari '+AUTO_JEDA.length+')…':'Mengirim skor ke gurumu…'+(snd.n?' (percobaan ulang '+snd.n+' dari '+AUTO_JEDA.length+')':''))+'</div>';
+  else if(ok)h+='<div class="fb ok">✔ Skor sudah tercatat untuk gurumu.'+(snd.res.ulang?' (Skor ini sudah pernah dikirim sebelumnya.)':'')+'</div>';
   else if(snd.state==='err')h+='<div class="fb bad">'+esc(snd.msg||'Gagal mengirim skor.')+(snd.retry?' Skormu <b>belum tercatat</b>. Pastikan internet menyala, lalu tekan “Kirim ulang”.':'')+'</div>';
-  else h+='<div class="fb info">Mode uji, skor tidak disetor ke server.</div>';
+  else h+='<div class="fb info">Mode uji. Skor tidak dikirim karena alamat penyimpanan belum diatur guru.</div>';
   h+='<table class="tbl rinci"><tr><th>Bagian</th><th>Poin</th></tr>'+['T2','T3','T4','LOTS','MOTS','HOTS'].map(function(k){return '<tr><td>'+RLAB[k]+'</td><td>'+rin[k][0]+' / '+rin[k][1]+'</td></tr>';}).join('')+'</table>';
   h+='<p>'+pesan+'</p>'+(miss.length?'<p><b>Perlu diperkuat</b> → '+miss.map(esc).join(', ')+'.</p>':'<p>Semua langkah benar pada percobaan pertama. 👏</p>');
   var b='';
@@ -264,9 +291,9 @@ PL.TAB.kuis={
   /* dipanggil sebelum pindah tab; false = batal pindah */
   sembunyi:function(){
     if(skorBelumTerkirim()&&!confirm(ambilTertunda()
-      ?'Skormu belum tercatat di server. Kamu masih bisa mengirimnya nanti lewat Kuis di peramban dan perangkat ini, selama waktu kuis belum habis. Tetap pindah?'
-      :'Skormu belum tercatat di server dan tidak dapat disimpan di peramban ini. Jika pindah, skor bisa hilang. Tetap pindah?'))return false;
-    if(belumTersimpan()&&!confirm('Jawaban terakhirmu belum tersimpan di server (periksa internet). Jika pindah sekarang, kamu tetap bisa kembali ke tab Kuis di halaman ini. Tetap pindah?'))return false;
+      ?'Skormu belum tercatat. Kamu masih bisa mengirimnya nanti lewat Kuis di peramban dan perangkat ini, selama waktu kuis belum habis. Tetap pindah?'
+      :'Skormu belum tercatat dan tidak dapat disimpan di peramban ini. Jika pindah, skor bisa hilang. Tetap pindah?'))return false;
+    if(belumTersimpan()&&!confirm('Jawaban terakhirmu belum tersimpan (periksa internet). Jika pindah sekarang, kamu tetap bisa kembali ke tab Kuis di halaman ini. Tetap pindah?'))return false;
     if(K.tahap==='kerja'&&K.sess){K.after=null;PL.Plus.ucap('Kuis dijeda. Jawabanmu tersimpan. Kembali ke tab Kuis untuk melanjutkan.');}
     return true;
   },

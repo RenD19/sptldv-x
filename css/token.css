@@ -1,0 +1,66 @@
+/* ==========================================================================
+   token.css · TOKEN DESAIN BERSAMA
+   Dimuat PERTAMA oleh keempat halaman (index, kuis, sistem-ptldv, balik-ptldv).
+   Ubah warna, ukuran huruf, sudut, atau bayangan di sini, bukan di file lain.
+
+   Pemakaian:
+     warna dasar      var(--ink) teks · var(--mut) teks redup · var(--bg) latar halaman
+                      var(--card) kartu · var(--line) garis tepi · var(--blue) aksi utama
+     warna lembut     --blue-50 … --blue-200 (latar biru muda)
+     umpan balik      --ok-*  benar · --bad-* salah · --info-* informasi · --hint-* petunjuk
+                      (-bg latar, -line garis tepi, -ink teks)
+     sorotan          --accent jingga untuk penunjuk Plus dan baris yang disorot
+     huruf            --fs-xs … --fs-xl
+     sudut            --r-s 8px · --r-m 12px · --r-l 16px · --r-pill bulat penuh
+     jarak            --sp-1 4px · --sp-2 8px · --sp-3 12px · --sp-4 16px
+     bayangan         --shadow-1 tombol/tab · --shadow-2 dialog
+     fokus keyboard   --focus (warna cincin fokus)
+   ========================================================================== */
+:root{
+  /* warna dasar (tidak berubah dari versi sebelumnya) */
+  --ink:#1b2a41;
+  --mut:#5b6b82;
+  --ink-2:#44546a;   /* angka sumbu bidang koordinat */
+  --bg:#eef3fb;
+  --card:#fff;
+  --line:#d5deee;
+  --blue:#1d4ed8;
+  --blue-700:#1e40af;  /* tombol utama saat disorot */
+  --green:#15803d;
+  --red:#b91c1c;
+  --amber:#b45309;
+
+  /* biru lembut */
+  --blue-50:#f6f9ff;
+  --blue-100:#eaf0ff;
+  --blue-200:#dde6f5;
+
+  /* umpan balik */
+  --ok-bg:#ecfdf3;   --ok-line:#9be0b8;   --ok-ink:#14532d;  --ok-strong:#dcf5e6;
+  --bad-bg:#fef2f2;  --bad-line:#f3b4b4;  --bad-ink:#7f1d1d; --bad-strong:#fee2e2;
+  --info-bg:#eff6ff; --info-line:#b6d0fb; --info-ink:#1e3a8a;
+  --hint-bg:#fff8e6; --hint-line:#f3dca0; --hint-hi:#fff3c4;
+  --accent:#f59e0b;
+
+  /* huruf */
+  --fs-xs:.78rem;
+  --fs-s:.85rem;
+  --fs-m:.95rem;
+  --fs-l:1.1rem;
+  --fs-xl:1.25rem;
+
+  /* sudut, jarak, bayangan */
+  --r-s:8px;
+  --r-m:12px;
+  --r-l:16px;
+  --r-pill:999px;
+  --sp-1:4px;
+  --sp-2:8px;
+  --sp-3:12px;
+  --sp-4:16px;
+  --shadow-1:0 1px 3px rgba(27,42,65,.16);
+  --shadow-2:0 12px 40px rgba(27,42,65,.25);
+  --focus:#93c5fd;
+}
+/* teks khusus guru: tampil hanya bila alamat memuat ?guru */
+html:not(.guru) .guru-saja,html:not(.guru) .exsrc{display:none}

@@ -1,0 +1,2501 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sistem Pertidaksamaan Linear Dua Variabel</title>
+<!-- KaTeX 0.16.45 (dipatok, SRI) untuk merender rumus persamaan garis. Bila gagal dimuat, teks lama tetap tampil. -->
+<link rel="stylesheet" id="katexCss" media="print" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.45/katex.min.css" integrity="sha384-UA8juhPf75SzzAMA/4fo3yOU7sBJ0om7SCD2GHq0fZqZco6tr1UCV7nUbk9J90JM" crossorigin="anonymous" referrerpolicy="no-referrer">
+<script defer id="katexJs" src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.45/katex.min.js" integrity="sha384-Tt7wBxLKwSzFVRET4O4U9H6v8MNaQ/CjN2FMP4xFm0ErrFu6aNqoonRVW5W40iGI" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>/* mode guru: tambahkan ?guru di alamat untuk menampilkan sumber materi dan kata kerja operasional */if(/[?&]guru(=|&|$)/.test(location.search))document.documentElement.classList.add('guru');</script>
+<link rel="stylesheet" href="css/token.css?v=2026-11-12.1">
+<link rel="stylesheet" href="css/materi-ptldv.css?v=2026-11-12.1">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Daerah Penyelesaian Sistem Pertidaksamaan Linear Dua Variabel</h1>
+      <p>Matematika · Kelas X · Fase E</p>
+      <nav class="nav-materi" aria-label="Urutan materi">
+        <a href="sistem-ptldv.html" aria-current="page"><b>1</b>Daerah Penyelesaian</a>
+        <a href="balik-ptldv.html"><b>2</b>Menyusun dari DP</a>
+        <a href="index.html"><b>3</b>Nilai Optimum</a>
+        <a href="tka.html"><b>4</b>Latihan TKA</a>
+      </nav>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab on" id="tabExplain" role="tab">Belajar</button>
+      <button class="tab" id="tabLearn" role="tab">Latihan Mandiri</button>
+      <button class="tab" id="tabPractice" role="tab">Kuis</button>
+    </div>
+  </header>
+
+  <section class="card" id="problemCard">
+    <div class="prob">
+      <div><small id="probMeta"></small><div id="probAsk" class="ask"></div><div class="sys" id="probText"></div></div>
+      <div class="prob-actions">
+        <button class="btn ghost" id="bRepeat">↺ Ulangi soal</button>
+        <button class="btn ghost" id="bNextQ">🎲 Soal baru</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="progressBox">
+    <ol class="prog" id="progress"></ol>
+    <p id="stepText"></p>
+  </section>
+
+  <div class="layout">
+    <section class="card" id="panel"></section>
+    <section class="card plane">
+      <svg id="plane" viewBox="0 0 460 460" role="img" aria-label="Bidang koordinat"></svg>
+      <p>Daerah hijau = daerah penyelesaian (DP). Geser atau ketuk bidang bila diminta.</p>
+    </section>
+  </div>
+</div>
+
+<!-- Maskot Plus -->
+<div id="plusWrap" data-mood="normal">
+  <div id="plusBubble" role="status" aria-live="polite"></div>
+  <div id="plusBody">
+    <svg viewBox="0 0 140 130" aria-hidden="true" focusable="false">
+      <ellipse cx="70" cy="122" rx="30" ry="4" fill="#1b2a41" opacity=".13"/>
+      <g id="plusChar">
+        <g id="armL"><line x1="30" y1="64" x2="15" y2="85" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"/><circle cx="15" cy="85" r="7.5" fill="#e0ecff" stroke="#1d4ed8" stroke-width="3"/></g>
+        <g id="armR"><line x1="110" y1="64" x2="125" y2="85" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"/><circle cx="125" cy="85" r="7.5" fill="#e0ecff" stroke="#1d4ed8" stroke-width="3"/></g>
+        <polygon points="49,34 91,34 91,51 108,51 108,93 91,93 91,110 49,110 49,93 32,93 32,51 49,51" fill="#1d4ed8" stroke="#1d4ed8" stroke-width="8" stroke-linejoin="round"/>
+        <circle cx="47" cy="82" r="4.5" fill="#f9a8d4" opacity=".75"/><circle cx="93" cy="82" r="4.5" fill="#f9a8d4" opacity=".75"/>
+        <g class="eye"><circle cx="59" cy="70" r="9" fill="#fff"/><circle cx="59" cy="71.5" r="4.8" fill="#1b2a41"/><circle cx="60.8" cy="69.5" r="1.5" fill="#fff"/></g>
+        <g class="eye"><circle cx="81" cy="70" r="9" fill="#fff"/><circle cx="81" cy="71.5" r="4.8" fill="#1b2a41"/><circle cx="82.8" cy="69.5" r="1.5" fill="#fff"/></g>
+        <path class="eyeH" d="M51 72Q59 61 67 72M73 72Q81 61 89 72" stroke="#fff" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+        <path class="brow" d="M50 58L68 53M72 53L90 58" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+        <path class="mN" d="M63 82Q70 90 77 82" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+        <path class="mH" d="M62 80Q70 97 78 80Z" fill="#fff" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+        <path class="mS" d="M63 88Q70 80 77 88" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      </g>
+    </svg>
+    <div id="plusConf"></div>
+  </div>
+</div>
+<button id="plusToggle" type="button" title="Sembunyikan Plus" aria-label="Sembunyikan Plus">Sembunyikan</button>
+
+<script>
+/* ================= PENGATURAN (diisi guru) =================
+   ENDPOINT : alamat Web App Google Apps Script, berakhiran /exec.
+              Dibiarkan kosong = MODE UJI: latihan tetap bisa dikerjakan,
+              tetapi skor TIDAK disetor ke mana pun.
+   MATERI   : jangan diubah ("sistem").                          */
+window.PTLDV_CONFIG={ENDPOINT:"https://script.google.com/macros/s/AKfycbyi8YzHFUgHnG2Ss4f9VlTaoSxPREECpeHW9v3eA5NKSayX_Bn8KSYULQSvQPBQKpWP/exec",MATERI:"sistem"};
+</script>
+<script>
+(function(){
+'use strict';
+var CONFIG=window.PTLDV_CONFIG||{ENDPOINT:'https://script.google.com/macros/s/AKfycbyi8YzHFUgHnG2Ss4f9VlTaoSxPREECpeHW9v3eA5NKSayX_Bn8KSYULQSvQPBQKpWP/exec',MATERI:'sistem'};
+/* ============================================================
+   CORE BERSAMA (dipakai persis sama oleh halaman siswa dan server)
+   Jangan diubah sebagian: pembangkit soal dan penilai harus
+   identik di kedua sisi. Server menolak halaman yang "cek"-nya
+   berbeda.
+   ============================================================ */
+var CORE=(function(){
+'use strict';
+var VERSI='2026-10-25.1';
+var R=10;
+var OPS=['<','≤','>','≥'];
+var isSolid=function(op){return op==='≤'||op==='≥';};
+var holds=function(v,c,op){return op==='<'?v<c:op==='≤'?v<=c:op==='>'?v>c:v>=c;};
+var sideOf=function(op){return (op==='<'||op==='≤')?-1:1;};
+var gcd=function(a,b){return b?gcd(b,a%b):a;};
+var hyp=function(a,b){return Math.sqrt(a*a+b*b);};   /* sqrt: dibulatkan benar oleh IEEE, sama di semua mesin */
+var isNum=function(v){return typeof v==='number'&&isFinite(v);};
+
+/* ---------- bilangan acak berbenih ---------- */
+function mulberry32(seed){
+  var a=seed>>>0;
+  return function(){
+    a=(a+0x6D2B79F5)>>>0;
+    var t=a;
+    t=Math.imul(t^(t>>>15),t|1);
+    t^=t+Math.imul(t^(t>>>7),t|61);
+    return((t^(t>>>14))>>>0)/4294967296;
+  };
+}
+function rndInt(rng,a,b){return Math.floor(rng()*(b-a+1))+a;}
+function shuffle(arr,rng){
+  for(var i=arr.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=arr[i];arr[i]=arr[j];arr[j]=t;}
+  return arr;
+}
+
+/* ---------- soal ---------- */
+var FIXED=[
+ [{a:1,b:1,op:'≤',c:6},{a:1,b:0,op:'≥',c:0},{a:0,b:1,op:'≥',c:0}],
+ [{a:2,b:1,op:'≥',c:4},{a:1,b:2,op:'≤',c:8}],
+ [{a:1,b:1,op:'>',c:2},{a:1,b:-1,op:'<',c:4},{a:0,b:1,op:'<',c:5}],
+ [{a:3,b:2,op:'≤',c:12},{a:1,b:-1,op:'≤',c:2},{a:1,b:0,op:'≥',c:0}],
+ [{a:1,b:-2,op:'≤',c:4},{a:1,b:1,op:'≥',c:1},{a:1,b:0,op:'≤',c:5}],
+ [{a:1,b:-1,op:'≤',c:0},{a:1,b:1,op:'≤',c:6},{a:1,b:0,op:'≥',c:0}]
+];
+function prepI(r){
+  var q={a:r.a,b:r.b,c:r.c,op:r.op};
+  if(q.a===0)q.rows=[{g:'x',v:0},{g:'x',v:2}];
+  else if(q.b===0)q.rows=[{g:'y',v:0},{g:'y',v:2}];
+  else if(q.c!==0)q.rows=[{g:'x',v:0},{g:'y',v:0}];
+  else q.rows=[{g:'x',v:0},{g:'x',v:2}];
+  q.rows.forEach(function(r){
+    if(r.g==='x'){r.ans=(q.c-q.a*r.v)/q.b;r.pt={x:r.v,y:r.ans};}
+    else{r.ans=(q.c-q.b*r.v)/q.a;r.pt={x:r.ans,y:r.v};}
+  });
+  q.A=q.rows[0].pt;q.B=q.rows[1].pt;
+  q.solid=isSolid(q.op);
+  var cand=[[0,0],[1,0],[0,1],[1,1],[-1,0],[0,-1]];
+  for(var i=0;i<cand.length;i++){if(q.a*cand[i][0]+q.b*cand[i][1]!==q.c){q.sug={x:cand[i][0],y:cand[i][1]};break;}}
+  return q;
+}
+
+/* ---------- geometri ---------- */
+var WIN=[[-R,-R],[R,-R],[R,R],[-R,R]];
+function clipHalf(poly,q,side){
+  var f=function(p){return side*(q.a*p[0]+q.b*p[1]-q.c);},out=[];
+  for(var i=0;i<poly.length;i++){
+    var P=poly[i],Q=poly[(i+1)%poly.length],fp=f(P),fq=f(Q);
+    if(fp>=0)out.push(P);
+    if((fp>0&&fq<0)||(fp<0&&fq>0)){var t=fp/(fp-fq);out.push([P[0]+t*(Q[0]-P[0]),P[1]+t*(Q[1]-P[1])]);}
+  }
+  return out;
+}
+function interPoly(s,skip){
+  var poly=WIN;
+  s.forEach(function(q,i){if(i!==skip&&poly.length)poly=clipHalf(poly,q,sideOf(q.op));});
+  return poly;
+}
+function area(poly){var a=0;for(var i=0;i<poly.length;i++){var P=poly[i],Q=poly[(i+1)%poly.length];a+=P[0]*Q[1]-Q[0]*P[1];}return Math.abs(a)/2;}
+function lineEnds(q){
+  var pts=[],u=[];
+  if(q.b!==0)[-R,R].forEach(function(x){var y=(q.c-q.a*x)/q.b;if(y>=-R-1e-9&&y<=R+1e-9)pts.push([x,y]);});
+  if(q.a!==0)[-R,R].forEach(function(y){var x=(q.c-q.b*y)/q.a;if(x>=-R-1e-9&&x<=R+1e-9)pts.push([x,y]);});
+  pts.forEach(function(p){if(!u.some(function(r){return Math.abs(r[0]-p[0])<1e-6&&Math.abs(r[1]-p[1])<1e-6;}))u.push(p);});
+  return u.length>=2?[u[0],u[1]]:null;
+}
+function holdsAll(s,x,y){return s.every(function(q){return holds(q.a*x+q.b*y,q.c,q.op);});}
+function findInside(s){
+  var best=null;
+  for(var x=-9;x<=9;x++)for(var y=-9;y<=9;y++){
+    var d=1e9;
+    s.forEach(function(q){var v=sideOf(q.op)*(q.a*x+q.b*y-q.c)/hyp(q.a,q.b);if(v<d)d=v;});
+    if(d>0&&(!best||d>best.d))best={x:x,y:y,d:d};
+  }
+  return best;
+}
+
+/* ---------- pembangkit soal (berbenih) ---------- */
+function randLine(rng,op,pos){
+  if(!pos&&rng()<.2){
+    var k=rndInt(rng,-6,6),o=op||OPS[rndInt(rng,0,3)];
+    return rng()<.5?{a:1,b:0,op:o,c:k}:{a:0,b:1,op:o,c:k};
+  }
+  for(;;){
+    var p=rndInt(rng,2,8)*(!pos&&rng()<.3?-1:1),q=rndInt(rng,2,8)*(!pos&&rng()<.3?-1:1);
+    var a=q,b=p,c=p*q,g=gcd(Math.abs(a),Math.abs(b));
+    a/=g;b/=g;c/=g;
+    if(a<0){a=-a;b=-b;c=-c;}
+    if(Math.abs(a)>9||Math.abs(b)>9||Math.abs(c)>60)continue;
+    return {a:a,b:b,c:c,op:op||OPS[rndInt(rng,0,3)]};
+  }
+}
+function validSys(arr){
+  var s=arr.map(prepI),i,j;
+  for(i=0;i<s.length;i++)for(j=i+1;j<s.length;j++)if(s[i].a*s[j].b-s[j].a*s[i].b===0)return false;
+  var A=area(interPoly(s,-1));
+  if(A<12||A>230)return false;
+  for(i=0;i<s.length;i++)if(area(interPoly(s,i))-A<1.5)return false;
+  var ins=findInside(s);
+  return !!ins&&ins.d>=0.9;
+}
+function genSystem(k,rng){
+  for(var t=0;t<1500;t++){
+    var arr=[],i;
+    if(k===3&&rng()<.4)arr.push(randLine(rng,rng()<.75?'≤':'≥',true),{a:1,b:0,op:'≥',c:0},{a:0,b:1,op:'≥',c:0});
+    else for(i=0;i<k;i++)arr.push(randLine(rng));
+    shuffle(arr,rng);
+    if(validSys(arr))return arr;
+  }
+  return FIXED[k===3?0:1];
+}
+function makeCands(s,rng){
+  var yes=[],no=[],bnd=[];
+  for(var x=-8;x<=8;x++)for(var y=-8;y<=8;y++){
+    var on=[],dmin=1e9;
+    s.forEach(function(q,k){var v=q.a*x+q.b*y-q.c;if(v===0)on.push(k);var d=Math.abs(v)/hyp(q.a,q.b);if(d<dmin)dmin=d;});
+    var truth=holdsAll(s,x,y);
+    if(on.length===1){
+      var k0=on[0];
+      var oth=s.every(function(q,k){return k===k0||sideOf(q.op)*(q.a*x+q.b*y-q.c)>0;});
+      if(oth)bnd.push({x:x,y:y,truth:truth});
+    }else if(on.length===0&&dmin>=1)(truth?yes:no).push({x:x,y:y,truth:truth});
+  }
+  if(!yes.length){var ins=findInside(s);yes.push({x:ins.x,y:ins.y,truth:true});}
+  if(!no.length)no.push({x:-9,y:9,truth:holdsAll(s,-9,9)});
+  var pick=function(a){return a[rndInt(rng,0,a.length-1)];};
+  var c1=(bnd.length&&rng()<.8)?pick(bnd):pick(yes);
+  var c2=c1.truth?pick(no):pick(yes);
+  return rng()<.5?[c1,c2]:[c2,c1];
+}
+/* Satu "paket latihan" ditentukan sepenuhnya oleh benih (seed). */
+function buildPack(seed){
+  var rng=mulberry32(seed);
+  var set=[genSystem(2,rng),genSystem(3,rng)];
+  var cands=set.map(function(s){return makeCands(s,rng);});
+  return {seed:seed,set:set,cands:cands};
+}
+
+/* ---------- penilai jejak jawaban ---------- */
+var STEPLAB={tab:'Tabel titik',place:'Letak titik',type:'Jenis garis',test:'Uji titik',shade:'Arsiran',inter:'Daerah irisan',q1:'Titik pada sistem',q2:'Titik pada sistem'};
+/* Skor = banyak langkah yang jawabannya benar pada percobaan pertama.
+   jejak = daftar peristiwa {p,i,s,a,t}: p=nomor soal, i=nomor pertidaksamaan (-1 bila tahap sistem),
+   s=jenis langkah, a=jawaban, t=waktu (ms sejak mulai). Hanya jawaban mentah yang dipercaya;
+   benar-salahnya dihitung ulang di sini. */
+function gradeTrace(pack,trace){
+  var sys=pack.set.map(function(s){return s.map(prepI);});
+  var order=[];
+  sys.forEach(function(s,p){
+    s.forEach(function(q,i){['tab','place','type','test','shade'].forEach(function(k){order.push({p:p,i:i,s:k});});});
+    order.push({p:p,i:-1,s:'inter'});order.push({p:p,i:-1,s:'q1'});order.push({p:p,i:-1,s:'q2'});
+  });
+  var ev=Array.isArray(trace)?trace:[];
+  var c=0,wrong=false,tp=null,sub='val',score=0,ignored=0,missed={},steps=[],lastT=0,monotonic=true;
+  function done(){
+    var d=order[c];
+    steps.push({p:d.p,i:d.i,s:d.s,ok:!wrong});
+    if(wrong){var nm=STEPLAB[d.s];missed[nm]=(missed[nm]||0)+1;}else score++;
+    c++;wrong=false;tp=null;sub='val';
+  }
+  for(var k=0;k<ev.length;k++){
+    var e=ev[k];
+    if(!e||typeof e!=='object'){ignored++;continue;}
+    if(isNum(e.t)){if(e.t<lastT)monotonic=false;else lastT=e.t;}
+    var d=order[c];
+    if(!d||e.p!==d.p||e.i!==d.i){ignored++;continue;}
+    var q=d.i>=0?sys[d.p][d.i]:null,S=sys[d.p],a=e.a,s=e.s;
+    if(d.s==='tab'){
+      if(s!=='tab'||!Array.isArray(a)||a.length!==2||!isNum(a[0])||!isNum(a[1])){ignored++;continue;}
+      if(Math.abs(a[0]-q.rows[0].ans)<1e-9&&Math.abs(a[1]-q.rows[1].ans)<1e-9)done();else wrong=true;
+    }else if(d.s==='place'){
+      if(s!=='place'||!a||!a.A||!a.B||!isNum(a.A.x)||!isNum(a.A.y)||!isNum(a.B.x)||!isNum(a.B.y)){ignored++;continue;}
+      if(a.A.x===q.A.x&&a.A.y===q.A.y&&a.B.x===q.B.x&&a.B.y===q.B.y)done();else wrong=true;
+    }else if(d.s==='type'){
+      if(s!=='type'||(a!=='solid'&&a!=='dash')){ignored++;continue;}
+      if((a==='solid')===q.solid)done();else wrong=true;
+    }else if(d.s==='test'){
+      if(s==='pt'){
+        if(!a||!isNum(a.x)||!isNum(a.y)||Math.abs(a.x)>R||Math.abs(a.y)>R){ignored++;continue;}
+        var v=q.a*a.x+q.b*a.y;
+        if(Math.abs(v-q.c)<1e-9){tp=null;sub='val';}      /* titik pada garis: ditolak halaman, bukan percobaan */
+        else{tp={x:a.x,y:a.y,v:v};sub='val';}
+      }else if(s==='val'){
+        if(!tp||sub!=='val'||!isNum(a)){ignored++;continue;}
+        if(Math.abs(a-tp.v)<1e-9)sub='cmp';else wrong=true;
+      }else if(s==='rel'){
+        if(!tp||sub!=='cmp'||typeof a!=='string'){ignored++;continue;}
+        if(a===(tp.v<q.c?'<':tp.v>q.c?'>':'='))sub='concl';else wrong=true;
+      }else if(s==='concl'){
+        if(!tp||sub!=='concl'||typeof a!=='boolean'){ignored++;continue;}
+        if(a===holds(tp.v,q.c,q.op))done();else wrong=true;
+      }else{ignored++;continue;}
+    }else if(d.s==='shade'){
+      if(s!=='shade'||(a!==1&&a!==-1)){ignored++;continue;}
+      if(a===sideOf(q.op))done();else wrong=true;
+    }else if(d.s==='inter'){
+      if(s!=='inter'||!a||!isNum(a.x)||!isNum(a.y)||Math.abs(a.x)>R||Math.abs(a.y)>R){ignored++;continue;}
+      var inside=S.every(function(z){return sideOf(z.op)*(z.a*a.x+z.b*a.y-z.c)>0;});
+      if(inside)done();else wrong=true;
+    }else{   /* q1 / q2 */
+      if(s!==d.s||typeof a!=='boolean'){ignored++;continue;}
+      var cd=pack.cands[d.p][d.s==='q1'?0:1];
+      if(a===holdsAll(S,cd.x,cd.y))done();else wrong=true;
+    }
+  }
+  return {score:score,max:order.length,done:c,complete:c===order.length,ignored:ignored,missed:missed,steps:steps,monotonic:monotonic,lastT:lastT};
+}
+
+/* ---------- sidik jari kode: halaman dan server harus menghasilkan nilai yang sama ---------- */
+function djb2(s){var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(16);}
+function cek(){
+  var pk=buildPack(20261025),q=prepI(pk.set[0][0]);
+  var sample=[
+    {p:0,i:0,s:'tab',a:[0,0],t:1},
+    {p:0,i:0,s:'tab',a:[q.rows[0].ans,q.rows[1].ans],t:2},
+    {p:0,i:0,s:'place',a:{A:q.A,B:q.B},t:3},
+    {p:9,i:9,s:'zz',a:1,t:4}
+  ];
+  return VERSI+':'+djb2(JSON.stringify({pk:pk,g:gradeTrace(pk,sample)}));
+}
+
+return {VERSI:VERSI,R:R,OPS:OPS,FIXED:FIXED,isSolid:isSolid,holds:holds,sideOf:sideOf,
+  mulberry32:mulberry32,prepI:prepI,WIN:WIN,clipHalf:clipHalf,interPoly:interPoly,area:area,lineEnds:lineEnds,
+  holdsAll:holdsAll,findInside:findInside,validSys:validSys,genSystem:genSystem,makeCands:makeCands,
+  buildPack:buildPack,gradeTrace:gradeTrace,cek:cek};
+})();
+var R=10,S=20,C=230,N=460;
+var $=function(s){return document.querySelector(s);};
+var sx=function(x){return C+x*S;}, sy=function(y){return C-y*S;};
+var n=function(v){v=Math.round(v*100)/100;return (v<0?'−':'')+Math.abs(v);};
+var esc=function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+var OPS=CORE.OPS;
+var COL=['#1d4ed8','#c2410c','#7e22ce'];
+var ANG=[45,135,90];
+var PH=['table','place','type','test','shade'];
+var PHN=['Tabel titik','Letak titik','Jenis garis','Uji titik','Arsir'];
+var LAB={table:'Tabel titik',place:'Letak titik',type:'Jenis garis',test:'Uji titik',shade:'Arsiran',inter:'Daerah irisan',q:'Titik pada sistem'};
+var isSolid=CORE.isSolid,holds=CORE.holds,sideOf=CORE.sideOf;
+function term(k,v,first){var m=Math.abs(k)===1?'':Math.abs(k);if(first)return (k<0?'−':'')+m+v;return (k<0?' − ':' + ')+m+v;}
+function lhs(p){var s='';if(p.a!==0)s+=term(p.a,'x',true);if(p.b!==0)s+=term(p.b,'y',s==='');return s;}
+function fmt(p,eq){return lhs(p)+' '+(eq?'=':p.op)+' '+n(p.c);}
+function coefStr(k){return k===1?'':k===-1?'−':n(k);}
+function par(v){return v<0?'('+n(v)+')':n(v);}
+function lhsSub(q,x,y){var parts=[];if(q.a!==0)parts.push(par(q.a)+'·('+n(x)+')');if(q.b!==0)parts.push(par(q.b)+'·('+n(y)+')');return parts.join(' + ');}
+function sysLabel(arr){return arr.map(function(q){return fmt(q);}).join(' ; ');}
+
+/* ---------- soal & geometri (dari CORE yang sama dengan server) ---------- */
+var FIXED=CORE.FIXED,prepI=CORE.prepI,WIN=CORE.WIN,clipHalf=CORE.clipHalf,interPoly=CORE.interPoly,lineEnds=CORE.lineEnds,holdsAll=CORE.holdsAll,findInside=CORE.findInside,validSys=CORE.validSys;
+function genSystem(k){return CORE.genSystem(k,Math.random);}
+function makeCands(s){return CORE.makeCands(s,Math.random);}
+function newSeed(){return Math.floor(Math.random()*2147483646)+1;}
+
+/* ---------- status ---------- */
+var st={mode:'learn',raw:null,sys:null,pick:0,stage:'intro',i:0,q:[],inter:null,hints:0,wrong:false,badRow:0,badPt:'A',
+  score:0,max:0,missed:{},idx:0,set:[],over:false,gate:false,pack:null,trace:[],sess:null,send:null};
+window.__st=st;
+function newQ(){return {phase:'table',drag:{A:{x:-8,y:-8},B:{x:-6,y:-8}},active:'A',showPts:false,type:null,lineOK:false,
+  test:null,sub:'val',evalDone:false,testRes:null,side:null,done:false};}
+var cur=function(){return st.q[st.i];};
+var P=function(){return st.sys[st.i];};
+
+function setSystem(raw,pick){
+  st.raw=raw;if(pick!==undefined)st.pick=pick;
+  st.sys=raw.map(prepI);
+  st.stage='intro';st.i=0;st.q=[];st.inter=null;st.hints=0;st.tries=0;st.wrong=false;st.badRow=0;st.badPt='A';
+  renderAll();
+  mascotSay('sapa');
+}
+function startI(i){st.i=i;st.q[i]=newQ();st.stage='ineq';st.hints=0;st.tries=0;st.wrong=false;renderAll();}
+function startInter(){
+  var ins=findInside(st.sys);
+  st.stage='inter';st.hints=0;st.tries=0;st.wrong=false;
+  st.inter={phase:'shade',tap:null,shaded:false,cand:(st.mode==='practice'&&st.pack?st.pack.cands[st.idx]:makeCands(st.sys)),qi:0,res:[null,null],ans:[false,false],inside:ins};
+  renderAll();
+}
+function setPhase(ph){cur().phase=ph;st.hints=0;st.tries=0;st.wrong=false;renderAll();}
+function setInterPhase(ph){st.inter.phase=ph;st.hints=0;st.tries=0;st.wrong=false;if(ph==='q1')st.inter.qi=0;if(ph==='q2')st.inter.qi=1;renderAll();}
+function startLearn(){plusHome();st.mode='learn';st.over=false;st.gate=false;soalBaru();}
+function practiceActive(){return st.mode==='practice'&&!st.gate&&!st.over&&!!st.sess&&!!st.sess.token;}
+function startPractice(){
+  plusHome();st.item=null;
+  st.mode='practice';st.over=false;st.send=null;
+  if(CONFIG.ENDPOINT){st.gate=true;st.sess=null;st.pack=null;st.trace=[];renderAll();}
+  else beginPractice(newSeed(),null);
+}
+function beginPractice(seed,sess){
+  st.mode='practice';st.over=false;st.gate=false;st.send=null;
+  st.score=0;st.max=0;st.idx=0;st.missed={};
+  st.pack=CORE.buildPack(seed);st.set=st.pack.set;
+  st.trace=[];st.sess=sess||{token:null,nama:'',t0c:performance.now()};
+  setSystem(st.set[0],'p');
+}
+/* merekam setiap percobaan jawaban (bukan skor!) untuk dinilai ulang oleh server */
+function rec(s,a){
+  if(st.mode!=='practice'||!st.sess)return;
+  var inq=(s==='tab'||s==='place'||s==='type'||s==='pt'||s==='val'||s==='rel'||s==='concl'||s==='shade');
+  st.trace.push({p:st.idx,i:inq?st.i:-1,s:s,a:a,t:Math.round(performance.now()-st.sess.t0c)});
+}
+
+/* ---------- koneksi ke server (Google Apps Script) ---------- */
+function callServer(obj){
+  var ctl=('AbortController' in window)?new AbortController():null,tm=null;
+  if(ctl)tm=setTimeout(function(){ctl.abort();},30000);
+  return fetch(CONFIG.ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(obj),signal:ctl?ctl.signal:undefined})
+    .then(function(r){if(tm)clearTimeout(tm);return r.json();});
+}
+function netMsg(err){return err&&err.name==='AbortError'?'Penyimpanan nilai tidak menjawab (waktu habis). Periksa internet, lalu tekan tombolnya lagi.':'Belum tersambung ke penyimpanan nilai. Periksa internet, lalu coba lagi.';}
+var PKEY='ptldv-skor-tertunda-'+CONFIG.MATERI;
+function savePending(o){try{localStorage.setItem(PKEY,JSON.stringify(o));}catch(e){}}
+function loadPending(){try{var x=localStorage.getItem(PKEY);return x?JSON.parse(x):null;}catch(e){return null;}}
+function clearPending(){try{localStorage.removeItem(PKEY);}catch(e){}}
+function fatalCode(r){return !!r&&(r.kode==='token'||r.kode==='habis'||r.kode==='versi'||r.kode==='jejak');}
+function loginPanel(el){
+  var pend=loadPending();
+  el.innerHTML='<h2>Kuis · Masuk</h2>'
+    +'<div class="note"><ul class="poin"><li>Skor <b>dikirim ke gurumu</b> dan dihitung ulang dari jawabanmu, jadi kerjakan sendiri.</li>'
+    +'<li>Kuis hanya bisa dikerjakan <b>sekali</b>.</li>'
+    +'<li>Bila halaman tertutup sebelum selesai, masuk lagi sebelum waktu habis untuk mendapat soal yang sama.</li></ul></div>'
+    +(pend?'<div class="rule">Ada skor yang <b>belum terkirim</b> dari kuis sebelumnya. <button class="btn" id="bPending">Kirim sekarang</button></div>':'')
+    +'<div class="form"><div class="two"><label>Kelas<input id="lgKelas" autocomplete="off" placeholder="mis. X-2" maxlength="20"></label>'
+    +'<label>No. absen<input id="lgAbsen" type="number" inputmode="numeric" min="1" max="99" placeholder="mis. 7"></label></div>'
+    +'<label>PIN<input id="lgPin" type="password" autocomplete="off" placeholder="dari gurumu" maxlength="20"></label>'
+    +'<label>Nama atau inisial <small>(isi hanya bila gurumu belum menyiapkan daftar siswa)</small><input id="lgNama" autocomplete="off" maxlength="40"></label></div>'
+    +'<div id="lgMsg" class="fb" hidden></div>'
+    +'<div class="row"><button class="btn primary" id="bLogin">Masuk kuis</button></div>';
+  on('bLogin',doLogin);on('bPending',resendPending);
+  ['lgKelas','lgAbsen','lgPin','lgNama'].forEach(function(id){$('#'+id).addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});});
+}
+function lgMsg(kind,html){var e=$('#lgMsg');if(!e)return;e.hidden=false;e.className='fb '+kind;e.innerHTML=html;}
+function doLogin(){
+  var kelas=$('#lgKelas').value.trim(),absen=$('#lgAbsen').value.trim(),pin=$('#lgPin').value,nama=$('#lgNama').value.trim();
+  if(!kelas||!absen){lgMsg('info','Isi kelas dan nomor absen.');return;}
+  var btn=$('#bLogin');btn.disabled=true;lgMsg('info','⏳ Menyambungkan…');
+  callServer({action:'start',materi:CONFIG.MATERI,kelas:kelas,absen:absen,pin:pin,nama:nama,cek:CORE.cek()})
+    .then(function(res){
+      if(!res||!res.ok){btn.disabled=false;lgMsg('bad',esc((res&&res.pesan)||'Belum bisa masuk. Periksa kelas, nomor absen, dan PIN, lalu coba lagi.'));return;}
+      beginPractice(res.seed,{token:res.token,nama:res.nama,t0c:performance.now(),lanjut:!!res.lanjut,batasMenit:res.batasMenit,sisaMenit:res.sisaMenit});
+    })
+    .catch(function(err){btn.disabled=false;lgMsg('bad',netMsg(err));});
+}
+function submitBody(){return {action:'submit',materi:CONFIG.MATERI,token:st.sess.token,trace:st.trace,klaim:{skor:st.score,maks:st.max},cek:CORE.cek()};}
+function submitScore(){
+  if(!CONFIG.ENDPOINT||!st.sess||!st.sess.token){st.send={state:'off'};renderPanel();return;}
+  var body=submitBody();savePending(body);sendBody(body);
+}
+var AUTO_JEDA=[4000,8000];   /* percobaan ulang otomatis: jeda (ms) sebelum percobaan ke-1 dan ke-2 */
+var sendSeq=0;
+function sendBody(body,n){
+  var id=++sendSeq;n=n||0;
+  var stale=function(){return id!==sendSeq;};
+  var show=function(x){st.send=x;if(st.over)renderPanel();};
+  var fail=function(msg,retry){
+    if(stale())return;
+    if(retry&&n<AUTO_JEDA.length){
+      show({state:'sending',n:n+1,wait:true});
+      setTimeout(function(){if(!stale())sendBody(body,n+1);},AUTO_JEDA[n]);
+      return;
+    }
+    show({state:'err',msg:msg,retry:retry});
+  };
+  show({state:'sending',n:n});
+  callServer(body).then(function(res){
+    if(res&&res.ok){clearPending();if(!stale())show({state:'ok',res:res});}
+    else{var f=fatalCode(res);if(f)clearPending();fail((res&&res.pesan)||'Skor belum diterima. Tunjukkan layar ini ke gurumu.',!f);}
+  }).catch(function(err){fail(netMsg(err),true);});
+}
+function resendPending(){
+  var p=loadPending();if(!p)return;
+  lgMsg('info','⏳ Mengirim skor tertunda…');
+  callServer(p).then(function(res){
+    if(res&&res.ok){clearPending();lgMsg('ok','✔ Skor tertunda terkirim: '+res.skor+' / '+res.maks+'.');var b=$('#bPending');if(b)b.disabled=true;}
+    else{if(fatalCode(res))clearPending();lgMsg('bad',esc((res&&res.pesan)||'Gagal mengirim.'));}
+  }).catch(function(err){lgMsg('bad',netMsg(err));});
+}
+/* skor sudah selesai dikerjakan tetapi belum tercatat di server (sedang dikirim, atau gagal dan masih bisa dicoba lagi) */
+function unsentScore(){
+  var x=st.send;
+  return st.mode==='practice'&&st.over&&!!x&&(x.state==='sending'||(x.state==='err'&&x.retry));
+}
+function konfirmPindah(){
+  if(!unsentScore())return true;
+  return confirm(loadPending()
+    ?'Skormu belum tercatat. Kamu masih bisa mengirimnya nanti lewat Kuis di peramban dan perangkat ini, selama waktu kuis belum habis. Tetap pindah?'
+    :'Skormu belum tercatat dan tidak dapat disimpan di peramban ini. Jika pindah, skor bisa hilang. Tetap pindah?');
+}
+/* pemberitahuan skor tertunda di luar panel masuk (mis. mode Belajar) */
+function pendNotice(el){
+  if(!CONFIG.ENDPOINT||st.gate||st.over||practiceActive()||!loadPending())return;
+  var d=document.createElement('div');d.id='pendBar';d.className='rule';
+  d.innerHTML='<span id="pendMsg">⚠ Ada skor kuis yang <b>belum terkirim</b> ke gurumu.</span> <button class="btn" id="bPendBar">Kirim sekarang</button>';
+  el.insertBefore(d,el.firstChild);on('bPendBar',resendBar);
+}
+function resendBar(){
+  var p=loadPending(),box=$('#pendBar'),msg=$('#pendMsg'),b=$('#bPendBar');
+  if(!p||!box)return;
+  b.disabled=true;msg.innerHTML='⏳ Mengirim skor tertunda…';
+  callServer(p).then(function(res){
+    if(res&&res.ok){clearPending();box.className='fb ok';box.innerHTML='✔ Skor tertunda terkirim: '+res.skor+' / '+res.maks+'.'+(res.ulang?' (Skor ini sudah pernah dikirim sebelumnya.)':'');}
+    else if(fatalCode(res)){clearPending();box.className='fb bad';box.innerHTML=esc((res&&res.pesan)||'Skor belum diterima. Tunjukkan layar ini ke gurumu.');}
+    else{msg.innerHTML='⚠ '+esc((res&&res.pesan)||'Gagal mengirim.');b.disabled=false;}
+  }).catch(function(err){msg.innerHTML='⚠ '+esc(netMsg(err));b.disabled=false;});
+}
+function nextLearn(){
+  if(st.pick==='r2')setSystem(genSystem(2),'r2');
+  else if(st.pick==='r3')setSystem(genSystem(3),'r3');
+  else{var i=(typeof st.pick==='number'?st.pick+1:0)%FIXED.length;setSystem(FIXED[i],i);}
+}
+
+/* ---------- umpan balik, petunjuk, skor ---------- */
+function fb(kind,html){var e=$('#fb');if(!e)return;e.hidden=false;e.className='fb '+kind;e.innerHTML=html;}
+function hintBtn(){return st.mode==='learn'?'<button class="btn ghost" id="bHint">💡 Petunjuk</button>':'';}
+function on(id,fn){var e=document.getElementById(id);if(e)e.onclick=fn;}
+function actions(html){$('#actions').innerHTML=html;}
+function nextBtn(label,fn){actions('<button class="btn primary" id="bNext">'+label+'</button>');on('bNext',fn);}
+function hintsBlock(){return '<ul id="hints" class="hints" hidden></ul><div id="fb" class="fb" hidden></div>';}
+function award(){st.max++;if(!st.wrong)st.score++;st.wrong=false;renderProblem();mascotSay('benar');}
+function curName(){if(st.stage==='ineq')return LAB[cur().phase];return st.inter.phase==='shade'?LAB.inter:LAB.q;}
+function showHint(){var l=hintList();if(!l.length)return;if(st.hints>=l.length){fb('info','Semua petunjuk untuk langkah ini sudah dibuka.');return;}if(petunjukTertahan()){fb('info','Petunjuk berikutnya (lebih rinci) terbuka setelah kamu mencoba menjawab sekali.');return;}st.hints=Math.min(l.length,st.hints+1);renderHints();mascotSay('petunjuk');}
+function renderHints(){
+  var box=$('#hints');if(!box)return;var l=hintList();
+  box.innerHTML=l.slice(0,st.hints).map(function(h){return '<li>'+h+'</li>';}).join('');
+  box.hidden=!st.hints;
+  renderMath(box);
+}
+function wrongAttempt(){
+  var nm=curName();
+  if(!st.wrong&&st.mode==='practice')st.missed[nm]=(st.missed[nm]||0)+1;
+  st.wrong=true;
+  if(st.mode==='learn'){st.tries=(st.tries||0)+1;if(st.hints<2)st.hints++;}mascotSay('salah');
+  renderHints();
+  whereBtn();
+  kunciCek();
+}
+function eqSub(p,r){
+  if(r.g==='x')return par(p.a)+'·('+n(r.v)+') + '+par(p.b)+'·y = '+n(p.c);
+  return par(p.a)+'·x + '+par(p.b)+'·('+n(r.v)+') = '+n(p.c);
+}
+function hintTable(p,i){
+  var r=p.rows[i],u=r.g==='x'?'y':'x',cu=r.g==='x'?p.b:p.a,rest=p.c-(r.g==='x'?p.a:p.b)*r.v;
+  return ['Untuk titik '+'AB'[i]+': substitusikan <b>'+r.g+' = '+n(r.v)+'</b> ke persamaan <span class="eq">'+esc(fmt(p,true))+'</span>.',
+    '<span class="eq">'+esc(eqSub(p,r))+'</span> → <span class="eq">'+coefStr(cu)+u+' = '+n(rest)+'</span>',
+    u+' = '+n(rest)+' ÷ '+par(cu)];
+}
+function hintList(){
+  var p,q,t;
+  if(st.stage==='ineq'){
+    q=cur();p=P();t=q.test;
+    if(q.phase==='table')return hintTable(p,Math.max(0,st.badRow||0));
+    if(q.phase==='place'){
+      var k=st.badPt||'A',pt=p[k];
+      return ['Pasangan nilai pada tabel adalah koordinat titik: '+k+'(x, y). Baca x dulu (kiri–kanan), lalu y (bawah–atas).',
+        'Titik '+k+': x = '+n(pt.x)+' → '+(pt.x===0?'tetap di sumbu-y (tidak bergeser ke kiri atau kanan)':pt.x>0?'geser '+pt.x+' satuan ke kanan dari titik asal':'geser '+(-pt.x)+' satuan ke kiri dari titik asal')+'.',
+        'Lalu y = '+n(pt.y)+' → '+(pt.y===0?'tetap di sumbu-x':pt.y>0?'naik '+pt.y+' satuan':'turun '+(-pt.y)+' satuan')+'. Jadi '+k+'('+n(pt.x)+', '+n(pt.y)+').'];
+    }
+    if(q.phase==='type')return ['Lihat tanda pada soal: <b>'+esc(p.op)+'</b>. Apakah tanda ini memuat “sama dengan”?',
+      'Aturan: ≤ dan ≥ memuat “sama dengan”, jadi titik pada garis ikut menjadi penyelesaian → <b>garis penuh</b>. Tanda &lt; dan &gt; tidak memuat “sama dengan” → <b>garis putus-putus</b>.',
+      'Pada soal ini tandanya '+esc(p.op)+', jadi pilih <b>'+(p.solid?'garis penuh':'garis putus-putus')+'</b>.'];
+    if(q.phase==='test'){
+      if(!t)return ['Pilih titik mana saja yang <b>tidak</b> terletak pada garis.',
+        'Titik yang hitungannya mudah, misalnya ('+p.sug.x+', '+p.sug.y+').',
+        'Isi x = '+p.sug.x+' dan y = '+p.sug.y+', lalu tekan <b>Uji titik</b>.'];
+      var tr=holds(t.v,p.c,p.op),rel=t.v<p.c?'lebih kecil dari':'lebih besar dari';
+      if(q.sub==='val')return ['Hitung tiap suku: '+par(p.a)+' × ('+n(t.x)+') dan '+par(p.b)+' × ('+n(t.y)+').',
+        'Suku pertama = '+n(p.a*t.x)+', suku kedua = '+n(p.b*t.y)+'. Jumlahkan keduanya.',
+        'Hasilnya <b>'+n(t.v)+'</b>.'];
+      if(q.sub==='cmp')return ['Bandingkan '+n(t.v)+' dengan '+n(p.c)+': mana yang lebih besar?',
+        'Bayangkan garis bilangan: bilangan yang berada di sebelah kiri lebih kecil.',
+        n(t.v)+' '+rel+' '+n(p.c)+', jadi tandanya <b>'+(t.v<p.c?'&lt;':'&gt;')+'</b>.'];
+      return ['Sekarang pakai tanda dari soal: <b>'+esc(p.op)+'</b>. Tulis '+n(t.v)+' '+esc(p.op)+' '+n(p.c)+'.',
+        'Ingat hasil perbandingan tadi: '+n(t.v)+' '+rel+' '+n(p.c)+'. Apakah itu cocok dengan tanda '+esc(p.op)+'?',
+        n(t.v)+' '+esc(p.op)+' '+n(p.c)+' bernilai <b>'+(tr?'Benar':'Salah')+'</b>.'];
+    }
+    if(q.phase==='shade'&&t){
+      var res=q.testRes;
+      return ['Ingat hasil uji titik, yaitu ('+n(t.x)+', '+n(t.y)+') '+(res?'memenuhi':'tidak memenuhi')+' pertidaksamaan.',
+        'Jika titik uji memenuhi, daerah penyelesaian adalah sisi yang <b>memuat</b> titik uji. Jika tidak memenuhi, daerah penyelesaian adalah sisi <b>sebaliknya</b>.',
+        'Jadi arsir sisi garis yang <b>'+(res?'memuat':'tidak memuat')+'</b> titik uji T di bidang koordinat.'];
+    }
+  }
+  if(st.stage==='inter'){
+    var I=st.inter;
+    if(I.phase==='shade')return ['Daerah penyelesaian sistem harus memenuhi <b>semua</b> pertidaksamaan, jadi berada di dalam semua daerah arsiran sekaligus.',
+      'Cari daerah tempat arsiran-arsiran saling bertumpuk (irisan).',
+      'Coba ketuk di sekitar titik ('+n(I.inside.x)+', '+n(I.inside.y)+').'];
+    var c=I.cand[I.qi];
+    return ['Substitusikan titik ('+n(c.x)+', '+n(c.y)+') ke <b>setiap</b> pertidaksamaan.',
+      'Titik termasuk daerah penyelesaian jika memenuhi <b>semua</b> pertidaksamaan. Satu saja gagal berarti titik itu bukan penyelesaian.',
+      'Jika titik berada tepat pada sebuah garis: garis penuh (≤, ≥) ikut menjadi penyelesaian, garis putus-putus (&lt;, &gt;) tidak.'];
+  }
+  return [];
+}
+
+/* ---------- tampilan umum ---------- */
+function isDone(i){return !!(st.q[i]&&st.q[i].done);}
+function renderAll(){
+  if(st.mode!=='explain'&&plusAt)plusHome();
+  document.body.classList.toggle('over',st.over||st.gate||st.mode==='explain');
+  document.body.classList.toggle('kuis-luar',st.mode==='practice'&&(st.over||st.gate));
+  renderProblem();renderProgress();renderPanel();drawPlane();
+  exBarSync();
+}
+function renderProblem(){
+  if(st.gate||st.mode==='explain')return;
+  if(kartuLatihan())return;
+  if(!st.sys)return;
+  $('#probAsk').innerHTML='Tentukan daerah penyelesaian (DP) '+(st.sys.length>1?'sistem pertidaksamaan':'pertidaksamaan')+' berikut.';
+  $('#probText').innerHTML='<div class="brace">{</div><div class="srows">'+st.sys.map(function(q,i){
+    var cls='srow'+((st.stage==='ineq'&&st.i===i)?' cur':'');
+    return '<div class="'+cls+'"><i style="background:'+COL[i]+'"></i><span>'+esc(fmt(q))+'</span>'+(isDone(i)?'<b class="okc">✓</b>':'')+'</div>';
+  }).join('')+'</div>';
+  $('#probMeta').textContent=st.mode==='learn'?(st.info?st.info.jd+' · '+st.info.lv:'Sistem pertidaksamaan'):((st.sess&&st.sess.nama?st.sess.nama+' · ':'')+'Soal '+(st.idx+1)+' dari '+st.set.length+' · Skor sementara '+st.score+' / '+st.max);
+  $('#bRepeat').hidden=st.mode!=='learn';
+  $('#bNextQ').hidden=st.mode!=='learn';
+}
+function renderProgress(){
+  if(st.mode==='learn'&&st.item&&!st.gate)return itemProgres();
+  if(!st.sys||st.gate||st.mode==='explain')return;
+  var items=[{l:'Soal',d:st.stage!=='intro',c:st.stage==='intro'}];
+  st.sys.forEach(function(q,i){items.push({l:'Pert. ('+(i+1)+')',d:isDone(i),c:st.stage==='ineq'&&st.i===i});});
+  if(st.sys.length>1)items.push({l:'Irisan',d:st.stage==='done',c:st.stage==='inter'});
+  $('#progress').innerHTML=items.map(function(it,i){
+    return '<li class="'+(it.d?'done':it.c?'cur':'')+'"><span>'+(it.d?'✓':i+1)+'</span><em>'+it.l+'</em></li>';
+  }).join('');
+  var t='';
+  if(st.stage==='intro')t='Pilih soal dan baca sistemnya';
+  else if(st.stage==='ineq')t='Pertidaksamaan ('+(st.i+1)+') dari '+st.sys.length+' · langkah '+(PH.indexOf(cur().phase)+1)+' dari 5: '+PHN[PH.indexOf(cur().phase)];
+  else if(st.stage==='inter')t='Mencari irisan semua daerah';
+  else t='Selesai 🎉';
+  $('#stepText').textContent=t;
+}
+function renderPanel(){
+  var el=$('#panel');
+  if(st.mode==='explain')return explainPanel(el);
+  if(st.mode==='learn'&&st.item&&st.stage!=='intro')return itemPanel(el);
+  if(st.gate)return loginPanel(el);
+  if(st.over)return overPanel(el);
+  if(st.stage==='intro')introPanel(el);
+  else if(st.stage==='ineq')ineqPanel(el);
+  else if(st.stage==='inter')interPanel(el);
+  else summaryPanel(el);
+  pendNotice(el);
+}
+function mini(ph){
+  var k=PH.indexOf(ph);
+  return '<div class="mini">'+PHN.map(function(nm,j){return '<span class="'+(j<k?'dn':j===k?'cur':'')+'">'+(j+1)+'. '+nm+'</span>';}).join('')+'</div>';
+}
+function head(){
+  var q=cur(),p=P(),i=st.i;
+  return '<h2>Pertidaksamaan <span style="color:'+COL[i]+'">('+(i+1)+')</span>: <span class="eq">'+esc(fmt(p))+'</span></h2>'+mini(q.phase);
+}
+
+/* ---------- Soal ---------- */
+function introPanel(el){
+  if(st.mode==='learn')return latihanIntro(el);
+  var learn=st.mode==='learn',h='',k=st.sys.length;
+  if(learn){
+    h+='<h2>Langkah 1 · Pilih soal</h2><p class="muted">Pilih satu sistem pertidaksamaan atau ambil soal acak.</p><div class="chips">'
+      +FIXED.map(function(s,i){return '<button class="chip'+(st.pick===i?' on':'')+'" data-i="'+i+'">'+esc(sysLabel(s))+'</button>';}).join('')
+      +'<button class="chip'+(st.pick==='r2'?' on':'')+'" id="bR2">🎲 Soal baru (2 pertidaksamaan)</button>'
+      +'<button class="chip'+(st.pick==='r3'?' on':'')+'" id="bR3">🎲 Soal baru (3 pertidaksamaan)</button></div>';
+  }else h+='<h2>Baca soal</h2>'+(st.sess&&st.sess.batasMenit&&st.idx===0?'<div class="rule">'+(st.sess.lanjut?'Kamu <b>melanjutkan kuis sebelumnya</b>: soalnya sama dan waktu tetap berjalan sejak kamu mulai pertama kali (sisa sekitar '+st.sess.sisaMenit+' menit). ':'')+'Batas waktu kuis: '+st.sess.batasMenit+' menit sejak masuk. Jangan menutup atau memuat ulang halaman.</div>':'');
+  h+='<div class="note"><p>Sistem ini terdiri dari <b>'+k+' pertidaksamaan</b>. Daerah penyelesaiannya adalah <b>irisan</b>: daerah yang memenuhi semua pertidaksamaan sekaligus.</p>'
+    +'<p><b>Rencana:</b> kerjakan pertidaksamaan satu per satu (tabel titik → letak titik → jenis garis → uji titik → arsir), lalu cari irisannya.</p></div>';
+  if(learn)h+='<div class="rule"><b>Ingat aturan garis:</b><br>tanda <b>≤</b> atau <b>≥</b> → garis <b>penuh</b><br>tanda <b>&lt;</b> atau <b>&gt;</b> → garis <b>putus-putus</b></div>';
+  h+='<div class="row"><button class="btn primary" id="bStart">Mulai soal</button></div>';
+  el.innerHTML=h;
+  el.querySelectorAll('[data-i]').forEach(function(b){b.onclick=function(){setSystem(FIXED[+b.dataset.i],+b.dataset.i);};});
+  on('bR2',function(){setSystem(genSystem(2),'r2');});
+  on('bR3',function(){setSystem(genSystem(3),'r3');});
+  on('bStart',function(){startI(0);});
+}
+
+/* ---------- Pertidaksamaan ---------- */
+function ineqPanel(el){
+  var q=cur();
+  ({table:phTable,place:phPlace,type:phType,test:phTest,shade:phShade})[q.phase](el);
+}
+function rowsText(p){
+  var e='Ubah tanda <b>'+esc(p.op)+'</b> menjadi <b>=</b>: garis batas <span class="eq">'+esc(fmt(p,true))+'</span>. ';
+  if(p.a===0)return e+'Garis ini sejajar sumbu-x, jadi pilih <b>x = 0</b> dan <b>x = 2</b>, lalu cari y.';
+  if(p.b===0)return e+'Garis ini sejajar sumbu-y, jadi pilih <b>y = 0</b> dan <b>y = 2</b>, lalu cari x.';
+  if(p.c!==0)return e+'Pilih <b>x = 0</b> untuk titik pada sumbu-y dan <b>y = 0</b> untuk titik pada sumbu-x.';
+  return e+'Garis ini melalui titik asal (0, 0), jadi gunakan <b>x = 0</b> dan <b>x = 2</b> agar kedua titik berbeda.';
+}
+function tableHTML(p,filled){
+  function inp(i){return '<input class="num'+(filled?' ok':'')+'" type="number" step="any" inputmode="decimal" data-i="'+i+'" value="'+(filled?String(p.rows[i].ans):'')+'"'+(filled?' disabled':'')+' aria-label="nilai yang dicari untuk titik '+'AB'[i]+'">';}
+  return '<table class="tbl"><thead><tr><th>Titik</th><th>x</th><th>y</th></tr></thead><tbody>'
+    +p.rows.map(function(r,i){return '<tr><td><b>'+'AB'[i]+'</b></td><td>'+(r.g==='x'?'<b>'+n(r.v)+'</b>':inp(i))+'</td><td>'+(r.g==='y'?'<b>'+n(r.v)+'</b>':inp(i))+'</td></tr>';}).join('')
+    +'</tbody></table>';
+}
+/* 1. tabel */
+function phTable(el){
+  var p=P();
+  el.innerHTML=head()+'<p>'+rowsText(p)+' Isi kotak yang kosong.</p>'+tableHTML(p,false)+hintsBlock()
+    +'<div id="actions" class="row">'+hintBtn()+'<button class="btn primary" id="bCheck">Periksa</button></div>';
+  on('bHint',showHint);on('bCheck',checkTable);
+  el.querySelectorAll('input').forEach(function(i){i.addEventListener('keydown',function(e){if(e.key==='Enter')checkTable();});});
+}
+function checkTable(){
+  var p=P(),inputs=[].slice.call(document.querySelectorAll('#panel input.num')),allOk=true,firstBad=-1,empty=false;
+  inputs.forEach(function(inp){if(inp.value==='')empty=true;});
+  if(empty){fb('info','Isi semua kotak terlebih dahulu.');return;}
+  var vals=[null,null];inputs.forEach(function(inp){vals[+inp.dataset.i]=parseFloat(inp.value);});rec('tab',vals);
+  inputs.forEach(function(inp){
+    var i=+inp.dataset.i,v=parseFloat(inp.value),ok=Math.abs(v-p.rows[i].ans)<1e-9;
+    inp.classList.toggle('ok',ok);inp.classList.toggle('bad',!ok);
+    if(!ok){allOk=false;if(firstBad<0)firstBad=i;}
+  });
+  if(allOk){award();setPhase('place');fb('ok','Tabel benar! Sekarang letakkan titik A dan B pada bidang koordinat.');}
+  else{
+    st.badRow=firstBad;st.lw={k:'table',row:firstBad};
+    fb('bad',st.mode==='learn'?'Belum tepat pada titik '+'AB'[firstBad]+'. Baca petunjuk di atas, lalu coba lagi.':'Belum tepat, coba lagi.');
+    wrongAttempt();
+  }
+}
+/* 2. letak titik */
+function placing(){return !st.gate&&!st.over&&st.stage==='ineq'&&!!cur()&&cur().phase==='place'&&!cur().showPts;}
+function phPlace(el){
+  var p=P();
+  el.innerHTML=head()+'<p>Pasangan pada tabel adalah koordinat <b>(x, y)</b>. <b>Geser</b> titik <b>A</b> dan <b>B</b> pada bidang koordinat ke posisi yang sesuai. Titik otomatis menempel ke bilangan bulat terdekat. Kamu juga bisa memilih A atau B di bawah ini, lalu mengetuk tempat tujuannya.</p>'
+    +tableHTML(p,true)+(st.mode==='learn'?pnyHTML(pnyTabel(p)):'')+'<div class="chips" id="coordChips"></div>'+hintsBlock()
+    +'<div id="actions" class="row">'+hintBtn()+'<button class="btn primary" id="bPlace">Periksa letak titik</button></div>';
+  on('bHint',showHint);on('bPlace',checkPlace);updateCoordChips();renderMath(el);
+}
+function updateCoordChips(){
+  var c=$('#coordChips');if(!c)return;var q=cur();
+  c.innerHTML=['A','B'].map(function(k){var d=q.drag[k];return '<button class="chip'+(q.active===k?' on':'')+'" data-k="'+k+'">'+k+' ('+n(d.x)+', '+n(d.y)+')</button>';}).join('');
+  c.querySelectorAll('[data-k]').forEach(function(b){b.onclick=function(){q.active=b.dataset.k;updateCoordChips();drawPlane();};});
+}
+function checkPlace(){
+  var p=P(),q=cur(),bad=[];
+  rec('place',{A:{x:q.drag.A.x,y:q.drag.A.y},B:{x:q.drag.B.x,y:q.drag.B.y}});
+  ['A','B'].forEach(function(k){if(q.drag[k].x!==p[k].x||q.drag[k].y!==p[k].y)bad.push(k);});
+  if(!bad.length){
+    q.showPts=true;award();st.hints=0;st.tries=0;
+    var hh=$('#hints');if(hh)hh.hidden=true;
+    document.querySelectorAll('#coordChips button').forEach(function(b){b.disabled=true;});
+    fb('ok','Tepat! Titik A('+n(p.A.x)+', '+n(p.A.y)+') dan B('+n(p.B.x)+', '+n(p.B.y)+') terletak pada garis <b>'+esc(fmt(p,true))+'</b>.');
+    nextBtn('Lanjut',function(){setPhase('type');});
+    drawPlane();
+  }else{
+    st.badPt=bad[0];st.lw={k:'place',bad:bad.slice(),A:{x:q.drag.A.x,y:q.drag.A.y},B:{x:q.drag.B.x,y:q.drag.B.y}};
+    fb('bad',st.mode==='learn'?'Titik '+bad.join(' dan ')+' belum tepat. Cocokkan dengan pasangan (x, y) pada tabel, lalu geser lagi.':'Belum tepat, coba lagi.');
+    wrongAttempt();
+  }
+}
+/* 3. jenis garis */
+var SVG_SOLID='<svg width="52" height="10" aria-hidden="true"><line x1="2" y1="5" x2="50" y2="5" stroke="currentColor" stroke-width="3.5"/></svg>';
+var SVG_DASH='<svg width="52" height="10" aria-hidden="true"><line x1="2" y1="5" x2="50" y2="5" stroke="currentColor" stroke-width="3.5" stroke-dasharray="8 6"/></svg>';
+function phType(el){
+  var p=P(),q=cur();
+  el.innerHTML=head()+'<p>Titik A dan B sudah dihubungkan oleh sebuah garis. Pilih jenis garis untuk tanda <b>'+esc(p.op)+'</b>:</p>'
+    +'<div class="seg"><button class="segb'+(q.type==='solid'?' on':'')+'" data-t="solid">'+SVG_SOLID+' Garis penuh</button><button class="segb'+(q.type==='dash'?' on':'')+'" data-t="dash">'+SVG_DASH+' Garis putus-putus</button></div>'
+    +hintsBlock()+'<div id="actions" class="row">'+hintBtn()+'<button class="btn primary" id="bCheck">Periksa</button></div>';
+  on('bHint',showHint);on('bCheck',checkType);
+  el.querySelectorAll('.segb').forEach(function(b){b.onclick=function(){
+    q.type=b.dataset.t;
+    el.querySelectorAll('.segb').forEach(function(x){x.classList.toggle('on',x.dataset.t===q.type);});
+    drawPlane();
+  };});
+}
+function checkType(){
+  var p=P(),q=cur();
+  if(!q.type){fb('info','Pilih jenis garis: penuh atau putus-putus.');return;}
+  rec('type',q.type);
+  if((q.type==='solid')===p.solid){
+    award();q.lineOK=true;
+    document.querySelectorAll('.segb').forEach(function(b){b.disabled=true;});
+    var hh=$('#hints');if(hh)hh.hidden=true;
+    fb('ok',p.solid?'Tepat! Tanda <b>'+esc(p.op)+'</b> memuat “sama dengan”, jadi titik pada garis ikut menjadi penyelesaian → <b>garis penuh</b>.'
+      :'Tepat! Tanda <b>'+esc(p.op)+'</b> tidak memuat “sama dengan”, jadi titik pada garis bukan penyelesaian → <b>garis putus-putus</b>.');
+    nextBtn('Lanjut',function(){setPhase('test');});
+  }else{
+    st.lw={k:'type'};
+    fb('bad',st.mode==='learn'?'Belum tepat. Perhatikan tanda <b>'+esc(p.op)+'</b>: apakah titik pada garis ikut menjadi penyelesaian?':'Belum tepat, coba lagi.');
+    wrongAttempt();
+  }
+}
+/* 4. uji titik */
+function phTest(el){
+  var p=P(),learn=st.mode==='learn';
+  el.innerHTML=head()+'<p>Pilih satu titik yang <b>tidak</b> terletak pada garis, lalu substitusikan ke <span class="eq">'+esc(fmt(p))+'</span>.</p>'
+    +(learn?'<p class="muted">'+(p.sug.x===0&&p.sug.y===0?'Titik <b>(0, 0)</b> paling mudah dihitung.':'Titik <b>(0, 0)</b> terletak pada garis ini, jadi pilih titik lain.')+'</p>':'')
+    +'<div class="xy"><span>(</span><input class="num" id="tx" type="number" step="any" inputmode="decimal" aria-label="nilai x titik uji"><span>,</span><input class="num" id="ty" type="number" step="any" inputmode="decimal" aria-label="nilai y titik uji"><span>)</span><button class="btn" id="bUse">Uji titik</button></div>'
+    +'<p class="muted">Kamu juga bisa mengetuk sebuah titik pada bidang koordinat.</p>'
+    +'<div id="evalBox"></div>'+hintsBlock()+'<div id="actions" class="row">'+hintBtn()+'</div>';
+  on('bHint',showHint);on('bUse',useTest);
+  ['tx','ty'].forEach(function(id){$('#'+id).addEventListener('keydown',function(e){if(e.key==='Enter')useTest();});});
+}
+function useTest(){
+  var q=cur();
+  if(q.evalDone)return;
+  var p=P(),x=parseFloat($('#tx').value),y=parseFloat($('#ty').value);
+  if(isNaN(x)||isNaN(y)){fb('info','Isi nilai x dan y titik uji terlebih dahulu.');return;}
+  if(Math.abs(x)>R||Math.abs(y)>R){fb('info','Pilih titik di dalam bidang koordinat (−10 sampai 10).');return;}
+  rec('pt',{x:x,y:y});
+  var v=p.a*x+p.b*y;
+  if(Math.abs(v-p.c)<1e-9){
+    q.test=null;drawPlane();$('#evalBox').innerHTML='';
+    fb('bad','Titik ('+n(x)+', '+n(y)+') terletak <b>tepat pada garis</b>, sehingga tidak bisa menentukan daerah. Pilih titik lain.');return;
+  }
+  q.test={x:x,y:y,v:v};q.sub='val';st.hints=0;st.tries=0;
+  var f=$('#fb');if(f)f.hidden=true;
+  renderHints();renderEval();drawPlane();
+}
+function renderEval(){
+  var p=P(),q=cur(),t=q.test,box=$('#evalBox'),ph=q.sub;
+  var rel=t.v<p.c?'<':t.v>p.c?'>':'=';
+  var h='<div class="sub"><p>Substitusikan titik <b>('+n(t.x)+', '+n(t.y)+')</b> ke ruas kiri <span class="eq">'+esc(lhs(p))+'</span>:</p>';
+  h+='<p class="calc">'+esc(lhsSub(p,t.x,t.y))+' = ';
+  if(ph==='val')h+='<input class="num" id="vIn" type="number" step="any" inputmode="decimal" aria-label="hasil substitusi"> <button class="btn" id="bVal">Periksa</button></p>';
+  else h+='<b class="okc">'+n(t.v)+' ✓</b></p>';
+  if(ph==='cmp'||ph==='concl'||ph==='done'){
+    h+='<p class="calc">Bandingkan dengan '+n(p.c)+': '+n(t.v)+' ';
+    if(ph==='cmp')h+=['<','=','>'].map(function(r){return '<button class="btn relb" data-r="'+r+'" aria-label="tanda '+esc(r)+'">'+esc(r)+'</button>';}).join(' ')+' '+n(p.c)+'</p><p class="muted">Pilih tanda yang benar di antara kedua bilangan.</p>';
+    else h+='<b class="okc">'+esc(rel)+'</b> '+n(p.c)+' ✓</p>';
+  }
+  if(ph==='concl'||ph==='done'){
+    h+='<p>Sekarang pakai tanda dari soal (<b>'+esc(p.op)+'</b>). Apakah pernyataan <b>'+n(t.v)+' '+esc(p.op)+' '+n(p.c)+'</b> benar?</p>';
+    if(ph==='concl')h+='<div class="row"><button class="btn" data-a="1">✔ Benar</button><button class="btn" data-a="0">✖ Salah</button></div>';
+  }
+  h+='</div>';
+  if(st.mode==='learn'&&ph!=='val'){var pb=pnyBanding(p,t,'Substitusi T('+n(t.x)+', '+n(t.y)+') ke ruas kiri');if(ph==='cmp'){pb.tex.pop();pb.txt.pop();}h+=pnyHTML([pb]);}
+  box.innerHTML=h;
+  renderMath(box);
+  on('bVal',checkVal);
+  var vi=$('#vIn');if(vi)vi.addEventListener('keydown',function(e){if(e.key==='Enter')checkVal();});
+  box.querySelectorAll('.relb').forEach(function(b){b.onclick=function(){checkRel(b.dataset.r);};});
+  box.querySelectorAll('[data-a]').forEach(function(b){b.onclick=function(){answerTest(b.dataset.a==='1');};});
+}
+function checkVal(){
+  var inp=$('#vIn'),q=cur(),t=q.test;
+  if(!inp||inp.value===''){fb('info','Isi hasil perhitungannya terlebih dahulu.');return;}
+  rec('val',parseFloat(inp.value));
+  if(Math.abs(parseFloat(inp.value)-t.v)<1e-9){
+    q.sub='cmp';st.hints=0;st.tries=0;renderHints();renderEval();
+    fb('ok','Benar, hasilnya '+n(t.v)+'. Sekarang bandingkan dengan '+n(P().c)+'.');
+  }else{
+    inp.classList.add('bad');st.lw={k:'val'};
+    fb('bad',st.mode==='learn'?'Belum tepat. Hitung tiap suku, lalu jumlahkan.':'Belum tepat, coba lagi.');
+    wrongAttempt();
+  }
+}
+function checkRel(r){
+  rec('rel',r);
+  var p=P(),q=cur(),t=q.test,rel=t.v<p.c?'<':t.v>p.c?'>':'=';
+  if(r===rel){
+    q.sub='concl';st.hints=0;st.tries=0;renderHints();renderEval();
+    fb('ok','Tepat! '+n(t.v)+' '+esc(rel)+' '+n(p.c)+'. Lanjutkan dengan tanda pada soal.');
+  }else{
+    st.lw={k:'rel'};
+    fb('bad',st.mode==='learn'?'Belum tepat. Mana yang lebih besar, '+n(t.v)+' atau '+n(p.c)+'?':'Belum tepat, coba lagi.');
+    wrongAttempt();
+  }
+}
+function answerTest(ans){
+  rec('concl',ans);
+  var p=P(),q=cur(),t=q.test,truth=holds(t.v,p.c,p.op);
+  if(ans===truth){
+    award();q.evalDone=true;q.testRes=truth;q.sub='done';st.hints=0;st.tries=0;renderEval();
+    document.querySelectorAll('#bUse,#tx,#ty').forEach(function(b){b.disabled=true;});
+    var hh=$('#hints');if(hh)hh.hidden=true;
+    fb('ok','Tepat! '+n(t.v)+' '+esc(p.op)+' '+n(p.c)+' bernilai <b>'+(truth?'benar':'salah')+'</b>, jadi titik ('+n(t.x)+', '+n(t.y)+') <b>'+(truth?'memenuhi':'tidak memenuhi')+'</b> pertidaksamaan.');
+    nextBtn('Lanjut',function(){setPhase('shade');});
+    drawPlane();
+  }else{
+    st.lw={k:'concl'};
+    fb('bad',st.mode==='learn'?'Belum tepat. Bandingkan hasil perbandingan tadi dengan tanda <b>'+esc(p.op)+'</b> pada soal.':'Belum tepat, coba lagi.');
+    wrongAttempt();
+  }
+}
+function tapTest(mx,my){
+  if(!$('#tx')||cur().evalDone)return;
+  var x=Math.max(-R,Math.min(R,Math.round(mx))),y=Math.max(-R,Math.min(R,Math.round(my)));
+  $('#tx').value=x;$('#ty').value=y;useTest();
+}
+/* 5. arsir */
+function phShade(el){
+  var p=P(),q=cur(),t=q.test,res=q.testRes;
+  el.innerHTML=head()+'<div class="note"><p>Hasil uji titik T('+n(t.x)+', '+n(t.y)+'): <b class="'+(res?'okc':'badc')+'">'+(res?'memenuhi':'tidak memenuhi')+'</b> pertidaksamaan <span class="eq">'+esc(fmt(p))+'</span>.</p></div>'
+    +'<p>Ketuk <b>sisi garis</b> yang merupakan daerah penyelesaian pertidaksamaan ini. Sisi itu akan diarsir.</p>'
+    +hintsBlock()+'<div id="actions" class="row">'+hintBtn()+'<button class="btn primary" id="bCheck">Periksa arsiran</button></div>';
+  on('bHint',showHint);on('bCheck',checkShade);
+}
+function tapSide(mx,my){
+  var q=cur(),p=P();
+  if(q.done||!$('#bCheck'))return;
+  if(Math.abs(mx)>R||Math.abs(my)>R)return;
+  var val=p.a*mx+p.b*my-p.c;
+  if(Math.abs(val)/Math.hypot(p.a,p.b)<0.2){fb('info','Ketukannya terlalu dekat dengan garis. Ketuk di salah satu sisi yang lebih jauh dari garis.');return;}
+  q.side=val>0?1:-1;drawPlane();
+  fb('info','Sisi yang kamu pilih sudah diarsir. Tekan <b>Periksa arsiran</b>, atau ketuk sisi lain untuk mengganti.');
+}
+function checkShade(){
+  var p=P(),q=cur();
+  if(!q.side){fb('info','Ketuk salah satu sisi garis pada bidang koordinat terlebih dahulu.');return;}
+  rec('shade',q.side);
+  if(q.side===sideOf(p.op)){
+    award();q.done=true;
+    renderProblem();renderProgress();drawPlane();
+    var hh=$('#hints');if(hh)hh.hidden=true;
+    fb('ok','Tepat! Daerah penyelesaian pertidaksamaan <b style="color:'+COL[st.i]+'">('+(st.i+1)+')</b> adalah sisi garis yang '+(q.testRes?'memuat':'tidak memuat')+' titik uji, yaitu daerah yang diarsir.');
+    var last=st.i>=st.sys.length-1,tunggal=last&&st.sys.length===1;
+    nextBtn(tunggal?'Lihat pembahasan':last?'Cari irisan':'Pertidaksamaan ('+(st.i+2)+')',function(){if(tunggal){st.stage='done';st.hints=0;st.tries=0;st.wrong=false;renderAll();}else if(last)startInter();else startI(st.i+1);});
+  }else{
+    st.lw={k:'shade'};
+    fb('bad',st.mode==='learn'?'Belum tepat. Baca petunjuk di atas, lalu ketuk sisi yang lain.':'Belum tepat, coba lagi.');
+    wrongAttempt();
+  }
+}
+
+/* ---------- Irisan ---------- */
+function violated(x,y){
+  for(var k=0;k<st.sys.length;k++){var q=st.sys[k];if(sideOf(q.op)*(q.a*x+q.b*y-q.c)<=0)return k;}
+  return -1;
+}
+function interPanel(el){
+  var I=st.inter,h='';
+  if(I.phase==='shade'){
+    h='<h2>Daerah penyelesaian sistem</h2>'
+      +'<div class="note"><p>Setiap pertidaksamaan sudah punya daerah arsiran sendiri. Daerah penyelesaian <b>sistem</b> adalah <b>irisan</b>-nya: daerah yang memenuhi <b>semua</b> pertidaksamaan sekaligus.</p></div>'
+      +'<p>Ketuk daerah irisan itu pada bidang koordinat.</p>'
+      +hintsBlock()+'<div id="actions" class="row">'+hintBtn()+'<button class="btn primary" id="bCheck">Periksa daerah</button></div>';
+    el.innerHTML=h;on('bHint',showHint);on('bCheck',checkInter);
+    return;
+  }
+  var c=I.cand[I.qi];
+  el.innerHTML='<h2>Uji pemahaman ('+(I.qi+1)+' dari 2)</h2>'
+    +'<p>Titik <b>P('+n(c.x)+', '+n(c.y)+')</b> ditandai pada bidang koordinat. Apakah titik P termasuk daerah penyelesaian sistem?</p>'
+    +'<div class="row"><button class="btn" data-a="1" id="bYes">✔ Ya, termasuk</button><button class="btn" data-a="0" id="bNo">✖ Tidak termasuk</button></div>'
+    +'<div id="qBox"></div>'+hintsBlock()+'<div id="actions" class="row">'+hintBtn()+'</div>';
+  on('bHint',showHint);
+  el.querySelectorAll('[data-a]').forEach(function(b){b.onclick=function(){answerQ(b.dataset.a==='1');};});
+}
+function tapInter(mx,my){
+  var I=st.inter;
+  if(I.phase!=='shade'||I.shaded)return;
+  if(Math.abs(mx)>R||Math.abs(my)>R)return;
+  for(var k=0;k<st.sys.length;k++){var q=st.sys[k];if(Math.abs(q.a*mx+q.b*my-q.c)/Math.hypot(q.a,q.b)<0.2){fb('info','Ketukannya terlalu dekat dengan sebuah garis. Ketuk di bagian dalam daerah.');return;}}
+  I.tap={x:mx,y:my};drawPlane();
+  fb('info','Titik ketukan ditandai (+). Tekan <b>Periksa daerah</b>, atau ketuk tempat lain untuk mengganti.');
+}
+function checkInter(){
+  var I=st.inter;
+  if(!I.tap){fb('info','Ketuk daerah irisan pada bidang koordinat terlebih dahulu.');return;}
+  rec('inter',{x:I.tap.x,y:I.tap.y});
+  var k=violated(I.tap.x,I.tap.y);
+  if(k<0){
+    I.shaded=true;award();
+    var hh=$('#hints');if(hh)hh.hidden=true;
+    fb('ok','Tepat! Daerah berwarna hijau adalah irisan semua daerah arsiran, yaitu daerah penyelesaian sistem.');
+    nextBtn('Lanjut',function(){setInterPhase('q1');});
+    drawPlane();
+  }else{
+    st.lw={k:'inter',x:I.tap.x,y:I.tap.y,kk:k};
+    fb('bad',st.mode==='learn'?'Belum tepat. Titik yang kamu ketuk berada di luar daerah pertidaksamaan <b style="color:'+COL[k]+'">('+(k+1)+')</b>. Daerah penyelesaian sistem harus berada di dalam semua daerah arsiran.':'Belum tepat, coba lagi.');
+    wrongAttempt();
+  }
+}
+function checkTableHTML(x,y){
+  return '<div class="sub">'+st.sys.map(function(q,k){
+    var v=q.a*x+q.b*y,t=holds(v,q.c,q.op),on=Math.abs(v-q.c)<1e-9;
+    return '<p class="calc"><b style="color:'+COL[k]+'">('+(k+1)+')</b> '+esc(lhsSub(q,x,y))+' = '+n(v)+' → '+n(v)+' '+esc(q.op)+' '+n(q.c)+' : <b class="'+(t?'okc':'badc')+'">'+(t?'benar':'salah')+'</b>'+(on?' <small>(titik pada garis '+(q.solid?'penuh':'putus-putus')+')</small>':'')+'</p>';
+  }).join('')+'</div>';
+}
+function answerQ(ans){
+  rec('q'+(st.inter.qi+1),ans);
+  var I=st.inter,c=I.cand[I.qi],truth=holdsAll(st.sys,c.x,c.y);
+  if(ans===truth){
+    award();I.res[I.qi]=truth;I.ans[I.qi]=true;
+    document.querySelectorAll('#bYes,#bNo').forEach(function(b){b.disabled=true;});
+    $('#qBox').innerHTML=checkTableHTML(c.x,c.y);
+    var hh=$('#hints');if(hh)hh.hidden=true;
+    fb('ok','Tepat! Titik P '+(truth?'memenuhi <b>semua</b> pertidaksamaan, jadi termasuk daerah penyelesaian.':'tidak memenuhi sedikitnya satu pertidaksamaan, jadi bukan daerah penyelesaian.'));
+    if(I.qi===0)nextBtn('Lanjut',function(){setInterPhase('q2');});
+    else nextBtn('Lihat ringkasan',function(){st.stage='done';st.hints=0;st.tries=0;st.wrong=false;renderAll();});
+    drawPlane();
+  }else{
+    st.lw={k:'q',c:{x:c.x,y:c.y}};
+    fb('bad',st.mode==='learn'?'Belum tepat. Uji titik P pada setiap pertidaksamaan, lalu lihat apakah semuanya terpenuhi.':'Belum tepat, coba lagi.');
+    wrongAttempt();
+  }
+}
+
+/* ---------- Ringkasan & skor ---------- */
+function summaryPanel(el){
+  var learn=st.mode==='learn',last=st.mode==='practice'&&st.idx>=st.set.length-1;
+  var li=st.sys.map(function(p,k){
+    var q=st.q[k];
+    return '<li><b style="color:'+COL[k]+'">('+(k+1)+')</b> <span class="eq">'+esc(fmt(p))+'</span>: garis '+(p.solid?'penuh':'putus-putus')+'; titik uji ('+n(q.test.x)+', '+n(q.test.y)+') '+(q.testRes?'memenuhi':'tidak memenuhi')+', jadi arsir sisi yang '+(q.testRes?'memuat':'tidak memuat')+' titik uji.</li>';
+  }).join('');
+  if(learn){
+    var bah=st.sys.map(function(p,k){var q=st.q[k];return '<b style="color:'+COL[k]+'">('+(k+1)+')</b> <span class="eq">'+esc(fmt(p))+'</span>: garis '+(p.solid?'penuh':'putus-putus')+'; titik uji ('+n(q.test.x)+', '+n(q.test.y)+') '+(q.testRes?'memenuhi':'tidak memenuhi')+', jadi arsir sisi yang '+(q.testRes?'memuat':'tidak memuat')+' titik uji.';});
+    bah.push(st.sys.length>1?'<b>Daerah penyelesaian sistem:</b> irisan semua daerah arsiran (daerah hijau). Titik pada garis putus-putus tidak termasuk, sedangkan titik pada garis penuh termasuk selama memenuhi pertidaksamaan lainnya.':'<b>Daerah penyelesaian:</b> sisi garis yang diarsir. Titik pada garis '+(st.sys[0].solid?'penuh termasuk penyelesaian.':'putus-putus tidak termasuk penyelesaian.'));
+    selesaiPanel(el,bah);mascotSay('selesai');return;
+  }
+  var btns=learn
+    ?'<button class="btn primary" id="bNextQ2">Soal berikutnya</button><button class="btn" id="bAgain2">↺ Ulangi soal</button><button class="btn ghost" id="bToPractice">Buka Latihan Mandiri</button>'
+    :'<button class="btn primary" id="bNextP">'+(last?'Lihat skor':'Soal berikutnya')+'</button>';
+  el.innerHTML='<h2>🎉 Daerah penyelesaian sistem sudah ditemukan</h2><ol class="sum">'+li
+    +'<li><b>Daerah penyelesaian sistem:</b> irisan semua daerah arsiran (daerah hijau). Titik pada garis putus-putus tidak termasuk, sedangkan titik pada garis penuh termasuk selama memenuhi pertidaksamaan lainnya.</li></ol>'
+    +(st.mode==='practice'?'<p class="muted">Skor sementara: '+st.score+' / '+st.max+'</p>':'')
+    +'<div class="row">'+btns+'</div>';
+  on('bNextQ2',nextLearn);on('bAgain2',function(){setSystem(st.raw);});on('bToPractice',function(){setTab('practice');startPractice();});
+  on('bNextP',function(){if(last){st.over=true;renderAll();submitScore();}else{st.idx++;setSystem(st.set[st.idx],'p');}});
+}
+function overPanel(el){
+  var snd=st.send||{state:'off'},server=snd.state==='ok',s=st.score,m=st.max,miss;
+  if(server){s=snd.res.skor;m=snd.res.maks;miss=snd.res.perluDiperkuat||[];}
+  else miss=Object.keys(st.missed).filter(function(k){return st.missed[k]>0;});
+  var pct=m?Math.round(100*s/m):0;
+  var msg=pct>=90?'Luar biasa! Kamu sudah menguasai cara menentukan daerah penyelesaian sistem.':pct>=70?'Bagus! Sedikit lagi kamu akan mahir.':'Ayo belajar lagi pelan-pelan di tab Belajar dan Latihan Mandiri, lalu coba kuis lagi.';
+  var h='<h2>Kuis selesai</h2><div class="score">'+s+'<small> / '+m+'</small></div>';
+  if(snd.state==='sending')h+='<div class="fb info">⏳ '+(snd.wait?'Pengiriman gagal. Mencoba lagi otomatis ('+snd.n+' dari '+AUTO_JEDA.length+')…':'Mengirim skor ke gurumu…'+(snd.n?' (percobaan ulang '+snd.n+' dari '+AUTO_JEDA.length+')':''))+'</div>';
+  else if(server)h+='<div class="fb ok">✔ Skor sudah tercatat untuk gurumu.'+(snd.res.ulang?' (Skor ini sudah pernah dikirim sebelumnya.)':'')+'</div>';
+  else if(snd.state==='err')h+='<div class="fb bad">'+esc(snd.msg||'Gagal mengirim skor.')+(snd.retry?' Skormu <b>belum tercatat</b>. Pastikan internet menyala, lalu tekan “Kirim ulang”.':'')+'</div>';
+  else h+='<div class="fb info">Mode uji. Skor tidak dikirim karena alamat penyimpanan belum diatur guru.</div>';
+  h+='<p>'+msg+'</p>'+(miss.length?'<p><b>Perlu diperkuat:</b> '+miss.map(esc).join(', ')+'.</p>':'<p>Semua langkah benar pada percobaan pertama. 👏</p>');
+  var b='';
+  if(snd.state==='err'&&snd.retry)b+='<button class="btn primary" id="bResend">Kirim ulang</button>';
+  if(snd.state!=='sending'){
+    var again=!CONFIG.ENDPOINT||(server&&snd.res.sisaPercobaan>0);
+    if(again)b+='<button class="btn primary" id="bAgain">Ulangi kuis</button>';
+    b+='<button class="btn" id="bLearn">Ke Latihan Mandiri</button>';
+  }
+  el.innerHTML=h+'<div class="row">'+b+'</div>';
+  on('bResend',function(){sendBody(submitBody());});on('bAgain',startPractice);on('bLearn',function(){if(!konfirmPindah())return;setTab('learn');startLearn();});
+}
+
+/* ---------- Bidang koordinat ---------- */
+function ptsStr(poly){return poly.map(function(q){return sx(q[0])+','+sy(q[1]);}).join(' ');}
+function drawPlane(){
+  if(drawViewNow())return;
+  var s='',i,k;
+  var sys=(st.over||st.gate)?null:st.sys;
+  s+='<defs>';
+  for(k=0;k<3;k++)s+='<pattern id="h'+k+'" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate('+ANG[k]+')"><line x1="0" y1="0" x2="0" y2="9" stroke="'+COL[k]+'" stroke-width="2" opacity=".55"/></pattern>';
+  s+='<marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1b2a41"/></marker></defs>';
+  s+='<rect width="'+N+'" height="'+N+'" fill="#fff"/><g stroke="#dbe4f3" stroke-width="1">';
+  for(i=-R;i<=R;i++)s+='<line x1="'+sx(i)+'" y1="'+sy(-R)+'" x2="'+sx(i)+'" y2="'+sy(R)+'"/><line x1="'+sx(-R)+'" y1="'+sy(i)+'" x2="'+sx(R)+'" y2="'+sy(i)+'"/>';
+  s+='</g>';
+  if(sys){
+    sys.forEach(function(q,k){
+      var c=st.q[k];
+      if(c&&c.side&&(c.done||(st.stage==='ineq'&&st.i===k&&c.phase==='shade'))){
+        var poly=clipHalf(WIN,q,c.side);
+        if(poly.length>2)s+='<polygon points="'+ptsStr(poly)+'" fill="'+COL[k]+'" fill-opacity=".09"/><polygon points="'+ptsStr(poly)+'" fill="url(#h'+k+')"/>';
+      }
+    });
+    if(st.stage!=='ineq'&&st.stage!=='intro'&&st.inter&&st.inter.shaded){
+      var ip=interPoly(sys,-1);
+      if(ip.length>2){
+        s+='<polygon points="'+ptsStr(ip)+'" fill="#15803d" fill-opacity=".30" stroke="#15803d" stroke-width="2.5" stroke-linejoin="round"/>';
+        var cx=0,cy=0;ip.forEach(function(q){cx+=q[0];cy+=q[1];});cx/=ip.length;cy/=ip.length;
+        s+='<text class="lbl" x="'+sx(cx)+'" y="'+(sy(cy)+5)+'" text-anchor="middle" style="fill:#14532d;font-size:15px">DP</text>';
+      }
+    }
+  }
+  s+='<line x1="'+(sx(-R)-6)+'" y1="'+sy(0)+'" x2="'+(sx(R)+14)+'" y2="'+sy(0)+'" stroke="#1b2a41" stroke-width="2" marker-end="url(#arr)"/>';
+  s+='<line x1="'+sx(0)+'" y1="'+(sy(-R)+6)+'" x2="'+sx(0)+'" y2="'+(sy(R)-14)+'" stroke="#1b2a41" stroke-width="2" marker-end="url(#arr)"/>';
+  s+='<text class="lbl" x="'+(sx(R)+16)+'" y="'+(sy(0)+18)+'" style="font-style:italic">x</text><text class="lbl" x="'+(sx(0)+10)+'" y="20" style="font-style:italic">y</text>';
+  for(i=-R;i<=R;i+=2){
+    if(i===0)continue;
+    s+='<text class="tick" x="'+sx(i)+'" y="'+(sy(0)+16)+'" text-anchor="middle">'+n(i)+'</text><text class="tick" x="'+(sx(0)-6)+'" y="'+(sy(i)+4)+'" text-anchor="end">'+n(i)+'</text>';
+  }
+  s+='<text class="tick" x="'+(sx(0)-6)+'" y="'+(sy(0)+16)+'" text-anchor="end">0</text>';
+  if(sys){
+    sys.forEach(function(q,k){
+      var c=st.q[k];
+      if(!c||!c.showPts)return;
+      var e=lineEnds(q);if(!e)return;
+      var done=c.type?COL[k]:'#64748b';
+      s+='<line x1="'+sx(e[0][0])+'" y1="'+sy(e[0][1])+'" x2="'+sx(e[1][0])+'" y2="'+sy(e[1][1])+'" stroke="'+done+'" stroke-width="3.5" stroke-linecap="round"'+(c.type==='dash'?' stroke-dasharray="11 8"':'')+'/>';
+      var E=e[0][1]>e[1][1]||(e[0][1]===e[1][1]&&e[0][0]>e[1][0])?e[0]:e[1],O=E===e[0]?e[1]:e[0];
+      var lx=sx(E[0]+0.07*(O[0]-E[0])),ly=sy(E[1]+0.07*(O[1]-E[1]));
+      var rt=lx>400;
+      s+='<text class="lbl" x="'+(rt?lx-6:lx+7)+'" y="'+(ly-6)+'" text-anchor="'+(rt?'end':'start')+'" style="fill:'+COL[k]+'">('+(k+1)+')</text>';
+    });
+    if(st.stage==='ineq'&&st.q[st.i]){
+      var q=st.q[st.i],p=st.sys[st.i];
+      if(q.phase!=='table'){
+        ['A','B'].forEach(function(key){
+          var pl=placing(),pt=pl?q.drag[key]:p[key],X=sx(pt.x),Y=sy(pt.y),right=X>360;
+          if(pl){
+            if(q.active===key)s+='<circle cx="'+X+'" cy="'+Y+'" r="14" fill="rgba(245,158,11,.25)" stroke="#f59e0b" stroke-width="3"/>';
+            else s+='<circle cx="'+X+'" cy="'+Y+'" r="14" fill="rgba(245,158,11,.14)"/>';
+          }
+          s+='<circle cx="'+X+'" cy="'+Y+'" r="6" fill="#fff" stroke="#c2410c" stroke-width="3.5"/>';
+          s+='<text class="lbl" x="'+(right?X-10:X+10)+'" y="'+(Y-10)+'" text-anchor="'+(right?'end':'start')+'" style="fill:#c2410c">'+key+'('+n(pt.x)+', '+n(pt.y)+')</text>';
+        });
+      }
+      if(q.test&&(q.phase==='test'||q.phase==='shade')){
+        var t=q.test,X2=sx(t.x),Y2=sy(t.y),col=q.evalDone?(q.testRes?'#15803d':'#b91c1c'):'#7c3aed',right2=X2>360;
+        s+='<rect x="'+(X2-7)+'" y="'+(Y2-7)+'" width="14" height="14" fill="'+col+'" stroke="#fff" stroke-width="2" transform="rotate(45 '+X2+' '+Y2+')"/>';
+        s+='<text class="lbl" x="'+(right2?X2-12:X2+12)+'" y="'+(Y2+18)+'" text-anchor="'+(right2?'end':'start')+'" style="fill:'+col+'">T('+n(t.x)+', '+n(t.y)+')</text>';
+      }
+    }
+    if(st.stage==='inter'&&st.inter){
+      var I=st.inter;
+      if(I.tap&&I.phase==='shade'&&!I.shaded){
+        var tx=sx(I.tap.x),ty=sy(I.tap.y);
+        s+='<path d="M'+(tx-8)+' '+ty+'H'+(tx+8)+'M'+tx+' '+(ty-8)+'V'+(ty+8)+'" stroke="#7c3aed" stroke-width="3.5" stroke-linecap="round"/>';
+      }
+      if(I.phase==='q1'||I.phase==='q2'){
+        var cd=I.cand[I.qi],px=sx(cd.x),py=sy(cd.y),pc=I.ans[I.qi]?(I.res[I.qi]?'#15803d':'#b91c1c'):'#7c3aed',pr=px>360;
+        s+='<rect x="'+(px-7)+'" y="'+(py-7)+'" width="14" height="14" fill="'+pc+'" stroke="#fff" stroke-width="2" transform="rotate(45 '+px+' '+py+')"/>';
+        s+='<text class="lbl" x="'+(pr?px-12:px+12)+'" y="'+(py+18)+'" text-anchor="'+(pr?'end':'start')+'" style="fill:'+pc+'">P('+n(cd.x)+', '+n(cd.y)+')</text>';
+      }
+    }
+  }
+  $('#plane').innerHTML=s;
+  $('#plane').classList.toggle('drag',placing());
+}
+var dragKey=null;
+function conv(e){var r=$('#plane').getBoundingClientRect();var vx=(e.clientX-r.left)/r.width*N,vy=(e.clientY-r.top)/r.height*N;return {vx:vx,vy:vy,mx:(vx-C)/S,my:(C-vy)/S};}
+function movePoint(k,c){
+  var q=cur(),x=Math.max(-R,Math.min(R,Math.round(c.mx))),y=Math.max(-R,Math.min(R,Math.round(c.my)));
+  var d=q.drag[k];if(d.x===x&&d.y===y)return;
+  q.drag[k]={x:x,y:y};updateCoordChips();drawPlane();
+}
+$('#plane').addEventListener('pointerdown',function(e){
+  if(!placing())return;
+  e.preventDefault();
+  var q=cur(),c=conv(e),order=q.active==='A'?['B','A']:['A','B'],best=null,bd=1e9;
+  order.forEach(function(k){var d=q.drag[k],dd=Math.hypot(c.vx-sx(d.x),c.vy-sy(d.y));if(dd<bd){bd=dd;best=k;}});
+  if(bd<=26&&best!==q.active){q.active=best;updateCoordChips();}
+  dragKey=q.active;movePoint(dragKey,c);drawPlane();
+  try{this.setPointerCapture(e.pointerId);}catch(_){}
+});
+$('#plane').addEventListener('pointermove',function(e){if(dragKey&&placing())movePoint(dragKey,conv(e));});
+['pointerup','pointercancel'].forEach(function(ev){$('#plane').addEventListener(ev,function(){dragKey=null;});});
+$('#plane').addEventListener('click',function(e){
+  if(!st.sys||st.over||st.gate)return;
+  var c=conv(e);
+  if(st.stage==='ineq'){
+    var q=cur();
+    if(q.phase==='test'&&!q.evalDone)tapTest(c.mx,c.my);
+    else if(q.phase==='shade'&&!q.done)tapSide(c.mx,c.my);
+  }else if(st.stage==='inter')tapInter(c.mx,c.my);
+});
+
+/* ---------- tab & tombol kartu soal ---------- */
+function setTab(m){$('#tabExplain').classList.toggle('on',m==='explain');$('#tabLearn').classList.toggle('on',m==='learn');$('#tabPractice').classList.toggle('on',m==='practice');}
+/* Pemetaan nama: tab "Belajar" = mode 'explain'; tab "Latihan Mandiri" = mode 'learn' (alur langkah tanpa skor);
+   tab "Kuis" = mode 'practice' (bernilai, terhubung server). Id dan nama internal tidak diubah. */
+var MSG_KUIS='Kuis sedang berjalan. Jika pindah ke tab lain, kuis harus diulang dari awal dan tercatat sebagai "dilanjutkan". Tetap pindah?';
+$('#tabExplain').onclick=function(){
+  if(practiceActive()&&!confirm(MSG_KUIS))return;
+  if(!konfirmPindah())return;
+  setTab('explain');startExplain();
+};
+$('#tabLearn').onclick=function(){
+  if(practiceActive()&&!confirm(MSG_KUIS))return;
+  if(!konfirmPindah())return;
+  setTab('learn');startLearn();
+};
+$('#tabPractice').onclick=function(){if(practiceActive()||!konfirmPindah())return;setTab('practice');startPractice();};
+/* ---------- menu urutan materi: pindah halaman ---------- */
+var lewatJaga=false;
+Array.prototype.forEach.call(document.querySelectorAll('.nav-materi a'),function(a){
+  a.addEventListener('click',function(e){
+    if(a.getAttribute('aria-current')==='page'){e.preventDefault();return;}
+    if(e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;   /* tab baru: halaman ini tidak ditinggalkan */
+    if(practiceActive()&&!confirm('Kuis sedang berjalan. Jika pindah ke halaman materi lain, kuis harus diulang dari awal dan tercatat sebagai "dilanjutkan". Tetap pindah?')){e.preventDefault();return;}
+    if(!konfirmPindah()){e.preventDefault();return;}
+    if(practiceActive()||unsentScore()){lewatJaga=true;setTimeout(function(){lewatJaga=false;},3000);}   /* sudah dikonfirmasi */
+  });
+});
+window.addEventListener('beforeunload',function(e){if(lewatJaga){lewatJaga=false;return;}if(practiceActive()||unsentScore()){e.preventDefault();e.returnValue='';}});
+$('#bRepeat').onclick=function(){if(st.mode==='learn')ulangiSoal();};
+$('#bNextQ').onclick=function(){if(st.mode==='learn')soalBaru();};
+/* ======================================================================
+   MODUL BERSAMA · isinya sama persis di sistem-ptldv.html dan balik-ptldv.html
+   (1) bidang koordinat dari "tampilan" (dipakai tab Belajar dan soal LOTS/HOTS)
+   (2) mesin tab Belajar: bagian muncul bertahap, contoh kontekstual, temukan kesalahan
+   (3) maskot Plus   (4) rumus KaTeX
+   (5) Latihan Mandiri: pilih tipe & level, soal langkah singkat (LOTS/HOTS),
+       petunjuk bertahap, Di mana salahku?, Lihat jawaban, penyelesaian bertahap,
+       panel selesai + pembahasan
+   Modul ini TIDAK menyentuh CORE, jejak jawaban, maupun skor Kuis.
+   Bagian khusus halaman ada di objek PAGE dan data EX (di bawah modul ini).
+   ====================================================================== */
+
+/* ---------- (1) bidang koordinat dari tampilan ----------
+   V = { L:[{q,col,lbl,ty}] garis ('solid'|'dash'|'thin'),
+         dp:[pertidaksamaan] daerah hijau (irisan), hf:[{q,col}] arsiran satu sisi,
+         mk:[{x,y,c,l,sh}] titik ('dot'|'dia'), dots:[[x,y]] titik bulat kecil,
+         tap:{x,y} tanda +, cap:'keterangan' } */
+var MKC={k:'#1b2a41',g:'#15803d',r:'#b91c1c',b:'#1d4ed8',o:'#c2410c',u:'#7c3aed',c:'#92400e'};
+var ANGV=[45,135,90];
+function vLine(q,k,lbl,ty){return {q:q,col:COL[k%COL.length],lbl:lbl===undefined?'('+(k+1)+')':lbl,ty:ty||(q.op==='='||isSolid(q.op)?'solid':'dash')};}
+function vSys(sys,o){o=o||{};return (sys||[]).map(function(q,k){return vLine(q,k,o.lbl?o.lbl[k]:undefined,o.ty);});}
+function vPolyStr(poly){return poly.map(function(q){return sx(q[0])+','+sy(q[1]);}).join(' ');}
+function vWrap(t,w){var out=[],line='';String(t).split(' ').forEach(function(wd){if((line+' '+wd).trim().length>w&&line){out.push(line);line=wd;}else line=(line+' '+wd).trim();});if(line)out.push(line);return out;}
+function drawView(V){
+  V=V||{};
+  var s='',i,k;
+  s+='<defs><pattern id="vhg" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" stroke="#15803d" stroke-width="2" opacity=".5"/></pattern>';
+  for(k=0;k<3;k++)s+='<pattern id="vh'+k+'" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate('+ANGV[k]+')"><line x1="0" y1="0" x2="0" y2="9" stroke="'+COL[k]+'" stroke-width="2" opacity=".5"/></pattern>';
+  s+='<marker id="varr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1b2a41"/></marker></defs>';
+  s+='<rect width="'+N+'" height="'+N+'" fill="#fff"/><g stroke="#dbe4f3" stroke-width="1">';
+  for(i=-R;i<=R;i++)s+='<line x1="'+sx(i)+'" y1="'+sy(-R)+'" x2="'+sx(i)+'" y2="'+sy(R)+'"/><line x1="'+sx(-R)+'" y1="'+sy(i)+'" x2="'+sx(R)+'" y2="'+sy(i)+'"/>';
+  s+='</g>';
+  (V.hf||[]).forEach(function(h,k){
+    var poly=clipHalf(WIN,h.q,h.side||sideOf(h.q.op)),col=h.col||COL[k%3];
+    if(poly.length>2)s+='<polygon points="'+vPolyStr(poly)+'" fill="'+col+'" fill-opacity=".08"/><polygon points="'+vPolyStr(poly)+'" fill="url(#vh'+(k%3)+')"/>';
+  });
+  if(V.dp){
+    var dp=interPoly(V.dp,-1);
+    if(dp.length>2)s+='<polygon points="'+vPolyStr(dp)+'" fill="#15803d" fill-opacity=".20"/><polygon points="'+vPolyStr(dp)+'" fill="url(#vhg)"/>';
+  }
+  s+='<line x1="'+(sx(-R)-6)+'" y1="'+sy(0)+'" x2="'+(sx(R)+14)+'" y2="'+sy(0)+'" stroke="#1b2a41" stroke-width="2" marker-end="url(#varr)"/>';
+  s+='<line x1="'+sx(0)+'" y1="'+(sy(-R)+6)+'" x2="'+sx(0)+'" y2="'+(sy(R)-14)+'" stroke="#1b2a41" stroke-width="2" marker-end="url(#varr)"/>';
+  s+='<text class="lbl" x="'+(sx(R)+16)+'" y="'+(sy(0)+18)+'" style="font-style:italic">x</text><text class="lbl" x="'+(sx(0)+10)+'" y="20" style="font-style:italic">y</text>';
+  for(i=-R;i<=R;i+=2){
+    if(i===0)continue;
+    s+='<text class="tick" x="'+sx(i)+'" y="'+(sy(0)+16)+'" text-anchor="middle">'+n(i)+'</text><text class="tick" x="'+(sx(0)-6)+'" y="'+(sy(i)+4)+'" text-anchor="end">'+n(i)+'</text>';
+  }
+  s+='<text class="tick" x="'+(sx(0)-6)+'" y="'+(sy(0)+16)+'" text-anchor="end">0</text>';
+  (V.dots||[]).forEach(function(d){s+='<circle cx="'+sx(d[0])+'" cy="'+sy(d[1])+'" r="3.4" fill="#92400e" opacity=".85"/>';});
+  (V.L||[]).forEach(function(l){
+    var e=lineEnds(l.q);if(!e)return;
+    var thin=l.ty==='thin',col=thin?'#94a3b8':l.col;
+    s+='<line x1="'+sx(e[0][0])+'" y1="'+sy(e[0][1])+'" x2="'+sx(e[1][0])+'" y2="'+sy(e[1][1])+'" stroke="'+col+'" stroke-width="'+(thin?2.5:3.5)+'" stroke-linecap="'+(l.ty==='dash'?'butt':'round')+'"'+(l.ty==='dash'?' stroke-dasharray="11 8"':'')+'/>';
+    if(l.lbl){
+      var E=e[0][1]>e[1][1]||(e[0][1]===e[1][1]&&e[0][0]>e[1][0])?e[0]:e[1],O=E===e[0]?e[1]:e[0];
+      var lx=sx(E[0]+0.07*(O[0]-E[0])),ly=sy(E[1]+0.07*(O[1]-E[1])),rt=lx>400;
+      s+='<text class="lbl" x="'+(rt?lx-6:lx+7)+'" y="'+(ly-6)+'" text-anchor="'+(rt?'end':'start')+'" style="fill:'+col+'">'+esc(l.lbl)+'</text>';
+    }
+  });
+  (V.mk||[]).forEach(function(m){
+    var col=MKC[m.c]||m.c||MKC.k,X=sx(m.x),Y=sy(m.y),rt=X>360,lab=m.l===undefined?'('+frac(m.x)+', '+frac(m.y)+')':m.l;
+    if(m.sh==='dia'){
+      s+='<rect x="'+(X-7)+'" y="'+(Y-7)+'" width="14" height="14" fill="'+col+'" stroke="#fff" stroke-width="2" transform="rotate(45 '+X+' '+Y+')"/>';
+      if(lab)s+='<text class="lbl" x="'+(rt?X-12:X+12)+'" y="'+(Y+18)+'" text-anchor="'+(rt?'end':'start')+'" style="fill:'+col+'">'+esc(lab)+'</text>';
+    }else{
+      s+=m.h?'<circle cx="'+X+'" cy="'+Y+'" r="5.5" fill="#fff" stroke="'+col+'" stroke-width="3"/>':'<circle cx="'+X+'" cy="'+Y+'" r="5.5" fill="'+col+'" stroke="#fff" stroke-width="2"/>';
+      if(lab)s+='<text class="lbl" x="'+(rt?X-9:X+9)+'" y="'+(Y-9)+'" text-anchor="'+(rt?'end':'start')+'" style="fill:'+col+'">'+esc(lab)+'</text>';
+    }
+  });
+  if(V.tap){var tx=sx(V.tap.x),ty=sy(V.tap.y);s+='<path d="M'+(tx-8)+' '+ty+'H'+(tx+8)+'M'+tx+' '+(ty-8)+'V'+(ty+8)+'" stroke="#7c3aed" stroke-width="3.5" stroke-linecap="round"/>';}
+  if(V.cap){
+    var ln=vWrap(V.cap,30).slice(0,3);
+    s+='<text x="12" y="'+(N-14-16*(ln.length-1))+'" style="font-size:13px;font-weight:600;fill:#334155;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round">'
+      +ln.map(function(t,j){return '<tspan x="12" dy="'+(j?16:0)+'">'+esc(t)+'</tspan>';}).join('')+'</text>';
+  }
+  return s;
+}
+function viewNow(){
+  if(st.mode==='explain')return exView();
+  if(st.mode==='learn'&&st.item)return itemView();
+  return null;
+}
+/* dipanggil di awal drawPlane() halaman: true = bidang sudah digambar dari tampilan */
+function drawViewNow(){
+  var V=viewNow();if(!V)return false;
+  var pl=$('#plane');pl.innerHTML=drawView(V);pl.classList.remove('drag');
+  return true;
+}
+
+/* ---------- bilangan pecahan untuk teks dan TeX ---------- */
+function toFrac(v){
+  if(Math.abs(v-Math.round(v))<1e-9)return {p:Math.round(v),q:1};
+  for(var q=2;q<=24;q++){var p=v*q;if(Math.abs(p-Math.round(p))<1e-9)return {p:Math.round(p),q:q};}
+  return {p:Math.round(v*100)/100,q:1};
+}
+var FR={'1/2':'½','1/3':'⅓','2/3':'⅔','1/4':'¼','3/4':'¾','1/5':'⅕','2/5':'⅖','3/5':'⅗','4/5':'⅘','1/6':'⅙','5/6':'⅚'};
+function frac(v){
+  var f=toFrac(v);if(f.q===1)return n(f.p);
+  var neg=f.p<0,a=Math.abs(f.p),w=Math.floor(a/f.q),r=a%f.q,u=FR[r+'/'+f.q];
+  return (neg?'−':'')+(u?(w?w:'')+u:(w?w+' ':'')+r+'/'+f.q);
+}
+function tn(v){var f=toFrac(v);if(f.q===1)return String(f.p).replace('-','-');return (f.p<0?'-':'')+'\\frac{'+Math.abs(f.p)+'}{'+f.q+'}';}
+function tk(v){return v<0?'('+tn(v)+')':tn(v);}
+function tLin(a,b){var t='';[[a,'x'],[b,'y']].forEach(function(z){var c=z[0];if(!c)return;var m=Math.abs(c),bd=(m===1?'':tn(m))+z[1];t+=t===''?(c<0?'-':'')+bd:(c<0?' - ':' + ')+bd;});return t||'0';}
+function tSub(a,b,x,y){var p=[];if(a!==0)p.push((a===1?'':a===-1?'-':tn(a)+' \\cdot ')+tk(x));if(b!==0)p.push((b===1?'':b===-1?'-':tn(b)+' \\cdot ')+tk(y));return p.join(' + ').replace(/\+ -/g,'- ');}
+var TOP={'≤':'\\le','≥':'\\ge','<':'<','>':'>','=':'='};
+function tTeks(s){return '\\text{'+String(s).replace(/[\\{}]/g,'')+'}';}
+function escAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+/* blok penyelesaian: [{judul, tex:[baris aligned], txt:[baris teks biasa]}] */
+function pnyHTML(bl){
+  if(!bl||!bl.length)return '';
+  return '<div class="penyelesaian"><b>Penyelesaian</b>'+bl.map(function(b){
+    return (b.judul?'<p class="pnyj">'+b.judul+'</p>':'')+'<p class="eq" data-tex="'+escAttr('\\begin{aligned}'+b.tex.join(' \\\\ ')+'\\end{aligned}')+'">'+b.txt.map(esc).join('<br>')+'</p>';
+  }).join('')+'</div>';
+}
+function tampilPny(bl,after){
+  var f=after||$('#fb');if(!f||!bl||!bl.length)return;
+  var old=$('#panel .penyelesaian');if(old&&old.parentNode)old.parentNode.removeChild(old);
+  f.insertAdjacentHTML('afterend',pnyHTML(bl));
+  var box=$('#panel .penyelesaian');if(box)renderMath(box);
+}
+/* substitusi titik ke ax + by lalu bandingkan dengan c */
+function pnyUji(q,T,judul){
+  var v=q.a*T.x+q.b*T.y,ok=holds(v,q.c,q.op);
+  return {judul:judul||('Uji titik ('+n(T.x)+', '+n(T.y)+') pada '+lhs(q)+' '+q.op+' '+n(q.c)),
+    tex:[tLin(q.a,q.b)+' &= '+tSub(q.a,q.b,T.x,T.y),'&= '+tn(v),'&\\Rightarrow\\ '+tn(v)+' '+TOP[q.op]+' '+tn(q.c)+'\\quad '+tTeks(ok?'(benar)':'(salah)')],
+    txt:[lhs(q)+' = '+lhsSub(q,T.x,T.y)+' = '+n(v),n(v)+' '+q.op+' '+n(q.c)+' → '+(ok?'benar':'salah')]};
+}
+/* persamaan garis melalui dua titik → bentuk ax + by = c */
+function pnyDuaTitik(P1,P2,judul){
+  var x1=P1.x,y1=P1.y,dx=P2.x-x1,dy=P2.y-y1,tex,txt;
+  judul=judul||('Persamaan garis melalui ('+n(x1)+', '+n(y1)+') dan ('+n(P2.x)+', '+n(P2.y)+')');
+  if(dx===0)return {judul:judul,tex:['x &= '+tn(x1)+'\\quad '+tTeks('(kedua titik memiliki x yang sama)')],txt:['Kedua titik memiliki x = '+n(x1)+', jadi x = '+n(x1)]};
+  if(dy===0)return {judul:judul,tex:['y &= '+tn(y1)+'\\quad '+tTeks('(kedua titik memiliki y yang sama)')],txt:['Kedua titik memiliki y = '+n(y1)+', jadi y = '+n(y1)]};
+  var a=dy,b=-dx,c=dy*x1-dx*y1,g=Math.abs(gcdN(gcdN(a,b),c))||1;
+  if(a<0||(a===0&&b<0))g=-g;
+  var A=a/g,B2=b/g,Cc=c/g;
+  tex=['\\frac{y - y_1}{y_2 - y_1} &= \\frac{x - x_1}{x_2 - x_1}',
+    '\\frac{y - '+tk(y1)+'}{'+tn(P2.y)+' - '+tk(y1)+'} &= \\frac{x - '+tk(x1)+'}{'+tn(P2.x)+' - '+tk(x1)+'}',
+    '\\frac{y - '+tk(y1)+'}{'+tn(dy)+'} &= \\frac{x - '+tk(x1)+'}{'+tn(dx)+'}',
+    tn(dx)+'(y - '+tk(y1)+') &= '+tn(dy)+'(x - '+tk(x1)+')',
+    tLin(a,b)+' &= '+tn(c)];
+  txt=['(y − y₁)/(y₂ − y₁) = (x − x₁)/(x₂ − x₁)','(y − '+par(y1)+')/'+par(dy)+' = (x − '+par(x1)+')/'+par(dx),
+    n(dx)+'(y − '+par(y1)+') = '+n(dy)+'(x − '+par(x1)+')',lhs({a:a,b:b})+' = '+n(c)];
+  if(g!==1){tex.push(tLin(A,B2)+' &= '+tn(Cc)+'\\quad '+tTeks(g<0&&Math.abs(g)===1?'(kalikan −1)':'(bagi dengan '+n(g)+')'));txt.push(lhs({a:A,b:B2})+' = '+n(Cc));}
+  return {judul:judul,tex:tex,txt:txt};
+}
+/* substitusi titik T ke ruas kiri lalu bandingkan dengan c (tanda <, =, >) */
+function pnyBanding(E,T,judul){
+  var v=E.a*T.x+E.b*T.y,r=v<E.c?'<':v>E.c?'>':'=';
+  return {judul:judul||('Substitusi ('+n(T.x)+', '+n(T.y)+')'),
+    tex:[tLin(E.a,E.b)+' &= '+tSub(E.a,E.b,T.x,T.y),'&= '+tn(v),'&\\Rightarrow\\ '+tn(v)+' '+r+' '+tn(E.c)],
+    txt:[lhs(E)+' = '+lhsSub(E,T.x,T.y)+' = '+n(v),n(v)+' '+r+' '+n(E.c)]};
+}
+function gcdN(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t;}return a;}
+
+/* ---------- (2) TAB BELAJAR ----------
+   Setiap layar di EX salah satu dari:
+   a. layar bertahap : {t, jd, src, parts:[HTML], beats:[{show, say, v, at}]}
+      show = bagian terakhir yang tampil, v = tampilan bidang, at = sasaran Plus (opsional)
+   b. layar biasa    : {t, jd, src, panel:HTML, beats:[{say, at}], sys, pts, bp, test}
+   c. temukan kesalahan: {t, k:1, jd, src, soal, lines, err, ws, why, gr, fix, sys, pts, test}
+   EX_TOPICS = [[id, label, grup]] menentukan isi menu; EX_GROUPS = urutan grup. */
+function B(say,at){return {say:say,at:at};}
+function Pt(x,y){return {pt:[x,y]};}
+function El(s){return {el:s};}
+function Ln(i){return {ln:i};}
+var DPT={dp:1};
+var ex={i:0,b:0,rev:false,miss:0,mark:null};
+function exBeats(sc){
+  if(!sc.k)return sc.beats;
+  if(!ex.rev)return [B('Ketuk baris yang menurutmu salah.',El('#exSols'))];
+  return [B(sc.ws,El('#sol'+sc.err))].concat(sc.gr||[],[B('Perbaikannya ada di sini.',El('#exFix'))]);
+}
+function exBeatNow(){var bs=exBeats(EX[ex.i]);return bs[Math.min(ex.b,bs.length-1)];}
+function vCopy(V){var W={};for(var k in V)W[k]=V[k];return W;}
+function exView(){
+  var sc=EX[ex.i],V;if(!sc)return null;
+  if(sc.parts)V=vCopy(exBeatNow().v||sc.v0||{});
+  else{
+    var mk=[];
+    (sc.pts||[]).forEach(function(p){mk.push({x:p[0],y:p[1],c:'k'});});
+    (sc.bp||[]).forEach(function(p){mk.push({x:p[0],y:p[1],c:'r'});});
+    if(sc.test)mk.push({x:sc.test[0],y:sc.test[1],c:'g',sh:'dia',l:'uji ('+n(sc.test[0])+', '+n(sc.test[1])+')'});
+    V={L:sc.L||vSys(sc.sys),dp:sc.noDp?null:sc.sys,hf:sc.hf||null,mk:mk};
+  }
+  if(ex.mark)V.mk=(V.mk||[]).concat([ex.mark]);
+  return V;
+}
+function exCase(sc){
+  var h='<p>'+sc.soal+'</p><p><b>Penyelesaian seorang siswa</b>: ketuk baris yang menurutmu salah.</p><div class="sols" id="exSols">';
+  sc.lines.forEach(function(t,i){h+='<button class="sol'+(ex.rev&&i===sc.err?' bad':'')+'" id="sol'+i+'" data-i="'+i+'" type="button">'+t+'</button>';});
+  h+='</div><div id="exMsg" class="muted" role="status"></div>';
+  if(ex.rev)h+='<div class="exbox why" id="exWhy"><b>Letak dan alasan kesalahan:</b> '+sc.why+'</div><div class="exbox fix" id="exFix" hidden><b>Perbaikan:</b> '+sc.fix+'</div>';
+  else h+='<div class="row"><button class="btn ghost" id="exReveal" type="button">Tunjukkan kesalahannya</button></div>';
+  return h;
+}
+function exMenu(sc){
+  var h='<select id="exTopic" aria-label="Pilih bagian">';
+  EX_GROUPS.forEach(function(g){
+    var tp=EX_TOPICS.filter(function(t){return t[2]===g;});if(!tp.length)return;
+    h+='<optgroup label="'+escAttr(g)+'">'+tp.map(function(t){return '<option value="'+t[0]+'"'+(t[0]===sc.t?' selected':'')+'>'+esc(t[1])+'</option>';}).join('')+'</optgroup>';
+  });
+  return h+'</select>';
+}
+function explainPanel(el){
+  var sc=EX[ex.i],h='',body;
+  if(sc.k)body=exCase(sc);
+  else if(sc.parts)body=sc.parts.map(function(p,i){return '<div class="expart" data-part="'+i+'" hidden>'+p+'</div>';}).join('');
+  else body=sc.panel;
+  h+='<div class="exhd">'+exMenu(sc)+'<small id="exPos"></small></div>';
+  h+='<h2>'+esc(sc.jd)+'</h2>'+body+'<small class="exsrc">Sumber: '+esc(sc.src)+'</small>';
+  h+='<div class="row'+(sc.go?'':' exempty')+'" id="exNav"><div id="exFloat"><span class="exfpos" id="exFpos" aria-hidden="true"></span><button class="btn" id="exPrev" type="button">◀ Sebelumnya</button><button class="btn primary" id="exNext" type="button">Berikutnya ▶</button><button class="btn ghost" id="exAgain" type="button" aria-label="Putar ulang layar ini">↺ <span class="lb">Putar ulang</span></button></div>'+(sc.go?'<button class="btn primary" id="exGo" type="button">Buka Latihan Mandiri</button>':'')+'</div>';
+  el.innerHTML=h;
+  renderMath(el);
+  on('exPrev',exPrev);on('exNext',exNext);on('exAgain',function(){ex.b=0;ex.mark=null;exBeat();});on('exReveal',function(){ex.rev=true;ex.b=0;exShow();});
+  on('exGo',function(){setTab('learn');startLearn();});
+  var tp=$('#exTopic');if(tp)tp.onchange=function(){exTopic(tp.value);};
+  el.querySelectorAll('.sol').forEach(function(b){b.onclick=function(){exTap(parseInt(b.getAttribute('data-i'),10));};});
+  el.querySelectorAll('tr.tpt').forEach(function(r){
+    r.onclick=function(){exRow(r);};
+    r.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();exRow(r);}};
+  });
+  pendNotice(el);
+}
+function exRow(r){
+  $('#panel').querySelectorAll('.hit').forEach(function(x){x.classList.remove('hit');});r.classList.add('hit');
+  var x=+r.getAttribute('data-x'),y=+r.getAttribute('data-y'),ok=r.getAttribute('data-ok')==='1';
+  ex.mark={x:x,y:y,c:ok?'g':'r',sh:'dia',l:'('+frac(x)+', '+frac(y)+')'};
+  drawPlane();
+  plusGo({pt:[x,y]},ok?'Titik ini ada di DP: semua pertidaksamaan benar.':'Titik ini di luar DP: sedikitnya satu pertidaksamaan salah.',4000);
+}
+function exTopic(id){for(var i=0;i<EX.length;i++)if(EX[i].t===id){ex.i=i;ex.b=0;ex.rev=false;ex.mark=null;exShow();return;}}
+function exTap(i){
+  var sc=EX[ex.i];if(ex.rev)return;
+  if(i===sc.err){ex.rev=true;ex.b=0;exShow();return;}
+  ex.miss++;
+  var b=$('#sol'+i);if(b)b.classList.add('ok');
+  var msg='Baris ini tidak mengandung kesalahan. Coba periksa baris lain.'+(ex.miss>=2?' Atau tekan "Tunjukkan kesalahannya".':'');
+  var m=$('#exMsg');if(m)m.textContent=msg;
+  plusGo({el:'#sol'+i},'Baris ini tidak mengandung kesalahan. Periksa baris lain.');
+}
+function exShow(){
+  var af=document.activeElement&&document.activeElement.id;
+  renderAll();
+  exBeat();
+  if(af&&/^ex(Prev|Next|Again)$/.test(af)){var fe=$('#'+af);if(fe&&!fe.disabled&&fe.focus)fe.focus({preventScroll:true});}
+}
+function exBeat(){
+  var sc=EX[ex.i],bs=exBeats(sc),bi=Math.min(ex.b,bs.length-1),bt=bs[bi],pn=$('#panel');
+  pn.querySelectorAll('.hit').forEach(function(e){e.classList.remove('hit');});
+  var part=null;
+  if(sc.parts){
+    pn.querySelectorAll('[data-part]').forEach(function(e){e.hidden=+e.getAttribute('data-part')>bt.show;});
+    part=pn.querySelector('[data-part="'+bt.show+'"]');
+  }
+  var fx=$('#exFix');if(fx)fx.hidden=!(sc.k&&ex.rev&&ex.b>=bs.length-1);
+  var txt='Layar '+(ex.i+1)+' dari '+EX.length+(bs.length>1?' · langkah '+(bi+1)+' dari '+bs.length:'');
+  var pos=$('#exPos');if(pos)pos.textContent=txt;
+  var fp=$('#exFpos');if(fp)fp.textContent=txt;
+  var pv=$('#exPrev'),nx=$('#exNext'),gb=$('#exGo');
+  if(pv)pv.disabled=(ex.i===0&&ex.b===0&&!ex.rev);
+  if(nx)nx.disabled=(ex.i===EX.length-1&&ex.b>=bs.length-1);
+  if(gb)gb.hidden=bi<bs.length-1;
+  drawPlane();
+  var tgt=bt.at;
+  if(tgt&&tgt.el){var te=$(tgt.el);if(te&&pn.contains(te))te.classList.add('hit');}
+  if(!tgt&&part){part.classList.add('hit');tgt={el:part};}
+  exBarSync();
+  plusGo(tgt,bt.say);
+}
+function exNext(){
+  var sc=EX[ex.i],nb=exBeats(sc).length;ex.mark=null;
+  if(sc.k&&!ex.rev){if(ex.i<EX.length-1){ex.i++;ex.b=0;ex.rev=false;exShow();}return;}
+  if(ex.b<nb-1){ex.b++;exBeat();return;}
+  if(ex.i<EX.length-1){ex.i++;ex.b=0;ex.rev=false;exShow();}
+}
+function exPrev(){
+  var sc=EX[ex.i];ex.mark=null;
+  if(ex.b>0){ex.b--;exBeat();return;}
+  if(sc.k&&ex.rev){ex.rev=false;ex.b=0;exShow();return;}
+  if(ex.i>0){ex.i--;var p=EX[ex.i];ex.rev=false;ex.b=p.parts?p.beats.length-1:0;exShow();}
+}
+function startExplain(i){
+  st.mode='explain';st.over=false;st.gate=false;st.stage='explain';st.item=null;st.T=null;st.lw=null;
+  ex.i=i||0;ex.b=0;ex.rev=false;ex.miss=0;ex.mark=null;
+  exShow();
+}
+
+/* ---------- (3) Maskot "Plus" ---------- */
+var PLUS={
+  benar:['Hebat! Kamu benar!','Mantap, lanjut terus!','Tepat sekali! Keren!','Yeay, jawabanmu benar!','Pintar! Pertahankan ya!'],
+  salah:['Belum tepat, coba lagi ya!','Tenang, kamu pasti bisa!','Hampir! Ayo coba sekali lagi!','Salah itu bagian belajar!','Jangan menyerah, semangat!'],
+  sapaL:['Halo! Aku Plus, ayo belajar!','Hai! Pilih soal, lalu mulai ya!'],
+  sapaP:['Siap kuis? Semangat ya!','Ayo, kamu pasti bisa!'],
+  petunjuk:['Baca petunjuk di panel ya!','Petunjuknya ada di sini, lho!'],
+  selesai:['Yeay, soal ini selesai!','Kerja bagus! Kamu hebat!','Keren! Satu soal tuntas!']
+};
+var plusTb=null,plusTa=null;
+function plusReduced(){return !!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);}
+function plusPick(a){return a[Math.floor(Math.random()*a.length)];}
+function plusSay(text){
+  var b=$('#plusBubble');if(!b)return;
+  b.textContent=text;b.classList.add('show');
+  clearTimeout(plusTb);plusTb=setTimeout(function(){b.classList.remove('show');},4800);
+}
+function plusState(mood,act,ms){
+  var w=$('#plusWrap');if(!w)return;
+  w.removeAttribute('data-act');void w.offsetWidth;
+  w.setAttribute('data-mood',mood);
+  if(act)w.setAttribute('data-act',act);
+  clearTimeout(plusTa);
+  plusTa=setTimeout(function(){w.removeAttribute('data-act');w.setAttribute('data-mood','normal');},ms);
+}
+function plusConfetti(){
+  if(plusReduced())return;
+  var box=$('#plusConf');if(!box)return;
+  var cols=['#f59e0b','#15803d','#c2410c','#7e22ce','#1d4ed8','#ec4899'];
+  for(var i=0;i<16;i++){
+    var p=document.createElement('i'),a=-Math.PI*(0.12+0.76*Math.random()),r=50+Math.random()*45;
+    p.style.setProperty('--dx',Math.round(Math.cos(a)*r)+'px');
+    p.style.setProperty('--dy',Math.round(Math.sin(a)*r)+'px');
+    p.style.setProperty('--rot',Math.round(Math.random()*540-270)+'deg');
+    p.style.background=cols[i%cols.length];
+    p.style.animationDelay=(Math.random()*.15)+'s';
+    box.appendChild(p);
+    (function(el){setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},1800);})(p);
+  }
+}
+/* jenis: 'sapa' | 'benar' | 'salah' | 'petunjuk' | 'selesai' | 'skor' (extra = persen) */
+function mascotSay(kind,extra){
+  if(!$('#plusWrap')||document.body.classList.contains('plus-off'))return;
+  var learn=st.mode==='learn',msg,mood='normal',act='',ms=1500;
+  if(kind==='benar'){msg=plusPick(PLUS.benar);mood='happy';act='cheer';ms=1500;}
+  else if(kind==='salah'){msg=(learn&&!document.body.classList.contains('tanpa-bantuan')&&Math.random()<.6)?(st.item?plusPick(PLUS.salah):plusGuide()):plusPick(PLUS.salah);mood='sad';act='shake';ms=1200;}
+  else if(kind==='petunjuk'){msg=plusPick(PLUS.petunjuk);act='point';ms=1900;}
+  else if(kind==='selesai'){msg=plusPick(PLUS.selesai);mood='happy';act='spin';ms=1700;plusConfetti();}
+  else if(kind==='skor'){
+    if(extra>=70){msg='Luar biasa! Skor kamu tinggi!';mood='happy';act='spin';ms=1700;plusConfetti();}
+    else{msg='Tidak apa-apa, ayo coba lagi!';act='wave';ms=2300;}
+  }else{msg=plusPick(st.mode!=='practice'?PLUS.sapaL:PLUS.sapaP);act='wave';ms=2300;}
+  plusSay(msg);plusState(mood,act,ms);
+}
+window.mascotSay=mascotSay;
+function setPlusOff(off,save){
+  var t=$('#plusToggle');
+  document.body.classList.toggle('plus-off',off);
+  t.textContent=off?'👋 Munculkan Plus':'Sembunyikan';
+  t.title=off?'Munculkan Plus':'Sembunyikan Plus';
+  t.setAttribute('aria-label',off?'Munculkan Plus':'Sembunyikan Plus');
+  if(off){var b=$('#plusBubble');if(b)b.classList.remove('show');}
+  if(save){try{localStorage.setItem('plusOff',off?'1':'0');}catch(_){}}
+}
+$('#plusToggle').onclick=function(){
+  var off=!document.body.classList.contains('plus-off');
+  setPlusOff(off,true);
+  if(!off)mascotSay('sapa');
+};
+try{setPlusOff(localStorage.getItem('plusOff')==='1',false);}catch(_){}
+
+/* ---------- Plus berpindah dan menunjuk ---------- */
+var plusAt=null,plusTf=null,plusTh=null;
+function fxEnsure(){
+  var f=$('#plusFx');if(f)return f;
+  f=document.createElementNS('http://www.w3.org/2000/svg','svg');f.id='plusFx';f.setAttribute('aria-hidden','true');
+  f.innerHTML='<defs><marker id="fxArr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f59e0b"/></marker></defs>'
+    +'<rect class="ring" id="fxRing" x="0" y="0" width="0" height="0"/><path class="beam" id="fxBeam" d=""/>';
+  document.body.appendChild(f);return f;
+}
+/* ---------- bar navigasi melayang (perangkat kecil) ---------- */
+var MQ_SMALL=window.matchMedia?window.matchMedia('not all and (min-width:860px) and (min-height:500px)'):null;
+function exBarH(){return parseFloat(document.documentElement.style.getPropertyValue('--exbar-h'))||0;}
+function exBarSync(){
+  var f=$('#exFloat'),on=st.mode==='explain'&&!!MQ_SMALL&&MQ_SMALL.matches&&!!f;
+  document.body.classList.toggle('ex-bar',on);
+  document.documentElement.style.setProperty('--exbar-h',(on?f.offsetHeight:0)+'px');
+}
+/* gulir otomatis: hanya sebagai respons atas aksi navigasi (plusGo), seminimal mungkin, dan di atas bar */
+var plusTouch=false;
+['touchstart'].forEach(function(nm){document.addEventListener(nm,function(){plusTouch=true;},{passive:true});});
+['touchend','touchcancel'].forEach(function(nm){document.addEventListener(nm,function(){plusTouch=false;},{passive:true});});
+function plusReveal(b){
+  if(plusTouch)return;
+  var m=12,vh=window.innerHeight-exBarH(),dy;
+  if(b.top>=m&&b.bottom<=vh-m)return;
+  dy=(b.height>vh-2*m||b.top<m)?b.top-m:b.bottom-(vh-m);
+  if(dy)window.scrollBy(0,dy);
+}
+/* garis dan DP yang sedang tampil (tampilan Belajar/soal singkat, atau soal alur langkah) */
+function plusLines(){var V=viewNow();if(V)return (V.L||[]).map(function(l){return l.q;});return st.sys||[];}
+function plusDp(){var V=viewNow();if(V)return V.dp||null;return st.sys;}
+/* mengubah target (titik bidang, garis, DP, atau elemen) menjadi kotak pada layar */
+function plusRect(t,reveal){
+  if(!t)return null;
+  var pl=$('#plane'),rad=16,p,q,e;
+  if(t.pt||t.ln!==undefined||t.dp){
+    if(!pl)return null;
+    if(t.pt)p=[t.pt[0],t.pt[1]];
+    else if(t.ln!==undefined){q=plusLines()[t.ln];e=q&&lineEnds(q);if(!e)return null;p=[(e[0][0]+e[1][0])/2,(e[0][1]+e[1][1])/2];rad=18;}
+    else{var d=plusDp(),ins=d&&findInside(d);if(!ins)return null;p=[ins.x,ins.y];rad=24;}
+    var scr=function(){var mm=pl.getScreenCTM();if(!mm)return null;var s2=pl.createSVGPoint();s2.x=sx(p[0]);s2.y=sy(p[1]);s2=s2.matrixTransform(mm);return {x:s2.x-rad,y:s2.y-rad,w:rad*2,h:rad*2,round:true};};
+    var rr=scr();if(rr&&reveal){plusReveal({top:rr.y,bottom:rr.y+rr.h,height:rr.h});rr=scr();}
+    return rr;
+  }
+  if(t.el){
+    e=typeof t.el==='string'?$(t.el):t.el;if(!e)return null;
+    var r0=e.getBoundingClientRect();
+    if(reveal){plusReveal({top:r0.top,bottom:r0.bottom,height:r0.height});r0=e.getBoundingClientRect();}
+    return {x:r0.left-4,y:r0.top-3,w:r0.width+8,h:r0.height+6,round:false};
+  }
+  return null;
+}
+function plusFxClear(){
+  var rg=$('#fxRing'),bm=$('#fxBeam');
+  if(rg){rg.setAttribute('width',0);rg.setAttribute('height',0);}
+  if(bm)bm.setAttribute('d','');
+}
+/* kotak bidang koordinat yang sedang tampil (dihindari Plus saat menunjuk teks) */
+function plusAvoid(){
+  var l=document.querySelectorAll('.plane svg'),i,r;
+  for(i=0;i<l.length;i++){r=l[i].getBoundingClientRect();if(r.width&&r.height)return {x:r.left,y:r.top,w:r.width,h:r.height};}
+  return null;
+}
+function plusPlace(reveal){
+  var a=plusAt;if(!a)return;
+  fxEnsure();
+  var r=plusRect(a.t,reveal);
+  if(!r){plusFxClear();return;}
+  var rg=$('#fxRing'),bm=$('#fxBeam');
+  rg.setAttribute('x',r.x);rg.setAttribute('y',r.y);rg.setAttribute('width',r.w);rg.setAttribute('height',r.h);rg.setAttribute('rx',r.round?r.w/2:10);
+  bm.setAttribute('d','');
+  var w=$('#plusWrap');
+  if(!w||document.body.classList.contains('plus-off'))return;
+  /* layar kecil: Plus tetap di pojok agar tidak menutupi teks; cincin sorotan tetap tampil */
+  if(MQ_SMALL&&MQ_SMALL.matches){w.style.transform='';w.removeAttribute('data-side');w.classList.remove('go');return;}
+  var vw=document.documentElement.clientWidth,vh=window.innerHeight-exBarH();
+  var bw=$('#plusBody').offsetWidth,bh=$('#plusBody').offsetHeight,ww=w.offsetWidth,wh=w.offsetHeight;
+  var hx=vw-8-ww,hy=vh-8-wh,m=16,tcx=r.x+r.w/2,tcy=r.y+r.h/2;
+  var yMid=tcy-(wh-bh/2);
+  var right={side:'r',X:r.x+r.w+m,Y:yMid},left={side:'l',X:r.x-m-ww,Y:yMid};
+  var vc=function(side,Y){var X=side==='r'?tcx-bw/2:tcx-(ww-bw/2);X=Math.min(Math.max(4,X),vw-4-ww);return {side:side,X:X,Y:Y,cx:X+(side==='r'?bw/2:ww-bw/2)};};
+  var vb=[vc('r',r.y+r.h+m),vc('l',r.y+r.h+m)],va=[vc('r',r.y-m-wh),vc('l',r.y-m-wh)];
+  var byC=function(p,q){return Math.abs(p.cx-tcx)-Math.abs(q.cx-tcx);};vb.sort(byC);va.sort(byC);
+  var cs=(tcx>vw/2?[left,right]:[right,left]).concat(tcy>vh/2?va.concat(vb):vb.concat(va));
+  var fits=function(c){return c.X>=4&&c.Y>=4&&c.X+ww<=vw-4&&c.Y+wh<=vh-4;};
+  var ex0=r.x-4,ey0=r.y-4,ew=r.w+8,eh=r.h+8;
+  var clash=function(c){return !(c.X+ww<=ex0||c.X>=ex0+ew||c.Y+wh<=ey0||c.Y>=ey0+eh);};
+  /* hindari menutupi bidang koordinat bila yang ditunjuk bukan titik pada bidang */
+  var av=a.t.pt?null:plusAvoid();
+  var tutup=function(c){return !!av&&!(c.X+ww<=av.x||c.X>=av.x+av.w||c.Y+wh<=av.y||c.Y>=av.y+av.h);};
+  var pk=null,i;
+  /* menunjuk teks: hanya di samping target; bila tidak muat tanpa menutupi bidang, Plus tetap di pojok dan menunjuk dengan panah */
+  if(!a.t.pt){
+    [left,right].forEach(function(c){if(!pk&&fits(c)&&!clash(c)&&!tutup(c))pk=c;});
+    if(!pk)pk={side:'l',X:hx,Y:hy};
+  }
+  for(i=0;!pk&&i<cs.length;i++)if(fits(cs[i])&&!clash(cs[i])){pk=cs[i];break;}
+  if(!pk)for(i=0;i<cs.length;i++)if(fits(cs[i])){pk=cs[i];break;}
+  if(!pk){pk={side:cs[0].side,X:Math.min(Math.max(4,cs[0].X),vw-4-ww),Y:Math.min(Math.max(4,cs[0].Y),vh-4-wh)};}
+  if(pk.X===hx&&pk.Y===hy)w.removeAttribute('data-side');else w.setAttribute('data-side',pk.side);
+  w.classList.add('go');
+  w.style.transform='translate('+Math.round(pk.X-hx)+'px,'+Math.round(pk.Y-hy)+'px)';
+  var Sp={x:pk.X+(pk.side==='r'?bw/2:ww-bw/2),y:pk.Y+wh-bh/2},Cp={x:tcx,y:tcy};
+  clearTimeout(plusTf);
+  plusTf=setTimeout(function(){
+    if(!plusAt)return;
+    var dx=Cp.x-Sp.x,dy=Cp.y-Sp.y,Lb=Math.sqrt(dx*dx+dy*dy)||1,ux=dx/Lb,uy=dy/Lb;
+    var t1=Math.min((r.w/2+6)/(Math.abs(ux)||1e-6),(r.h/2+6)/(Math.abs(uy)||1e-6));
+    var s0=bw*.42;if(Lb<=s0+t1+8){bm.setAttribute('d','');return;}
+    bm.setAttribute('d','M'+(Sp.x+ux*s0)+' '+(Sp.y+uy*s0)+' L'+(Cp.x-ux*t1)+' '+(Cp.y-uy*t1));
+  },plusReduced()?0:680);
+}
+function plusGo(t,text,auto){
+  plusAt={t:t};clearTimeout(plusTh);
+  if(text){var b=$('#plusBubble');if(b){b.textContent=text;b.classList.add('show');clearTimeout(plusTb);}}
+  plusPlace(true);
+  if(!document.body.classList.contains('plus-off'))plusState('normal','point',1900);
+  if(auto)plusTh=setTimeout(plusHome,auto);
+}
+function plusHome(){
+  plusAt=null;clearTimeout(plusTf);clearTimeout(plusTh);
+  var w=$('#plusWrap');if(w){w.style.transform='';w.removeAttribute('data-side');}
+  plusFxClear();
+  var b=$('#plusBubble');if(b)b.classList.remove('show');
+}
+var plusRaf=0;
+function plusRefresh(){if(!plusAt||plusRaf)return;plusRaf=requestAnimationFrame(function(){plusRaf=0;plusPlace();});}
+window.addEventListener('resize',exBarSync);
+window.addEventListener('resize',plusRefresh);
+if(MQ_SMALL&&MQ_SMALL.addEventListener)MQ_SMALL.addEventListener('change',function(){exBarSync();plusRefresh();});
+window.addEventListener('scroll',plusRefresh,{passive:true});
+$('#panel').addEventListener('scroll',plusRefresh,{passive:true});
+document.addEventListener('keydown',function(e){
+  if(st.mode!=='explain')return;
+  var tg=e.target&&e.target.tagName;
+  if(e.key==='Escape'){plusHome();return;}
+  if(tg==='INPUT'||tg==='TEXTAREA'||tg==='SELECT')return;
+  if(e.key==='ArrowRight')exNext();else if(e.key==='ArrowLeft')exPrev();
+});
+
+/* ---------- (4) Rumus (KaTeX): render LaTeX (KaTeX) dengan teks lama sebagai cadangan ----------
+   Setiap rumus ditulis <… data-tex="LATEX">TEKS LAMA</…>. Bila KaTeX (JS dan CSS) belum/tidak termuat,
+   teks lama tetap tampil apa adanya. Perenderan dilakukan ke elemen sementara lalu ditukar, sehingga
+   galat apa pun membuat teks lama tetap utuh. */
+var TEX_DUA_TITIK='\\dfrac{y - y_1}{y_2 - y_1} = \\dfrac{x - x_1}{x_2 - x_1}';
+function texNum(v){v=Math.round(v*100)/100;return (v<0?'-':'')+Math.abs(v);}
+function texPar(v){return v<0?'('+texNum(v)+')':texNum(v);}
+/* pasangan TeX dari teks: (y − par(y1))/par(dy) = (x − par(x1))/par(dx) */
+function texSubst(x1,y1,dx,dy){return '\\dfrac{y - '+texPar(y1)+'}{'+texPar(dy)+'} = \\dfrac{x - '+texPar(x1)+'}{'+texPar(dx)+'}';}
+var MATH_FB=(typeof WeakMap==='function')?new WeakMap():null;
+var MATH_OPT={throwOnError:false,displayMode:false,output:'htmlAndMathml',strict:'ignore',trust:false};
+var MATH_CSS_OK=false;
+function mathCss(){
+  var l=document.getElementById('katexCss'),okc=MATH_CSS_OK;
+  if(!l||!l.sheet)return false;
+  try{okc=l.sheet.cssRules.length>0;}catch(e){}
+  if(!okc)return false;
+  if(l.media!=='all')l.media='all';
+  return true;
+}
+function mathReady(){return !!(MATH_FB&&window.katex&&typeof window.katex.render==='function'&&mathCss());}
+function renderMath(root){
+  if(!root||!mathReady())return 0;
+  var list=[].slice.call(root.querySelectorAll?root.querySelectorAll('[data-tex]'):[]);
+  if(root.nodeType===1&&root.hasAttribute('data-tex'))list.unshift(root);
+  var c=0;
+  list.forEach(function(el){
+    if(el.querySelector('.katex'))return;
+    var tex=el.getAttribute('data-tex'),tmp;
+    try{
+      tmp=document.createElement('span');
+      window.katex.render(tex,tmp,MATH_OPT);
+      if(!tmp.querySelector('.katex')||tmp.querySelector('.katex-error'))return;
+    }catch(e){return;}
+    MATH_FB.set(el,el.innerHTML);
+    el.innerHTML='';
+    while(tmp.firstChild)el.appendChild(tmp.firstChild);
+    c++;
+  });
+  if(c){plusRefresh();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(plusRefresh);}
+  return c;
+}
+function mathBoot(){if(mathReady())renderMath(document);}
+['katexJs','katexCss'].forEach(function(id){var e=document.getElementById(id);if(e)e.addEventListener('load',function(){if(id==='katexCss')MATH_CSS_OK=true;mathBoot();});});
+window.addEventListener('load',mathBoot);
+if(document.fonts&&document.fonts.addEventListener)document.fonts.addEventListener('loadingdone',plusRefresh);
+window.__math={render:renderMath,ready:mathReady,fallback:function(el){return MATH_FB?MATH_FB.get(el):undefined;},texSubst:texSubst};
+
+/* ---------- (5) LATIHAN MANDIRI ----------
+   Pilihan tipe dan level mengikuti dokumen "Susunan Kategori Soal SPtLDV dan Nilai Optimum".
+   MOTS memakai alur langkah halaman ini (st.item = null). LOTS dan HOTS memakai soal langkah
+   singkat (st.item = soal) yang dibentuk GEN di bawah. Semuanya hanya di Latihan Mandiri:
+   tidak ada skor, jejak, atau server. */
+/* Latihan tanpa bantuan (seperti TKA): menyembunyikan 💡 Petunjuk dan 📍 Di mana salahku? */
+function tanpaBantuan(){try{return localStorage.getItem('latihanTanpaBantuan')==='1';}catch(_){return false;}}
+function setTanpaBantuan(v){try{localStorage.setItem('latihanTanpaBantuan',v?'1':'0');}catch(_){}document.body.classList.toggle('tanpa-bantuan',!!v);}
+document.body.classList.toggle('tanpa-bantuan',tanpaBantuan());
+var LEVELN={L:'Dasar',M:'Terapan',H:'Menantang'};   /* nama level untuk siswa (LOTS/MOTS/HOTS) */
+var LEVELK={L:'LOTS',M:'MOTS',H:'HOTS'};
+var LV={t:'C',l:'C'};
+var IS=null;   /* status soal langkah singkat */
+st.item=null;st.info=null;st.tries=0;
+function acakDari(a){return a[Math.floor(Math.random()*a.length)];}
+function lvCalon(){
+  var semua=PAGE.tipe.map(function(o){return o[0];}).filter(function(v){return v!=='C';});
+  var c=(LV.t==='C'?semua:[LV.t]).filter(function(t){return LV.l==='C'||PAGE.levelTipe[t].indexOf(LV.l)>=0;});
+  if(!c.length){LV.l='C';c=LV.t==='C'?semua:[LV.t];}
+  return c;
+}
+function soalBaru(){
+  plusHome();
+  var t=acakDari(lvCalon()),l=LV.l==='C'?acakDari(PAGE.levelTipe[t].split('')):LV.l;
+  if(l==='M'){
+    st.item=null;IS=null;st.info={t:t,l:'M',jd:PAGE.jd,lv:'Terapan',kko:PAGE.kkoM};
+    PAGE.muatMots(t);
+  }else{
+    var Q=PAGE.gen(t,l);
+    st.item=Q;st.info={t:t,l:l,jd:PAGE.jd,lv:LEVELN[l],kko:Q.kko};
+    st.stage='intro';itemMulai();renderAll();mascotSay('sapa');
+  }
+}
+function ulangiSoal(){
+  if(st.item){st.stage='item';itemMulai();renderAll();mascotSay('sapa');}
+  else PAGE.ulangMots();
+}
+function mulaiSoal(){
+  if(st.item){st.stage='item';itemMulai();renderAll();mascotSay('sapa');}
+  else PAGE.mulaiMots();
+}
+/* kartu soal di Latihan Mandiri. true = sudah ditangani (soal langkah singkat) */
+function kartuLatihan(){
+  if(st.mode!=='learn'||!st.info)return false;
+  $('#probMeta').textContent=st.info.jd+' · '+st.info.lv;
+  $('#bRepeat').hidden=false;$('#bNextQ').hidden=false;
+  var pt=$('#probText'),pa=$('#probAsk');
+  if(st.item){pa.innerHTML=st.item.soal;pt.innerHTML='';pt.hidden=true;renderMath(pa);return true;}
+  pt.hidden=false;
+  return false;
+}
+function latihanIntro(el){
+  var h='<h2>Pilih soal</h2><p class="muted">Pilih tipe dan level. Tekan 🎲 Soal baru untuk mengganti soal.</p>';
+  h+='<div class="lvl"><b>Tipe soal</b><div class="chips">'+PAGE.tipe.map(function(o){return '<button class="chip'+(String(LV.t)===o[0]?' on':'')+'" data-tipe="'+o[0]+'">'+o[1]+'</button>';}).join('')+'</div></div>';
+  h+='<div class="lvl"><b>Level</b><div class="chips">'+[['L','Dasar'],['M','Terapan'],['H','Menantang'],['C','Campuran']].map(function(o){
+    var mati=o[0]!=='C'&&LV.t!=='C'&&PAGE.levelTipe[LV.t].indexOf(o[0])<0;
+    return '<button class="chip'+(LV.l===o[0]?' on':'')+'" data-level="'+o[0]+'"'+(mati?' disabled title="Level ini tidak tersedia untuk tipe yang dipilih"':'')+'>'+o[1]+'</button>';}).join('')+'</div></div>';
+  h+='<div class="lvl"><b>Bantuan</b><div class="chips">'+[['1','Dengan bantuan'],['0','Tanpa bantuan (seperti TKA)']].map(function(o){var on=(o[0]==='0')===tanpaBantuan();return '<button class="chip'+(on?' on':'')+'" data-bantuan="'+o[0]+'" aria-pressed="'+on+'">'+o[1]+'</button>';}).join('')+'</div></div>';
+  h+='<div class="row"><button class="btn" id="bAcakSoal">🎲 Soal baru</button></div>';
+  h+='<div class="note"><p>Soal di atas termasuk <b>'+esc(st.info.jd+' · '+st.info.lv)+'</b><span class="guru-saja"> ('+LEVELK[st.info.l]+', kata kerja <i>'+esc(st.info.kko)+'</i>)</span>.</p>'
+    +(st.item?'':PAGE.notaMots())
+    +''+(tanpaBantuan()?'<p>Mode <b>tanpa bantuan</b>. 💡 Petunjuk dan 📍 Di mana salahku? disembunyikan, seperti saat TKA. 🔑 Lihat jawaban tetap muncul setelah dua kali salah.</p>':'<p>Di Latihan kamu boleh mencoba berulang kali, membuka 💡 Petunjuk, dan memakai 📍 Di mana salahku?</p>')+'</div>';
+  if(!st.item)h+=PAGE.ingatMots();
+  h+='<div class="row"><button class="btn primary" id="bStart">Mulai soal</button></div>';
+  el.innerHTML=h;
+  el.querySelectorAll('[data-tipe]').forEach(function(b){b.onclick=function(){
+    var v=b.getAttribute('data-tipe');LV.t=v;
+    if(LV.t!=='C'&&LV.l!=='C'&&PAGE.levelTipe[LV.t].indexOf(LV.l)<0)LV.l='C';
+    soalBaru();
+  };});
+  el.querySelectorAll('[data-level]').forEach(function(b){b.onclick=function(){LV.l=b.getAttribute('data-level');soalBaru();};});
+  el.querySelectorAll('[data-bantuan]').forEach(function(b){b.onclick=function(){setTanpaBantuan(b.getAttribute('data-bantuan')==='0');latihanIntro(el);};});
+  on('bAcakSoal',soalBaru);on('bStart',mulaiSoal);
+}
+/* panel akhir soal di Latihan Mandiri */
+function selesaiPanel(el,li){
+  el.innerHTML='<h2>🎉 Soal selesai</h2><h3>Pembahasan</h3><ol class="sum">'+li.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ol>'
+    +'<div class="row"><button class="btn primary" id="bNextQ2">Soal berikutnya</button><button class="btn" id="bAgain2">↺ Ulangi soal</button><button class="btn ghost" id="bToPractice">Buka Kuis</button></div>';
+  renderMath(el);
+  on('bNextQ2',soalBaru);on('bAgain2',ulangiSoal);
+  on('bToPractice',function(){setTab('practice');startPractice();});
+}
+/* ---- bantuan bertahap untuk alur langkah halaman (MOTS) ---- */
+/* petunjuk ke-3 (paling rinci) baru terbuka setelah siswa mencoba menjawab sekali */
+function petunjukTertahan(){return st.mode==='learn'&&!st.item&&st.hints>=2&&!st.tries;}
+function kunciCek(){
+  if(st.mode!=='learn'||st.item||st.tries<2||$('#bKunci'))return;
+  var a=$('#actions');if(!a||a.querySelector('#bNext'))return;
+  a.insertAdjacentHTML('beforeend','<button class="btn ghost" id="bKunci" type="button">🔑 Lihat jawaban</button>');
+  on('bKunci',function(){
+    plusHome();var ok=PAGE.kunci();
+    if(ok===false)return;
+    var f=$('#fb');if(f&&!f.hidden){f.className='fb info';f.innerHTML='🔑 Jawaban yang benar sudah diisikan. Pelajari, lalu lanjutkan.<br>'+f.innerHTML;}
+    var b=$('#bKunci');if(b)b.remove();
+  });
+}
+/* tombol "Di mana salahku?" (hanya Latihan Mandiri) */
+function whereBtn(){
+  if(st.mode!=='learn')return;
+  if(st.item?!(IS&&IS.lw):!st.lw)return;
+  var e=$('#fb');if(!e||e.hidden||$('#bWhere'))return;
+  var d=document.createElement('div');d.id='whereBox';d.className='whereBox';
+  d.innerHTML='<button class="btn ghost" id="bWhere" type="button">📍 Di mana salahku?</button> <span id="whereTxt" role="status"></span>';
+  e.appendChild(d);on('bWhere',function(){if(st.item)itemWhere();else whereShow();});
+}
+
+/* ---- soal langkah singkat (LOTS/HOTS) ---- */
+function itemMulai(){IS={s:0};itemReset();}
+function itemStep(){return st.item.st[IS.s];}
+function itemReset(){
+  var St=itemStep();IS.ans=[];IS.lock=[];IS.bad=[];IS.tries=0;IS.hints=0;IS.solved=false;IS.kunci=false;IS.pt=null;IS.lw=null;
+  if(St.k==='form')St.it.forEach(function(it){IS.ans.push(it.t==='eq'?['','','']:it.t==='num'?'':null);IS.lock.push(false);});
+}
+function itemAktif(){return st.mode==='learn'&&!!st.item&&st.stage==='item';}
+function parseNum(s){
+  s=String(s==null?'':s).trim().replace(/−/g,'-').replace(/\s/g,'').replace(',','.');
+  if(!/^-?\d+(\.\d+)?$/.test(s))return NaN;
+  return +s;
+}
+function optKind(o){var m=Math.max.apply(null,o.map(function(x){return String(x).length;}));return m<=3?'op':m<=24?'seg':'sol';}
+function itemHTML(it,i){
+  var lk=IS.lock[i],dis=lk||IS.solved?' disabled':'',a=IS.ans[i],cls='trow'+(lk?' ok':IS.bad.indexOf(i)>=0?' bad':'');
+  if(it.t==='pg'){
+    var kind=optKind(it.o),b='';
+    it.o.forEach(function(o,j){
+      var on=a===j;
+      if(kind==='op')b+='<button class="btn relb opb'+(on?' sel':'')+'" data-ii="'+i+'" data-j="'+j+'"'+dis+' aria-label="tanda '+esc(o)+'">'+esc(o)+'</button> ';
+      else if(kind==='seg')b+='<button class="segb'+(on?' on':'')+'" data-ii="'+i+'" data-j="'+j+'"'+dis+'>'+esc(o)+'</button>';
+      else b+='<button class="sol'+(on?' on':'')+'" data-ii="'+i+'" data-j="'+j+'"'+dis+' type="button">'+o+'</button>';
+    });
+    return '<div class="'+cls+'" data-ii="'+i+'"><p>'+it.lab+'</p><div class="'+(kind==='sol'?'sols':'seg')+'">'+b+'</div></div>';
+  }
+  if(it.t==='num')return '<div class="'+cls+'" data-ii="'+i+'"><label class="nrow"><span>'+it.lab+'</span> <input class="num vin" data-ii="'+i+'" inputmode="decimal" autocomplete="off" value="'+escAttr(a)+'"'+dis+' aria-label="'+escAttr(it.lab.replace(/<[^>]+>/g,''))+'"></label></div>';
+  var inp=function(j,ph){return '<input class="num" data-ii="'+i+'" data-j="'+j+'" inputmode="numeric" autocomplete="off" value="'+escAttr(a[j])+'" placeholder="'+ph+'"'+dis+' aria-label="'+ph+'">';};
+  return '<div class="'+cls+'" data-ii="'+i+'"><p>'+it.lab+'</p><div class="eqin">'+inp(0,'a')+'<span>x +</span>'+inp(1,'b')+'<span>y =</span>'+inp(2,'c')+'</div></div>';
+}
+/* tabel x | y (item 0 = y saat x = 0, item 1 = x saat y = 0) */
+function itemXY(){
+  var inp=function(i){var lk=IS.lock[i],dis=lk||IS.solved?' disabled':'';return '<input class="num vin'+(lk?' ok':IS.bad.indexOf(i)>=0?' bad':'')+'" data-ii="'+i+'" inputmode="decimal" autocomplete="off" value="'+escAttr(IS.ans[i])+'"'+dis+' aria-label="'+escAttr(itemStep().it[i].lab)+'">';};
+  return '<table class="tbl txy"><tr><th>x</th><td>0</td><td>'+inp(1)+'</td></tr><tr><th>y</th><td>'+inp(0)+'</td><td>0</td></tr></table>';
+}
+function itemPanel(el){
+  if(st.stage==='done')return selesaiPanel(el,st.item.bahas);
+  var St=itemStep(),h='<h2>Langkah '+(IS.s+1)+' · '+esc(St.nm)+'</h2><p>'+St.q+'</p>';
+  if(St.k==='form'){
+    h+=St.lay==='xy'?itemXY():St.it.map(itemHTML).join('');
+    if(St.it.some(function(it){return it.t==='eq';}))h+='<p class="muted">Tulis koefisien negatif dengan tanda minus, misalnya −7. Bentuk yang dikalikan juga diterima.</p>';
+  }else h+='<p class="calc" id="ptState">Titik pilihanmu '+(IS.pt?'<b>('+n(IS.pt.x)+', '+n(IS.pt.y)+')</b>':'<span class="muted">belum ada</span>')+'</p><p class="muted">Ketuk satu titik kisi pada bidang koordinat.</p>';
+  h+=hintsBlock()+'<div id="actions" class="row"><button class="btn ghost" id="bHint" type="button">💡 Petunjuk</button><button class="btn primary" id="bCheck" type="button">Periksa</button></div>';
+  el.innerHTML=h;
+  itemHints();renderMath(el);
+  on('bHint',itemPetunjuk);on('bCheck',itemCek);
+  el.querySelectorAll('button[data-j]').forEach(function(b){b.onclick=function(){
+    var i=+b.getAttribute('data-ii');if(IS.lock[i]||IS.solved)return;IS.ans[i]=+b.getAttribute('data-j');
+    IS.bad=IS.bad.filter(function(x){return x!==i;});
+    var row=b.closest('.trow');row.classList.remove('bad');
+    row.querySelectorAll('[data-j]').forEach(function(x){var o=+x.getAttribute('data-j')===IS.ans[i];x.classList.toggle('on',o);x.classList.toggle('sel',o);});
+  };});
+  el.querySelectorAll('input.num[data-ii]').forEach(function(inp){
+    inp.addEventListener('input',function(){
+      var i=+inp.getAttribute('data-ii');
+      if(inp.hasAttribute('data-j'))IS.ans[i][+inp.getAttribute('data-j')]=inp.value;else IS.ans[i]=inp.value;
+      inp.classList.remove('bad');var r=inp.closest('.trow');if(r)r.classList.remove('bad');
+    });
+    inp.addEventListener('keydown',function(e){if(e.key==='Enter')itemCek();});
+  });
+}
+function itemHints(){
+  var box=$('#hints');if(!box)return;var l=itemStep().h||[];
+  box.innerHTML=l.slice(0,IS.hints).map(function(h){return '<li>'+h+'</li>';}).join('');
+  box.hidden=!IS.hints;renderMath(box);
+}
+function itemPetunjuk(){
+  var l=itemStep().h||[];
+  if(IS.hints>=l.length){fb('info','Semua petunjuk untuk langkah ini sudah dibuka.');return;}
+  if(IS.hints>=2&&!IS.tries){fb('info','Petunjuk berikutnya (lebih rinci) terbuka setelah kamu mencoba menjawab sekali.');return;}
+  IS.hints++;itemHints();mascotSay('petunjuk');
+}
+function itemBenar(it,a){
+  if(it.t==='pg')return a===it.key;
+  if(it.t==='num'){var v=parseNum(a);return !isNaN(v)&&Math.abs(v-it.key)<1e-9;}
+  var w=a.map(parseNum),k=it.key,r=null,ok=true;
+  if(w.some(isNaN)||(w[0]===0&&w[1]===0))return false;
+  [[w[0],k.a],[w[1],k.b],[w[2],k.c]].forEach(function(p){
+    if(!ok)return;
+    if(p[1]===0){if(p[0]!==0)ok=false;return;}
+    var q=p[0]/p[1];if(r===null)r=q;else if(Math.abs(q-r)>1e-9)ok=false;
+  });
+  return ok&&r!==null&&r!==0;
+}
+function itemDiDalam(cond,p){
+  var s=cond.s;
+  return holdsAll(s,p.x,p.y)&&!s.some(function(q){return q.a*p.x+q.b*p.y===q.c;});
+}
+function itemCek(){
+  var St=itemStep(),pn=$('#panel');
+  if(IS.solved)return;
+  if(St.k==='pt'){
+    if(!IS.pt){fb('info','Ketuk satu titik kisi pada bidang koordinat terlebih dahulu.');return;}
+    if(itemDiDalam(St.cond,IS.pt))return itemTuntas(false);
+    IS.lw={k:'pt',p:{x:IS.pt.x,y:IS.pt.y}};return itemSalah();
+  }
+  var kosong=false;
+  St.it.forEach(function(it,i){if(IS.lock[i])return;var a=IS.ans[i];
+    if(it.t==='pg'&&a===null)kosong=true;
+    if(it.t==='num'&&String(a).trim()==='')kosong=true;
+    if(it.t==='eq'&&a.some(function(x){return String(x).trim()==='';}))kosong=true;});
+  if(kosong){fb('info','Lengkapi semua isian terlebih dahulu.');return;}
+  IS.bad=[];
+  St.it.forEach(function(it,i){if(IS.lock[i])return;if(itemBenar(it,IS.ans[i]))IS.lock[i]=true;else IS.bad.push(i);});
+  if(!IS.bad.length)return itemTuntas(false);
+  IS.lw={k:'form',bad:IS.bad.slice()};itemSalah();
+}
+function itemSalah(){
+  var St=itemStep(),adaBenar=IS.lock.some(Boolean);
+  IS.tries++;
+  itemPanel($('#panel'));
+  fb('bad','Belum tepat. '+(St.k==='form'&&adaBenar?'Bagian yang hijau sudah benar. ':'')+'Baca petunjuk, lalu coba lagi.');
+  if(IS.hints<Math.min(2,(St.h||[]).length))IS.hints++;
+  itemHints();whereBtn();
+  if(IS.tries>=2)$('#actions').insertAdjacentHTML('beforeend','<button class="btn ghost" id="bKunci" type="button">🔑 Lihat jawaban</button>');
+  on('bKunci',itemKunci);
+  mascotSay('salah');drawPlane();
+}
+function teksKunci(St){
+  if(St.k==='pt')return '('+n(St.cond.ok.x)+', '+n(St.cond.ok.y)+') atau titik kisi lain di dalam DP';
+  var lab=function(it){return String(it.lab).replace(/<[^>]+>/g,'').replace(/\s*(=|…)\s*$/,'');};
+  return St.it.map(function(it){
+    var v=it.t==='pg'?String(it.o[it.key]).replace(/<[^>]+>/g,''):it.t==='num'?frac(it.key):lhs(it.key)+' = '+n(it.key.c);
+    return St.it.length>1||it.t!=='pg'?lab(it)+' → '+v:v;
+  }).join('; ');
+}
+function itemKunci(){
+  var St=itemStep();
+  if(St.k==='pt')IS.pt={x:St.cond.ok.x,y:St.cond.ok.y};
+  else St.it.forEach(function(it,i){IS.ans[i]=it.t==='pg'?it.key:it.t==='num'?String(it.key):[String(it.key.a),String(it.key.b),String(it.key.c)];IS.lock[i]=true;});
+  IS.bad=[];IS.hints=(St.h||[]).length;
+  itemTuntas(true);
+}
+function itemTuntas(kunci){
+  var St=itemStep(),last=IS.s>=st.item.st.length-1;
+  IS.solved=true;IS.kunci=kunci;IS.lw=null;plusHome();
+  itemPanel($('#panel'));
+  if(kunci)fb('info','🔑 Jawaban yang benar adalah <b>'+esc(teksKunci(St))+'</b>. Pelajari, lalu lanjutkan.');
+  else{fb('ok','Tepat! '+(last?'Soal ini selesai.':'Lanjut ke langkah berikutnya.'));var hh=$('#hints');if(hh)hh.hidden=true;}
+  tampilPny(St.pn);
+  actions('<button class="btn primary" id="bNext" type="button">'+(last?'Lihat pembahasan':'Langkah berikutnya')+'</button>');on('bNext',itemLanjut);
+  if(!kunci)mascotSay('benar');
+  renderProgress();drawPlane();
+}
+function itemLanjut(){
+  if(IS.s<st.item.st.length-1){IS.s++;itemReset();renderAll();}
+  else{st.stage='done';renderAll();mascotSay('selesai');}
+}
+function itemWhere(){
+  var w=IS&&IS.lw;if(!w)return;
+  var St=itemStep(),t=null,msg='';
+  if(w.k==='pt'){
+    var s=St.cond.s,on=s.some(function(q){return q.a*w.p.x+q.b*w.p.y===q.c;});
+    t={pt:[w.p.x,w.p.y]};
+    msg=on?'Titik ('+n(w.p.x)+', '+n(w.p.y)+') terletak tepat pada garis. Pilih titik kisi yang tidak berada di garis.':'Titik ('+n(w.p.x)+', '+n(w.p.y)+') berada di luar DP. Pilih titik di daerah yang memenuhi semua pertidaksamaan.';
+  }else{
+    var i=w.bad[0],it=St.it[i];
+    t={el:St.lay==='xy'?'#panel input[data-ii="'+i+'"]':'#panel .trow[data-ii="'+i+'"]'};
+    msg='Bagian ini belum tepat: '+String(it.lab).replace(/<[^>]+>/g,'').replace(/\s*[=:…]\s*$/,'')+'. '+String((St.h||[])[0]||'').replace(/<[^>]+>/g,'');
+  }
+  var el=$('#whereTxt');if(el)el.textContent=msg;
+  plusGo(t,msg,9000);
+}
+function itemView(){
+  var Q=st.item,St,v;
+  if(st.stage==='done')v=Q.vz;
+  else if(st.stage==='intro')v=Q.st[0].v;
+  else{St=itemStep();v=(IS.solved&&IS.s===Q.st.length-1)?Q.vz:St.v;}
+  v=v||{};
+  var V={L:v.ln?vSys(Q.sys,{ty:v.ln===1?'thin':undefined}):[],dp:v.sh?Q.sys:null,hf:v.ar?Q.sys.map(function(q,k){return {q:q,col:COL[k%3]};}):null,
+    mk:(v.mk||[]).slice()};
+  if(St&&St.k==='pt'&&IS.pt)V.mk.push({x:IS.pt.x,y:IS.pt.y,c:IS.solved?'g':'u',sh:'dia',l:'('+n(IS.pt.x)+', '+n(IS.pt.y)+')'});
+  return V;
+}
+function itemProgres(){
+  var Q=st.item,items=[{l:'Soal',d:st.stage!=='intro',c:st.stage==='intro'}];
+  Q.st.forEach(function(St,i){items.push({l:St.nm,d:st.stage==='done'||(st.stage==='item'&&(i<IS.s||(i===IS.s&&IS.solved))),c:st.stage==='item'&&i===IS.s&&!IS.solved});});
+  $('#progress').innerHTML=items.map(function(it,i){return '<li class="'+(it.d?'done':it.c?'cur':'')+'"><span>'+(it.d?'✓':i+1)+'</span><em>'+esc(it.l)+'</em></li>';}).join('');
+  $('#stepText').textContent=st.stage==='intro'?'Baca soal, lalu tekan Mulai':st.stage==='done'?'Selesai 🎉':'Langkah '+(IS.s+1)+' dari '+Q.st.length+': '+itemStep().nm;
+}
+$('#plane').addEventListener('click',function(e){
+  if(!itemAktif())return;
+  var St=itemStep();if(St.k!=='pt'||IS.solved)return;
+  var c=conv(e),x=Math.max(-R,Math.min(R,Math.round(c.mx))),y=Math.max(-R,Math.min(R,Math.round(c.my)));
+  IS.pt={x:x,y:y};
+  var ps=$('#ptState');if(ps)ps.innerHTML='Titik pilihanmu <b>('+n(x)+', '+n(y)+')</b>';
+  drawPlane();
+});
+
+/* ---------- pembentuk soal LOTS/HOTS (diadaptasi dari js/core.js sptldv-x; bidang −10 sampai 10) ---------- */
+var GEN=(function(){
+var OPS4=['<','≤','>','≥'];
+function ri(rng,a,b){return Math.floor(rng()*(b-a+1))+a;}
+function pick(rng,a){return a[Math.floor(rng()*a.length)];}
+function shuf(a,rng){for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function flipOp(op){return op==='<'?'>':op==='>'?'<':op==='≤'?'≥':op==='≥'?'≤':op;}
+function L(a,b,c,op){return {a:a,b:b,c:c,op:op};}
+function norm(q){var g=gcdN(gcdN(q.a,q.b),q.c)||1,a=q.a/g,b=q.b/g,c=q.c/g,op=q.op;if(a<0||(a===0&&b<0)){a=-a;b=-b;c=-c;op=flipOp(op);}return L(a,b,c,op);}
+var AX=[L(1,0,0,'≥'),L(0,1,0,'≥')];
+function term(k,v,first){var m=Math.abs(k)===1?'':n(Math.abs(k));if(first)return (k<0?'−':'')+m+v;return (k<0?' − ':' + ')+m+v;}
+function lin(a,b){var s='';if(a!==0)s+=term(a,'x',true);if(b!==0)s+=term(b,'y',s==='');return s||'0';}
+function ineqS(q){return lin(q.a,q.b)+' '+q.op+' '+n(q.c);}
+function eqS(q){return lin(q.a,q.b)+' = '+n(q.c);}
+function ptS(p){return '('+n(p.x)+', '+n(p.y)+')';}
+function subS(a,b,x,y){var s=[];if(a!==0)s.push((a===1?'':n(a))+'('+n(x)+')');if(b!==0)s.push((b===1?'':n(b))+'('+n(y)+')');return s.join(' + ');}
+function F(nm,q,it,h,v,lay,pn){return {nm:nm,k:'form',q:q,it:it,h:h||[],v:v||{},lay:lay||'',pn:pn||null};}
+function P(nm,q,cond,h,v){return {nm:nm,k:'pt',q:q,cond:cond,h:h||[],v:v||{}};}
+function pg(lab,o,key){return {t:'pg',lab:lab,o:o,key:key};}
+function num(lab,key){return {t:'num',lab:lab,key:key};}
+function eqI(lab,k){return {t:'eq',lab:lab,key:{a:k.a,b:k.b,c:k.c}};}
+function pgS(rng,lab,key,dis){var o=shuf([key].concat(dis),rng);return pg(lab,o,o.indexOf(key));}
+var YT=['Ya','Tidak'],BS=['Benar','Salah'],PP=['Penuh','Putus-putus'];
+function M(x,y,c,l){return {x:x,y:y,c:c||'k',l:l===undefined?ptS({x:x,y:y}):l};}
+function inPt(s){var f=findInside(s);return f?{x:f.x,y:f.y}:{x:0,y:0};}
+function Q(t,l,o){return {t:t,l:l,kko:o.kko,soal:o.soal,sys:o.sys||[],st:o.st||[],vz:o.vz||{},bahas:o.bahas||[]};}
+/* blok penyelesaian titik potong sumbu */
+function pnPotong(k){
+  var X=k.c/k.a,Y=k.c/k.b;
+  var ya=(k.b===1?'':tn(k.b))+'y',xa=(k.a===1?'':tn(k.a))+'x';
+  return [{judul:'Titik potong dengan sumbu-y (x = 0)',tex:[tn(k.a)+' \\cdot 0 + '+ya+' &= '+tn(k.c),ya+' &= '+tn(k.c),'y &= '+tn(Y)],
+           txt:[term(k.a,'x',true).replace('x','(0)')+term(k.b,'y',false)+' = '+n(k.c),n(k.b)+'y = '+n(k.c),'y = '+frac(Y)]},
+          {judul:'Titik potong dengan sumbu-x (y = 0)',tex:[xa+' + '+tn(k.b)+' \\cdot 0 &= '+tn(k.c),xa+' &= '+tn(k.c),'x &= '+tn(X)],
+           txt:[n(k.a)+'x + '+n(k.b)+'(0) = '+n(k.c),n(k.a)+'x = '+n(k.c),'x = '+frac(X)]}];
+}
+
+/* ===== TIPE 1 · MENGGAMBAR DP ===== */
+function g1L(rng){
+  var p=ri(rng,2,8),q=ri(rng,2,8);if(q===p)q=p===8?3:p+1;
+  var op=pick(rng,OPS4),k=norm(L(q,p,p*q,op)),X=k.c/k.a,Y=k.c/k.b;
+  var T={x:ri(rng,0,Math.min(9,X+1)),y:ri(rng,0,Math.min(9,Y+1))},v=k.a*T.x+k.b*T.y,ya=holds(v,k.c,k.op);
+  return Q(1,'L',{kko:'menyebutkan, menentukan, memeriksa',sys:[k],
+    soal:'Perhatikan pertidaksamaan <b>'+ineqS(k)+'</b>.',
+    st:[F('Jenis garis','Bagaimana garis batas pertidaksamaan ini digambar?',[pg('Garis batas '+eqS(k)+' digambar',PP,isSolid(op)?0:1)],
+          ['Lihat tandanya: apakah ada garis di bawah tanda (≤ atau ≥)?','Tanda ≤ atau ≥ → garis penuh; tanda &lt; atau &gt; → garis putus-putus.']),
+        F('Titik potong sumbu','Lengkapi tabel x | y untuk garis '+eqS(k)+'. Kedua titik itu adalah titik potong garis dengan sumbu.',[num('y saat x = 0',Y),num('x saat y = 0',X)],
+          ['Kolom pertama x = 0. Substitusikan x = 0 ke '+eqS(k)+', lalu hitung y.','Kolom kedua y = 0. Substitusikan y = 0 sehingga '+term(k.a,'x',true)+' = '+n(k.c)+', lalu bagi kedua ruas dengan '+n(k.a)+'.'],{},'xy',pnPotong(k)),
+        F('Memeriksa titik','Apakah titik '+ptS(T)+' termasuk penyelesaian?',[num('Nilai '+lin(k.a,k.b)+' di '+ptS(T)+' =',v),pg('Titik '+ptS(T)+' termasuk penyelesaian?',YT,ya?0:1)],
+          ['Substitusikan x = '+n(T.x)+' dan y = '+n(T.y)+' ke ruas kiri.','Bandingkan hasilnya dengan '+n(k.c)+' memakai tanda '+op+'.'],{ln:2,mk:[M(T.x,T.y,'b')]},'',[pnyUji(k,T)])],
+    vz:{ln:2,sh:1,mk:[M(T.x,T.y,'b'),M(X,0),M(0,Y)]},
+    bahas:['Tanda '+op+' → garis '+(isSolid(op)?'penuh':'putus-putus')+'.','Tabel x | y menghasilkan titik potong '+ptS({x:0,y:Y})+' dan '+ptS({x:X,y:0})+'.',
+      'Uji '+ptS(T)+' → '+subS(k.a,k.b,T.x,T.y)+' = '+n(v)+'; '+n(v)+' '+op+' '+n(k.c)+' '+(ya?'benar, jadi titik itu termasuk penyelesaian.':'salah, jadi titik itu tidak termasuk penyelesaian.')]});
+}
+function g1H(rng,v){
+  var q,st2,soal,vz,bahas;
+  if(v==='a'){
+    var k=pick(rng,[1,2,3,-1,-2]),o=pick(rng,OPS4),h0=holds(0,0,o);
+    q=norm(L(k,-1,0,flipOp(o)));
+    var kx=(k===1?'':k===-1?'−':n(k))+'x',disp='y '+o+' '+kx,h1=holds(0,k,o);
+    soal='Rudi menggambar DP dari <b>'+disp+'</b>. Ia menguji titik (0, 0) dan mendapat 0 '+o+' 0 yang bernilai '+(h0?'benar':'salah')+', lalu mengarsir sisi yang '+(h0?'memuat':'tidak memuat')+' (0, 0).';
+    st2=[F('Analisis kesalahan','Di mana letak kesalahan Rudi?',[pgS(rng,'Kesalahan Rudi','Titik (0, 0) terletak pada garis batas, jadi tidak dapat dipakai sebagai titik uji.',
+          ['Garis batasnya seharusnya digambar '+(isSolid(o)?'putus-putus':'penuh')+'.','Pernyataan 0 '+o+' 0 seharusnya bernilai '+(h0?'salah':'benar')+'.','Tidak ada kesalahan; arsirannya sudah benar.'])],
+          ['Substitusikan (0, 0) ke persamaan garis y = '+kx+'. Apa hasilnya?','Titik uji tidak boleh terletak pada garis batas.'],{ln:2,mk:[M(0,0,'r')]}),
+        F('Uji titik lain','Uji titik (1, 0) yang tidak terletak pada garis.',[num('Nilai ruas kanan '+kx+' di (1, 0) =',k),pg('Pernyataan 0 '+o+' '+n(k)+' bernilai',BS,h1?0:1)],
+          ['Ruas kiri y bernilai 0; ruas kanan '+kx+' dengan x = 1.','Bandingkan 0 dengan '+n(k)+' memakai tanda '+o+'.'],{ln:2,mk:[M(1,0,'g')]},'',
+          [{judul:'Uji titik (1, 0) pada y '+o+' '+kx,tex:[tTeks('ruas kiri: ')+'y &= 0',tTeks('ruas kanan: ')+(k===1?'':k===-1?'-':tn(k))+'x &= '+tn(k)+'\\quad '+tTeks('(x = 1)'),'&\\Rightarrow\\ 0 '+TOP[o]+' '+tn(k)+'\\quad '+tTeks(h1?'(benar)':'(salah)')],txt:['Ruas kiri: y = 0','Ruas kanan: '+kx+' = '+n(k),'0 '+o+' '+n(k)+' → '+(h1?'benar':'salah')]}]),
+        P('Mengarsir','Klik satu titik kisi di sisi yang benar (bukan pada garis).',{k:'in',s:[q],ok:inPt([q])},
+          ['Pernyataan benar → sisi yang memuat (1, 0); salah → sisi seberangnya.'],{ln:2,mk:[M(1,0,'g')]})];
+    vz={ln:2,sh:1,mk:[M(1,0,'g')]};
+    bahas=['(0, 0) terletak pada garis y = '+kx+', sehingga uji (0, 0) tidak bisa menentukan sisi.','Uji (1, 0) → 0 '+o+' '+n(k)+' '+(h1?'benar → arsir sisi yang memuat (1, 0).':'salah → arsir sisi yang tidak memuat (1, 0).')];
+    return Q(1,'H',{kko:'menganalisis',sys:[q],soal:soal,st:st2,vz:vz,bahas:bahas});
+  }
+  if(v==='b'){
+    var a=ri(rng,1,3),b=ri(rng,1,3);if(gcdN(a,b)>1)b=1;
+    var lo=ri(rng,1,4),hi=lo+ri(rng,2,4),ada=rng()<.5,c1=ada?hi:lo,c2=ada?lo:hi;
+    var s1=L(a,b,c1,'≤'),s2=L(a,b,c2,'≥'),ls=lin(a,b);
+    soal='Tanpa menggambar, selidiki apakah sistem <b>'+ineqS(s1)+'</b> dan <b>'+ineqS(s2)+'</b> memiliki DP.';
+    var r1='Ruas kiri kedua pertidaksamaan sama (garisnya sejajar) dan tidak ada nilai '+ls+' yang sekaligus ≤ '+c1+' dan ≥ '+c2+'.';
+    var r2='Garisnya sejajar dan DP berupa jalur di antara kedua garis, yaitu '+c2+' ≤ '+ls+' ≤ '+c1+'.';
+    var s3=ada?P('Titik di DP','Klik satu titik kisi di dalam DP, bukan pada garis.',{k:'in',s:[s1,s2],ok:inPt([s1,s2])},['DP berada di antara kedua garis sejajar.'],{ln:2,ar:1})
+      :F('Syarat DP','Agar sistem memiliki DP, ruas kanan '+ls+' ≤ … paling kecil bernilai berapa?',[num('Ruas kanan paling kecil =',c2)],['Nilai '+ls+' harus bisa sekaligus ≤ ruas kanan dan ≥ '+c2+'.'],{ln:2,ar:1});
+    st2=[F('Menyelidiki DP','Apakah sistem ini memiliki DP?',[pg('Sistem memiliki DP?',['Ada','Tidak ada'],ada?0:1)],['Bandingkan ruas kiri kedua pertidaksamaan.','Ruas kiri sama → garis sejajar.']),
+        F('Alasan','Pilih alasan yang tepat.',[pgS(rng,'Alasannya',ada?r2:r1,[ada?r1:r2,'Kedua garis pasti berpotongan, jadi DP selalu ada.','Kedua garis penuh, jadi DP pasti hanya berupa sebuah garis.'])],['Ruas kiri sama berarti kedua garis sejajar.']),s3];
+    vz={ln:2,sh:ada?1:0,ar:ada?0:1};
+    bahas=['Ruas kiri kedua pertidaksamaan sama, yaitu '+ls+', jadi garisnya sejajar.',ada?'Nilai '+ls+' antara '+c2+' dan '+c1+' memenuhi keduanya, jadi DP ada (jalur di antara garis).':'Tidak ada nilai '+ls+' yang ≤ '+c1+' sekaligus ≥ '+c2+', jadi DP tidak ada. DP baru ada jika ruas kanan pertama paling kecil '+c2+'.'];
+    return Q(1,'H',{kko:'menyelidiki, menganalisis',sys:[s1,s2],soal:soal,st:st2,vz:vz,bahas:bahas});
+  }
+  var aa=ri(rng,1,3),m=ri(rng,1,4),nn=ri(rng,1,4),kk=ri(rng,-2,4),op=pick(rng,OPS4),c=aa*m+nn*kk,ax=(aa===1?'':aa)+'x',sb=function(u){return aa===1?String(u):aa+'('+u+')';};
+  var key=sb(m)+' + '+nn+'k '+op+' '+n(c);
+  var dis=[sb(nn)+' + '+m+'k '+op+' '+n(c),sb(m)+' + '+nn+'k '+flipOp(op)+' '+n(c),sb(m)+' + k '+op+' '+n(c),sb(nn)+' + '+m+'k '+flipOp(op)+' '+n(c)];
+  dis=dis.filter(function(d,i){return d!==key&&dis.indexOf(d)===i;}).slice(0,3);
+  q=L(aa,kk,c,op);
+  soal='Tentukan nilai k agar titik ('+m+', '+nn+') berada di DP <b>'+ax+' + ky '+op+' '+n(c)+'</b>.';
+  var pnK=[{judul:'Substitusi ('+m+', '+nn+') lalu selesaikan dalam k',tex:[tn(aa)+'('+m+') + k('+nn+') &\\ '+TOP[op]+'\\ '+tn(c),tn(aa*m)+' + '+nn+'k &\\ '+TOP[op]+'\\ '+tn(c),nn+'k &\\ '+TOP[op]+'\\ '+tn(c-aa*m),'k &\\ '+TOP[op]+'\\ '+tn(kk)],
+    txt:[sb(m)+' + '+nn+'k '+op+' '+n(c),n(aa*m)+' + '+nn+'k '+op+' '+n(c),nn+'k '+op+' '+n(c-aa*m),'k '+op+' '+n(kk)]}];
+  st2=[F('Substitusi','Substitusikan titik ('+m+', '+nn+').',[pgS(rng,'Hasil substitusi',key,dis)],['x diganti '+m+' dan y diganti '+nn+'.']),
+      F('Batas nilai k','Selesaikan pertidaksamaan dalam k.',[num('Batas nilai k =',kk)],['Pindahkan '+(aa*m)+' ke ruas kanan, lalu bagi dengan '+nn+'.'],{},'',pnK),
+      F('Parameter','Lengkapi syarat nilai k.',[pg('Jadi, k … '+n(kk),OPS4.slice(),OPS4.indexOf(op))],['Membagi dengan bilangan positif '+nn+' tidak mengubah tanda.'])];
+  st2.forEach(function(S2){S2.v={mk:[M(m,nn,'b')]};});
+  return Q(1,'H',{kko:'menentukan syarat',sys:[q],soal:soal,st:st2,vz:{ln:2,sh:1,mk:[M(m,nn,'b')]},
+    bahas:['Substitusi menghasilkan '+key+' → '+nn+'k '+op+' '+n(c-aa*m)+' → k '+op+' '+n(kk)+'.','Untuk k = '+n(kk)+', titik ('+m+', '+nn+') tepat berada pada garis batas.']});
+}
+
+/* ===== TIPE 2 · SISTEM DARI DP ===== */
+function g2L(rng){
+  var k=ri(rng,1,8)*(rng()<.4?-1:1),op=pick(rng,OPS4),tegak=rng()<.5,q=tegak?L(1,0,k,op):L(0,1,k,op),vr=tegak?'x':'y',vv={ln:2,sh:1};
+  return Q(2,'L',{kko:'menuliskan, mengenali',sys:[q],
+    soal:'DP (hijau) dibatasi satu garis '+(tegak?'tegak':'mendatar')+'. Tuliskan pertidaksamaannya.',
+    st:[F('Bentuk garis','Garis batas pada gambar berbentuk',[pg('Persamaan garisnya',['x = … (garis tegak)','y = … (garis mendatar)'],tegak?0:1)],['Garis tegak sejajar sumbu-y; garis mendatar sejajar sumbu-x.'],vv),
+        F('Konstanta','Garis itu memotong sumbu-'+(tegak?'x':'y')+' di titik berapa?',[num(vr+' = □, □ =',k)],['Baca titik potong garis dengan sumbu-'+(tegak?'x':'y')+'.'],vv),
+        F('Tanda','Pilih tanda dari jenis garis dan letak DP.',[pg(vr+' … '+n(k),OPS4.slice(),OPS4.indexOf(op))],['Jenis garis: penuh (≤, ≥) atau putus-putus (&lt;, &gt;).',(tegak?'DP di kanan garis → '+vr+' lebih besar; di kiri → lebih kecil.':'DP di atas garis → '+vr+' lebih besar; di bawah → lebih kecil.')],vv)],
+    vz:vv,bahas:['Garis '+(tegak?'tegak':'mendatar')+' '+vr+' = '+n(k)+', '+(isSolid(op)?'penuh':'putus-putus')+'.','DP di '+(tegak?(sideOf(op)>0?'kanan':'kiri'):(sideOf(op)>0?'atas':'bawah'))+' garis → '+ineqS(q)+'.']});
+}
+/* HOTS: mengevaluasi dan memperbaiki jawaban teman untuk DP sistem s (dari genSystem halaman ini) */
+function gEval(rng,raw){
+  var s=raw.map(function(q){return L(q.a,q.b,q.c,q.op);}),j=ri(rng,0,s.length-1),q=s[j],jenis=rng()<.65?'arah':'garis';
+  var salahOp=jenis==='arah'?flipOp(q.op):(q.op==='≤'?'<':q.op==='<'?'≤':q.op==='≥'?'>':'≥');
+  var rin=s.map(function(z,i){return i===j?L(z.a,z.b,z.c,salahOp):z;}),T=inPt(s),val=q.a*T.x+q.b*T.y,lst=rin.map(ineqS);
+  var vv={ln:2,sh:1},vt={ln:2,sh:1,mk:[M(T.x,T.y,'g','T'+ptS(T))]};
+  var lab=s.length===1?'pertidaksamaan':'sistem';
+  var st2=[F('Evaluasi jawaban','Pertidaksamaan Rina yang salah adalah',[pg('Yang salah',lst,j)],
+      ['Bandingkan jenis setiap garis pada gambar dengan tandanya, lalu uji satu titik di dalam DP.','Pertidaksamaan yang tandanya tidak cocok dengan gambar atau bernilai salah untuk titik di DP adalah yang keliru.'],vv)];
+  if(jenis==='arah')st2.push(F('Uji titik','Uji titik T'+ptS(T)+' di dalam DP pada ruas kiri '+lin(q.a,q.b)+'.',[num('Nilai '+lin(q.a,q.b)+' di T =',val)],['Substitusikan x = '+n(T.x)+' dan y = '+n(T.y)+'.'],vt,'',[pnyUji(q,T,'Uji T'+ptS(T)+' pada '+lin(q.a,q.b))]));
+  else st2.push(F('Jenis garis','Garis '+eqS(q)+' pada gambar digambar',[pg('Garisnya',PP,isSolid(q.op)?0:1)],['Lihat gambar: apakah garisnya utuh atau terputus-putus?'],vt));
+  st2.push(F('Perbaikan','Tanda yang benar:',[pg(lin(q.a,q.b)+' … '+n(q.c),OPS4.slice(),OPS4.indexOf(q.op))],['Garis '+(isSolid(q.op)?'penuh → ≤ atau ≥':'putus-putus → &lt; atau &gt;')+'.','Titik di DP: bandingkan '+n(val)+' dengan '+n(q.c)+'.'],vt));
+  return Q(2,'H',{kko:'mengevaluasi, memperbaiki',sys:s,
+    soal:'Untuk DP (hijau) pada gambar, Rina menulis '+lab+' <b>'+lst.join(' ; ')+'</b>. Periksa dan perbaiki.',
+    st:st2,vz:vt,bahas:[jenis==='arah'?'Uji T'+ptS(T)+' → '+subS(q.a,q.b,T.x,T.y)+' = '+n(val)+', jadi '+lst[j]+' bernilai salah untuk titik di DP.':'Garis '+eqS(q)+' digambar '+(isSolid(q.op)?'penuh':'putus-putus')+', jadi tanda '+salahOp+' tidak cocok.',
+      'Perbaikannya '+ineqS(q)+'.']});
+}
+/* HOTS: merancang sistem dari titik sudut segi empat */
+function quad(rng){
+  for(var t=0;t<800;t++){
+    var A=ri(rng,4,9),B2=ri(rng,4,9),P2=ri(rng,1,A-1),Qy=ri(rng,1,B2-1);
+    if(P2*B2+Qy*A<=A*B2)continue;
+    var l1=norm(L(Qy,A-P2,Qy*A,'≤')),l2=norm(L(B2-Qy,P2,P2*B2,'≤'));
+    var y1=l1.c/l1.b,x2=l2.c/l2.a;
+    if(Math.floor(y1)!==y1||Math.floor(x2)!==x2||y1>10||x2>10)continue;
+    return {A:A,B:B2,P:P2,Q:Qy,l1:l1,l2:l2};
+  }
+  return {A:6,B:6,P:4,Q:4,l1:L(2,1,12,'≤'),l2:L(1,2,12,'≤')};
+}
+function g2Hr(rng){
+  var d=quad(rng),s=[d.l1,d.l2].concat(AX),cs=[M(0,0),M(d.A,0),M(d.P,d.Q),M(0,d.B)],vw={mk:cs},vf={ln:2,sh:1,mk:cs},T=inPt(s);
+  return Q(2,'H',{kko:'merancang',sys:s,
+    soal:'Rancang sistem pertidaksamaan yang DP-nya segi empat dengan titik sudut (0, 0), ('+d.A+', 0), ('+d.P+', '+d.Q+'), (0, '+d.B+'). Semua garis batas penuh.',
+    st:[F('Garis (1)','Garis (1) menghubungkan ('+d.A+', 0) dan ('+d.P+', '+d.Q+').',[eqI('Garis (1)',d.l1)],['Pakai rumus dua titik.','Periksa: kedua titik harus memenuhi persamaanmu.'],vw,'',[pnyDuaTitik({x:d.A,y:0},{x:d.P,y:d.Q})]),
+        F('Garis (2)','Garis (2) menghubungkan (0, '+d.B+') dan ('+d.P+', '+d.Q+').',[eqI('Garis (2)',d.l2)],['Pakai rumus dua titik.','Periksa: kedua titik harus memenuhi persamaanmu.'],vw,'',[pnyDuaTitik({x:0,y:d.B},{x:d.P,y:d.Q})]),
+        F('Tanda','Lengkapi tanda agar DP-nya tepat segi empat itu.',s.map(function(q,i){return pg(['(1) '+lin(q.a,q.b)+' … '+n(q.c),'(2) '+lin(q.a,q.b)+' … '+n(q.c),'x … 0','y … 0'][i],OPS4.slice(),OPS4.indexOf(q.op));}),
+          ['Semua garis penuh → ≤ atau ≥.','(0, 0) adalah titik sudut DP, jadi uji titik lain di dalamnya, misalnya '+ptS(T)+'.'],vw)],
+    vz:vf,bahas:['Garis (1): '+eqS(d.l1)+'; garis (2): '+eqS(d.l2)+'.','Uji '+ptS(T)+' di dalam DP → sistemnya '+ineqS(d.l1)+'; '+ineqS(d.l2)+'; x ≥ 0; y ≥ 0.']});
+}
+return {g1L:g1L,g1H:g1H,g2L:g2L,gEval:gEval,g2Hr:g2Hr,L:L,norm:norm,AX:AX,ineqS:ineqS,eqS:eqS,lin:lin};
+})();
+
+/* ---------- alat penulis isi tab Belajar (contoh kontekstual) ---------- */
+function LQ(a,b,c,op){return {a:a,b:b,c:c,op:op};}
+var AXS=[LQ(1,0,0,'≥'),LQ(0,1,0,'≥')];
+function sysX(arr){return arr.concat(AXS);}
+function ln(a,b,c,op,k,lbl){return {q:LQ(a,b,c,op),col:COL[k||0],lbl:lbl===undefined?'':lbl,ty:op==='='||isSolid(op)?'solid':'dash'};}
+function pt(x,y,c,l,h){return {x:x,y:y,c:c||'k',l:l,h:h};}
+function vw(o){o=o||{};return {L:o.lines||[],dp:o.shade||null,hf:o.half||null,mk:o.mk||[],dots:(o.dots||[]).map(function(p){return [p.x,p.y];}),cap:o.cap||''};}
+function cornersMk(arr){return arr.map(function(p){return pt(p[0],p[1]);});}
+function dotsIn(sys,mx,my){var d=[];for(var x=0;x<=mx;x++)for(var y=0;y<=my;y++)if(holdsAll(sys,x,y))d.push({x:x,y:y});return d;}
+function ingat(h){return '<div class="rule"><b>INGAT!</b> '+h+'</div>';}
+function ul(a){return '<ul class="exl">'+a.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>';}
+function ol(a){return '<ol class="exl">'+a.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ol>';}
+function eqH(t){return '<span class="eq">'+t+'</span>';}
+/* tabel x | y untuk mencari titik pada garis */
+function tabXY(cap,xs,ys){
+  var f=function(v){return typeof v==='number'?frac(v):v;};
+  return '<table class="tbl txy">'+(cap?'<caption>'+cap+'</caption>':'')+'<tr><th>x</th>'+xs.map(function(v){return '<td>'+f(v)+'</td>';}).join('')+'</tr><tr><th>y</th>'+ys.map(function(v){return '<td>'+f(v)+'</td>';}).join('')+'</tr><tr><th>(x, y)</th>'+xs.map(function(v,i){return '<td>('+f(v)+', '+f(ys[i])+')</td>';}).join('')+'</tr></table>';
+}
+/* susunan eliminasi bersusun: rows = [[tanda, ruas, label], ...]; baris terakhir = hasil */
+function elim(rows){
+  return '<table class="elim">'+rows.map(function(r,i){return '<tr'+(i===rows.length-1?' class="hasil"':'')+'><td>'+r[0]+'</td><td>'+r[1]+'</td><td class="muted">'+(r[2]||'')+'</td></tr>';}).join('')+'</table>';
+}
+function tblE(head,rows,cls){
+  return '<div class="tscroll"><table class="ext'+(cls?' '+cls:'')+'"><tr>'+head.map(function(h){return '<th>'+h+'</th>';}).join('')+'</tr>'
+    +rows.map(function(r){return '<tr'+(r.pt?' class="tpt" data-x="'+r.pt[0]+'" data-y="'+r.pt[1]+'" data-ok="'+(r.ok?1:0)+'" tabindex="0"':'')+'>'+r.c.map(function(c){return '<td>'+c+'</td>';}).join('')+'</tr>';}).join('')+'</table></div>';
+}
+function RW(x,y,ok,cells){return {pt:[x,y],ok:ok,c:cells};}
+/* pembentuk satu contoh kontekstual: Situasi → Diketahui/Ditanyakan → langkah → uji titik → Diskusi → Coba Sendiri
+   (format sama dengan tab Belajar sptldv-x) */
+function contoh(o){
+  var parts=[],beats=[],last=o.v0;
+  parts.push('<p class="muted">Konteks: '+o.konteks+'</p><div class="exbox"><b>Situasi</b><p>'+o.situasi+'</p></div>');
+  beats.push({show:0,say:'Baca situasinya dulu, ya.',v:o.v0});
+  parts.push('<div class="dd"><div class="exbox"><b>Diketahui</b>'+ul(o.dik)+'</div><div class="exbox"><b>Ditanyakan</b>'+ul(o.tanya)+'</div></div>');
+  beats.push({show:1,say:'Sebelum melihat penyelesaian, tulis sendiri yang diketahui dan ditanyakan.',v:o.v0});
+  o.langkah.forEach(function(l){
+    parts.push('<div class="exstep">'+(l[0]?'<b class="lkh">'+l[0].replace(/:$/,'')+'</b> ':'')+l[1]+'</div>');
+    if(l[3])last=l[3];
+    beats.push({show:parts.length-1,say:l[2],v:last});
+  });
+  parts.push('<h3>Uji titik dan tafsirannya</h3>'+tblE(o.head,o.rows,'tuji')+'<p class="muted">✓ = pertidaksamaan bernilai benar, ✗ = salah. Ketuk satu baris untuk melihat titiknya di grafik.</p>');
+  beats.push({show:parts.length-1,say:'Titik di DP membuat semua pertidaksamaan benar. Ketuk baris tabel untuk melihat titiknya.',v:o.vAkhir||last});
+  parts.push('<div class="exbox"><b>Pertanyaan Diskusi</b>'+ol(o.diskusi)+'<details><summary>Lihat petunjuk jawaban</summary>'+ol(o.kunciD)+'</details></div>');
+  beats.push({show:parts.length-1,say:'Diskusikan pertanyaan ini bersama teman.',v:o.vAkhir||last});
+  parts.push('<div class="exbox fix"><b>Coba Sendiri</b><p>'+o.coba+'</p><details><summary>Buka kunci</summary><p>'+o.kunciC+'</p></details></div>');
+  beats.push({show:parts.length-1,say:'Sekarang giliranmu. Coba sendiri, baru buka kuncinya!',v:o.vCoba||o.vAkhir||last});
+  return {t:o.t,jd:o.jd,src:o.src,parts:parts,beats:beats};
+}
+/* layar bertahap biasa: items = [[HTML bagian | null, ucapan Plus, tampilan (opsional), sasaran Plus (opsional)], ...] */
+function scr(t,jd,src,items,go){
+  var parts=[],beats=[],last=null;
+  items.forEach(function(it){
+    if(it[0]!==null)parts.push(it[0]);
+    if(it[2])last=it[2];
+    beats.push({show:parts.length-1,say:it[1],v:last,at:it[3]});
+  });
+  return {t:t,jd:jd,src:src,parts:parts,beats:beats,go:!!go};
+}
+/* ======================= akhir MODUL BERSAMA ======================= */
+
+/* ---------- contoh kontekstual A–C (sumber: PDF "Pembahasan Contoh Kontekstual SPtLDV") ---------- */
+var LA_=ln(4,3,24,'=',0,'4x + 3y = 24');
+var LB_=ln(5,6,30,'≤',0,'5x + 6y = 30'),SB_=sysX([LQ(5,6,30,'≤')]);
+var SC_=sysX([LQ(2,1,10,'≤'),LQ(1,1,8,'≤')]),LC_=[ln(2,1,10,'≤',0,'(1)'),ln(1,1,8,'≤',1,'(2)')];
+var CK_A=contoh({t:'cA',jd:'Contoh kontekstual A · Belanja barongko dan onde-onde',src:'Pembahasan Contoh Kontekstual, Bagian A (halaman 2)',konteks:'kantin sekolah di Watampone',
+ situasi:'Di kantin sekolah, barongko dijual Rp4.000 per buah dan onde-onde Rp3.000 per buah. Andi membawa Rp24.000 dan ingin menghabiskan seluruh uangnya untuk membeli kedua jenis kue itu. Andi ingin tahu kombinasi apa saja yang mungkin.',
+ dik:['Harga barongko Rp4.000, onde-onde Rp3.000','Uang Rp24.000 habis tepat'],tanya:['Persamaan dan grafiknya','Kombinasi pembelian yang mungkin'],
+ v0:vw({cap:'x = banyak barongko, y = banyak onde-onde (buah).'}),
+ langkah:[['MISALKAN:','x = banyak barongko (buah), y = banyak onde-onde (buah).','Tetapkan dulu arti x dan y.'],
+  ['SUSUN:','Uang habis tepat → persamaan, bukan pertidaksamaan, yaitu '+eqH('4.000x + 3.000y = 24.000')+'. Bagi kedua ruas dengan 1.000 → '+eqH('4x + 3y = 24'),'Kata “habis tepat” menghasilkan persamaan.'],
+  ['PILIH dan HITUNG:','Pilih nilai x, lalu hitung y dari 4x + 3y = 24.'+tabXY('',[0,3,6],[8,4,0])+'x = 0 → 3y = 24 → y = 8<br>x = 3 → 12 + 3y = 24 → y = 4<br>x = 6 → 24 + 3y = 24 → y = 0<br>Kombinasi yang mungkin adalah (0, 8), (3, 4), dan (6, 0).','Isi tabel x | y. Ada tiga kombinasi bilangan bulat.',vw({mk:[pt(0,8),pt(3,4),pt(6,0)],cap:'x = banyak barongko, y = banyak onde-onde (buah).'})],
+  ['','x = 1 → 4 + 3y = 24 → y = 6⅔ (bukan bilangan bulat).'+tabXY('',[1],[20/3]),'x = 1 memberi pecahan, jadi bukan pilihan.',vw({mk:[pt(0,8),pt(3,4),pt(6,0),pt(1,20/3,'r',undefined,true)]})],
+  ['GAMBAR:','Plot titik-titik itu dan hubungkan dengan garis lurus. Tiga titik segaris → hitungan benar.'+ingat('Kata <i>tepat</i> atau <i>habis</i> menghasilkan persamaan (=). Pertidaksamaan muncul jika ada kata seperti “paling banyak” atau “minimal”.'),'Tiga titik segaris berarti hitungannya benar.',vw({lines:[LA_],mk:[pt(0,8),pt(3,4),pt(6,0)]})]],
+ head:['Titik','Uji 4x + 3y = 24','Di DP?','Makna dalam konteks'],
+ rows:[RW(0,8,1,['(0, 8)','4(0) + 3(8) = 24 = 24 ✓','Ya','8 onde-onde saja, uang pas']),RW(3,4,1,['(3, 4)','4(3) + 3(4) = 24 = 24 ✓','Ya','3 barongko + 4 onde-onde, uang pas']),
+  RW(6,0,1,['(6, 0)','4(6) + 3(0) = 24 = 24 ✓','Ya','6 barongko saja, uang pas']),RW(1,20/3,1,['(1, 6⅔)','4(1) + 3(6⅔) = 24 = 24 ✓','Ya','Di garis, tetapi 6⅔ onde-onde tidak mungkin dibeli']),
+  RW(2,5,0,['(2, 5)','4(2) + 3(5) = 23 ≠ 24 ✗','Tidak','Belanja Rp23.000, sisa Rp1.000, jadi uang tidak habis'])],
+ diskusi:['Mengapa garis 4x + 3y = 24 tetap digambar utuh, padahal hanya tiga titik yang menjadi jawaban?','Mengapa nilai x yang dipilih adalah 0, 3, dan 6?','Jika soalnya berbunyi “uang tidak lebih dari Rp24.000”, apa yang berubah pada model dan grafiknya?'],
+ kunciD:['Garis menunjukkan semua pasangan yang memenuhi; hanya titik bilangan bulat yang bermakna.','3y = 24 − 4x harus habis dibagi 3. Karena 24 habis dibagi 3, 4x juga harus, jadi x kelipatan 3.','Tanda menjadi ≤ dan seluruh daerah kiri-bawah garis ikut menjadi penyelesaian.'],
+ coba:'Harga barongko naik menjadi Rp5.000, onde-onde tetap Rp3.000, dan Andi membawa Rp30.000 yang ingin dihabiskan.<br>a. Tulis persamaannya dalam bentuk paling sederhana.<br>b. Tentukan semua kombinasi pembelian yang mungkin.',
+ kunciC:'a. 5x + 3y = 30<br>b. (0, 10), (3, 5), (6, 0)',vCoba:vw({cap:'Coba Sendiri: gambar garismu sendiri, lalu buka kunci.'})});
+
+var CK_B=contoh({t:'cB',jd:'Contoh kontekstual B · Uang jajan seminggu',src:'Pembahasan Contoh Kontekstual, Bagian B (halaman 3)',konteks:'kantin sekolah',
+ situasi:'Nisa menyiapkan Rp30.000 untuk jajan selama seminggu. Ia suka nasi kuning (Rp5.000 per porsi) dan es pisang ijo (Rp6.000 per gelas). Belanjanya tidak boleh lebih dari Rp30.000. Nisa ingin tahu pilihan jajan mana saja yang masih terjangkau.',
+ dik:['Nasi kuning Rp5.000 per porsi, es pisang ijo Rp6.000 per gelas','Batas belanja Rp30.000 (tidak lebih dari)'],tanya:['Pertidaksamaan dan DP-nya','Pilihan jajan yang terjangkau'],
+ v0:vw({cap:'x = porsi nasi kuning, y = gelas es pisang ijo.'}),
+ langkah:[['MISALKAN:','x = banyak porsi nasi kuning, y = banyak gelas es pisang ijo.','Tetapkan arti x dan y.'],
+  ['SUSUN:','“Tidak lebih dari” → ≤<br>'+eqH('5.000x + 6.000y ≤ 30.000')+' → bagi 1.000 → '+eqH('5x + 6y ≤ 30'),'“Tidak lebih dari” berarti ≤.'],
+  ['GAMBAR:','Garis batas 5x + 6y = 30. Cari dua titik dengan tabel x | y.'+tabXY('',[0,6],[5,0])+'x = 0 → 6y = 30 → y = 5<br>y = 0 → 5x = 30 → x = 6<br>Tanda ≤ → garis penuh (belanja tepat Rp30.000 boleh).','Tanda ≤ membuat garisnya penuh.',vw({lines:[LB_],mk:[pt(0,5),pt(6,0)]})],
+  ['UJI:','Titik (0, 0) → 5(0) + 6(0) = 0 ≤ 30, benar.','Uji titik (0, 0): hasilnya benar.',vw({lines:[LB_],mk:[pt(0,5),pt(6,0),pt(0,0,'g','(0, 0)')]})],
+  ['ARSIR:','Benar → arsir sisi yang memuat (0, 0), yaitu sisi kiri-bawah garis.'+ingat('Titik cokelat pada grafik adalah pilihan yang benar-benar mungkin: bilangan bulat dan tidak negatif.'),'Titik cokelat adalah pilihan jajan yang mungkin.',vw({lines:[LB_],shade:SB_,dots:dotsIn(SB_,8,8),cap:'Titik bulat menunjukkan pilihan yang benar-benar mungkin.'})]],
+ head:['Titik','Uji 5x + 6y ≤ 30','Di DP?','Makna dalam konteks'],
+ rows:[RW(2,3,1,['(2, 3)','5(2) + 6(3) = 28 ≤ 30 ✓','Ya','Rp28.000, sisa Rp2.000']),RW(3,2,1,['(3, 2)','5(3) + 6(2) = 27 ≤ 30 ✓','Ya','Rp27.000, sisa Rp3.000']),
+  RW(1,4,1,['(1, 4)','5(1) + 6(4) = 29 ≤ 30 ✓','Ya','Rp29.000, sisa Rp1.000']),RW(0,5,1,['(0, 5)','5(0) + 6(5) = 30 ≤ 30 ✓','Ya','Tepat Rp30.000, masih boleh']),
+  RW(4,2,0,['(4, 2)','5(4) + 6(2) = 32 &gt; 30 ✗','Tidak','Rp32.000, uang kurang Rp2.000'])],
+ diskusi:['Paling banyak berapa gelas es yang dapat dibeli jika Nisa tidak membeli nasi kuning?','Mengapa garis batasnya penuh, bukan putus-putus?','Jika kalimatnya diganti “kurang dari Rp30.000”, apa yang berubah? Apakah (0, 5) masih termasuk?'],
+ kunciD:['5 gelas (titik (0, 5)).','Belanja tepat Rp30.000 masih diperbolehkan.','Tanda &lt;, garis putus-putus; (0, 5) tidak termasuk karena 30 &lt; 30 salah.'],
+ coba:'Uang jajan Rp24.000, nasi kuning Rp4.000 per porsi, es pisang ijo Rp6.000 per gelas, belanja tidak lebih dari uang yang ada.<br>a. Tulis pertidaksamaan paling sederhana.<br>b. Apakah 3 porsi dan 2 gelas dapat dibeli? Bagaimana dengan 4 porsi dan 2 gelas?',
+ kunciC:'a. 4x + 6y ≤ 24 → 2x + 3y ≤ 12<br>b. (3, 2) → 12 ≤ 12, bisa (tepat Rp24.000). (4, 2) → 14 &gt; 12, tidak bisa (Rp28.000).',
+ vCoba:vw({mk:[pt(3,2,'b'),pt(4,2,'b')],cap:'Coba Sendiri: uji kedua titik ini.'})});
+
+var CK_C=contoh({t:'cC',jd:'Contoh kontekstual C · Membuat kue untuk bazar OSIS',src:'Pembahasan Contoh Kontekstual, Bagian C (halaman 4)',konteks:'kegiatan OSIS',
+ situasi:'OSIS membuat barongko dan onde-onde untuk bazar sekolah. Mengukus satu loyang barongko memerlukan 2 jam, sedangkan menggoreng satu wajan onde-onde memerlukan 1 jam. Dapur hanya dapat dipakai paling lama 10 jam. Meja bazar dapat memajang paling banyak 8 wadah (1 loyang atau 1 wajan = 1 wadah).',
+ dik:['Barongko 2 jam per loyang, onde-onde 1 jam per wajan, waktu paling banyak 10 jam','Meja paling banyak 8 wadah'],tanya:['Sistem pertidaksamaan dan DP-nya','Titik sudut DP dan artinya'],
+ v0:vw({cap:'x = loyang barongko, y = wajan onde-onde.'}),
+ langkah:[['MISALKAN:','x = banyak loyang barongko, y = banyak wajan onde-onde.','Tetapkan arti x dan y.'],
+  ['SUSUN:','Waktu → '+eqH('2x + y ≤ 10')+' ... (1)<br>Wadah → '+eqH('x + y ≤ 8')+' ... (2)<br>Banyak kue tidak negatif, jadi x ≥ 0 dan y ≥ 0','Ada dua batasan, yaitu waktu dan wadah.'],
+  ['GAMBAR:','Garis (1) 2x + y = 10, penuh.'+tabXY('',[0,5],[10,0]),'Gambar garis (1) dulu.',vw({lines:[LC_[0]],mk:[pt(5,0),pt(0,10)]})],
+  ['','Garis (2) x + y = 8, penuh.'+tabXY('',[0,8],[8,0]),'Lalu garis (2).',vw({lines:LC_,mk:[pt(5,0),pt(0,10),pt(8,0),pt(0,8)]})],
+  ['UJI dan ARSIR:','(0, 0) → 0 ≤ 10 dan 0 ≤ 8 benar → arsir sisi yang memuat (0, 0), di kuadran I.','Uji (0, 0) benar untuk keduanya.',vw({lines:LC_,shade:SC_,mk:[pt(0,0,'g','(0, 0)')]})],
+  ['TITIK POTONG:','eliminasi y dengan mengurangkan (2) dari (1).'+elim([['','2x + y = 10','(1)'],['−','x + y = 8','(2)'],['','x = 2','']])+'Substitusi x = 2 ke (2) → 2 + y = 8 → y = 6.<br>DP berupa segi empat dengan titik sudut (0, 0), (5, 0), (2, 6), (0, 8).','Titik potongnya (2, 6). DP berbentuk segi empat.',vw({lines:LC_,shade:SC_,mk:cornersMk([[0,0],[5,0],[2,6],[0,8]])})]],
+ head:['Titik','Uji (1) waktu','Uji (2) wadah','Di DP?','Makna dalam konteks'],
+ rows:[RW(2,4,1,['(2, 4)','2(2) + 4 = 8 ≤ 10 ✓','2 + 4 = 6 ≤ 8 ✓','Ya','Waktu 8 jam, 6 wadah, bisa']),RW(2,6,1,['(2, 6)','2(2) + 6 = 10 ≤ 10 ✓','2 + 6 = 8 ≤ 8 ✓','Ya','Waktu dan meja tepat penuh']),
+  RW(4,4,0,['(4, 4)','2(4) + 4 = 12 &gt; 10 ✗','4 + 4 = 8 ≤ 8 ✓','Tidak','Meja cukup, tetapi waktu kurang 2 jam']),RW(1,8,0,['(1, 8)','2(1) + 8 = 10 ≤ 10 ✓','1 + 8 = 9 &gt; 8 ✗','Tidak','Waktu cukup, tetapi butuh 9 wadah'])],
+ diskusi:['Jika OSIS ingin membuat barongko sebanyak-banyaknya, batasan mana yang lebih dulu habis?','Titik (4, 4) dan (1, 8) sama-sama di luar DP. Apa beda penyebabnya?','Jika meja ditambah menjadi 10 wadah, bagaimana DP-nya berubah?'],
+ kunciD:['Waktu. Barongko paling banyak 5 loyang, sedangkan meja masih muat 8.','(4, 4) melanggar waktu; (1, 8) melanggar wadah.','x + y ≤ 10 tidak lagi membatasi; DP menjadi segitiga (0, 0), (5, 0), (0, 10).'],
+ coba:'Waktu dapur diperpanjang menjadi paling lama 12 jam, sedangkan meja tetap paling banyak 8 wadah.<br>a. Tulis sistem pertidaksamaannya.<br>b. Tentukan titik-titik sudut DP-nya.',
+ kunciC:'a. 2x + y ≤ 12, x + y ≤ 8, x ≥ 0, y ≥ 0<br>b. (0, 0), (6, 0), (4, 4), (0, 8)',vCoba:vw({cap:'Coba Sendiri: gambar sistem barumu.'})});
+
+/* ============================================================
+   TAB BELAJAR (sistem-ptldv.html): konsep menggambar DP + contoh kontekstual A–C
+   Layar konsep disusun untuk halaman ini mengikuti langkah GAMBAR • UJI • ARSIR
+   (Susunan Kategori Soal, Tipe 1). Contoh kontekstual dari PDF Pembahasan Contoh Kontekstual.
+   Tab ini tidak menyentuh skor, jejak, atau server.
+   ============================================================ */
+var SRC_K='Ringkasan materi menggambar DP (Bagian A–C)';
+var S_P=[LQ(2,1,4,'≥'),LQ(1,2,8,'≤')];
+var L_212=ln(2,3,12,'≤',0,'2x + 3y = 12'),Q_212=LQ(2,3,12,'≤');
+var L_X2Y=ln(1,-2,4,'>',0,'x − 2y = 4'),Q_X2Y=LQ(1,-2,4,'>');
+var L_Y2X=ln(2,-1,0,'≥',0,'y = 2x'),Q_Y2X=LQ(2,-1,0,'≤');
+var S_C2=[LQ(1,1,6,'≤'),LQ(1,0,0,'≥'),LQ(0,1,0,'≥')];
+var S_PK=[LQ(1,1,2,'>'),LQ(1,-1,4,'<'),LQ(0,1,5,'<')];
+var EX_GROUPS=['A · Garis batas','B · Daerah penyelesaian','C · DP sistem','Rangkuman','Temukan kesalahan'];
+var EX_TOPICS=[['p','Pengantar','A · Garis batas'],['a0','Garis batas dari tabel x | y','A · Garis batas'],['a1','Garis melalui (0, 0), tegak, dan mendatar','A · Garis batas'],['cA','Contoh kontekstual A · Barongko dan onde-onde','A · Garis batas'],
+  ['b0','Jenis garis','B · Daerah penyelesaian'],['b1','Uji titik dan arsir (contoh 1)','B · Daerah penyelesaian'],['b2','Uji titik dan arsir (contoh 2)','B · Daerah penyelesaian'],['b3','Jika (0, 0) terletak pada garis','B · Daerah penyelesaian'],['cB','Contoh kontekstual B · Uang jajan seminggu','B · Daerah penyelesaian'],
+  ['c0','DP sistem adalah irisan','C · DP sistem'],['c1','Contoh sistem dua pertidaksamaan','C · DP sistem'],['c2','Contoh dengan sumbu koordinat','C · DP sistem'],['pk','Periksa DP dengan titik','C · DP sistem'],['cC','Contoh kontekstual C · Kue untuk bazar OSIS','C · DP sistem'],
+  ['r','Rangkuman langkah','Rangkuman'],['k','Temukan kesalahan (6 kasus)','Temukan kesalahan']];
+var EX=[
+scr('p','Pengantar: menggambar daerah penyelesaian',SRC_K,[
+ ['<p>Daerah penyelesaian (DP) sebuah pertidaksamaan linear dua variabel adalah semua titik (x, y) yang membuat pertidaksamaan itu bernilai <b>benar</b>.</p><p class="ans">GAMBAR garis batas • UJI satu titik • ARSIR sisi yang benar</p>','Halo! Aku Plus. Kita belajar menggambar DP, ya.',vw({lines:vSys(S_P)})],
+ [ol(['<b>GAMBAR</b> garis batas: ubah tanda menjadi =, cari dua titik dengan tabel x | y, lalu tentukan jenis garis.','<b>UJI</b> satu titik yang tidak terletak pada garis.','<b>ARSIR</b> sisi yang memuat titik uji jika hasilnya benar; sisi seberangnya jika salah.','Untuk <b>sistem</b>, DP adalah <b>irisan</b> semua arsiran.']),'Ini langkah-langkahnya. Kita bahas satu per satu.'],
+ [ingat('Di aplikasi ini DP ditandai dengan <b>daerah hijau</b>. Di buku, DP biasanya diarsir.'),'DP ditandai dengan daerah hijau.',vw({lines:vSys(S_P),shade:S_P}),DPT]]),
+scr('a0','A · Garis batas dari tabel x | y',SRC_K,[
+ ['<p>Garis batas pertidaksamaan <b>2x + 3y ≤ 12</b> adalah garis <b>2x + 3y = 12</b>. Tandanya diganti dengan =.</p>','Ganti tandanya dengan sama dengan.',vw({})],
+ ['<p>Cari dua titik dengan tabel x | y. Pilih x = 0, lalu y = 0.</p>'+tabXY('',[0,6],[4,0])+'<p>x = 0 → 3y = 12 → y = 4<br>y = 0 → 2x = 12 → x = 6</p>','x = 0 memberi titik pada sumbu-y; y = 0 memberi titik pada sumbu-x.',vw({mk:[pt(0,4),pt(6,0)]})],
+ ['<p>Letakkan titik (0, 4) dan (6, 0) pada bidang koordinat, lalu hubungkan dengan garis lurus.</p>','Hubungkan kedua titik menjadi garis.',vw({lines:[L_212],mk:[pt(0,4),pt(6,0)]})],
+ [ingat('Titik potong dengan sumbu paling mudah dicari: x = 0 untuk sumbu-y dan y = 0 untuk sumbu-x.'),'Titik potong sumbu paling mudah dihitung.']]),
+scr('a1','A · Garis melalui (0, 0), garis tegak, dan garis mendatar',SRC_K,[
+ ['<p>Garis <b>y = 2x</b> melalui titik (0, 0). Jika dipakai x = 0 dan y = 0, keduanya menghasilkan titik yang sama. Jadi pilih <b>x = 0</b> dan <b>x = 2</b>.</p>'+tabXY('',[0,2],[0,4]),'Garis melalui (0, 0)? Pakai x = 0 dan x = 2.',vw({lines:[ln(2,-1,0,'=',0,'y = 2x')],mk:[pt(0,0),pt(2,4)]})],
+ ['<p>Garis <b>x = 3</b> adalah garis <b>tegak</b> (sejajar sumbu-y). Semua titiknya memiliki x = 3, misalnya (3, 0) dan (3, 2).</p>','Garis x = 3 tegak, sejajar sumbu-y.',vw({lines:[ln(1,0,3,'=',1,'x = 3')],mk:[pt(3,0),pt(3,2)]})],
+ ['<p>Garis <b>y = −2</b> adalah garis <b>mendatar</b> (sejajar sumbu-x). Semua titiknya memiliki y = −2.</p>'+ingat('Garis <b>tegak</b> berbentuk x = k; garis <b>mendatar</b> berbentuk y = k.'),'Garis y = −2 mendatar, sejajar sumbu-x.',vw({lines:[ln(1,0,3,'=',1,'x = 3'),ln(0,1,-2,'=',2,'y = −2')],mk:[pt(0,-2),pt(4,-2)]})]]),
+CK_A,
+scr('b0','B · Jenis garis: penuh atau putus-putus',SRC_K,[
+ ['<p>Tanda <b>≤</b> atau <b>≥</b> memuat “sama dengan”, jadi titik pada garis ikut menjadi penyelesaian → garis <b>penuh</b>.</p>','Tanda ≤ atau ≥ → garis penuh.',vw({lines:[ln(2,3,12,'≤',0,'2x + 3y ≤ 12')]})],
+ ['<p>Tanda <b>&lt;</b> atau <b>&gt;</b> tidak memuat “sama dengan”, jadi titik pada garis bukan penyelesaian → garis <b>putus-putus</b>.</p>','Tanda < atau > → garis putus-putus.',vw({lines:[ln(2,3,12,'<',1,'2x + 3y < 12')]})],
+ [tblE(['Tanda','Jenis garis','Titik pada garis'],[{c:['≤ atau ≥','penuh','termasuk penyelesaian']},{c:['&lt; atau &gt;','putus-putus','bukan penyelesaian']}]),'Ringkasnya seperti tabel ini.']]),
+scr('b1','B · Uji titik dan arsir pada 2x + 3y ≤ 12',SRC_K,[
+ ['<p><b>GAMBAR</b> garis 2x + 3y = 12 sebagai garis <b>penuh</b>, karena tandanya ≤.</p>','Garis penuh karena tandanya ≤.',vw({lines:[L_212]})],
+ ['<p><b>UJI</b> titik (0, 0), yang tidak terletak pada garis.<br>'+eqH('2(0) + 3(0) = 0')+' dan 0 ≤ 12 → <b>benar</b></p>','Uji (0, 0). Hasilnya 0 ≤ 12, benar.',vw({lines:[L_212],mk:[pt(0,0,'g','(0, 0)')]}),Pt(0,0)],
+ ['<p><b>ARSIR</b> sisi yang <b>memuat</b> (0, 0), yaitu sisi kiri-bawah garis.</p>','Benar → arsir sisi yang memuat titik uji.',vw({lines:[L_212],half:[{q:Q_212,col:COL[0]}],mk:[pt(0,0,'g','(0, 0)')]})],
+ [ingat('Hasil uji <b>benar</b> → arsir sisi yang <b>memuat</b> titik uji. Hasil uji <b>salah</b> → arsir sisi <b>seberangnya</b>.'),'Ingat aturan ini, ya.']]),
+scr('b2','B · Uji titik dan arsir: x − 2y > 4',SRC_K,[
+ ['<p>Garis batas x − 2y = 4.</p>'+tabXY('',[0,4],[-2,0])+'<p>x = 0 → −2y = 4 → y = −2<br>y = 0 → x = 4<br>Tanda &gt; → garis <b>putus-putus</b>.</p>','Garisnya putus-putus karena tandanya >.',vw({lines:[L_X2Y],mk:[pt(0,-2),pt(4,0)]})],
+ ['<p><b>UJI</b> (0, 0) → '+eqH('0 − 2(0) = 0')+' dan 0 &gt; 4 → <b>salah</b></p>','Uji (0, 0). Hasilnya 0 > 4, salah.',vw({lines:[L_X2Y],mk:[pt(0,0,'r','(0, 0)')]}),Pt(0,0)],
+ ['<p>Salah → <b>ARSIR</b> sisi yang <b>tidak memuat</b> (0, 0), yaitu sisi kanan-bawah garis.</p>','Salah → arsir sisi seberangnya.',vw({lines:[L_X2Y],half:[{q:Q_X2Y,col:COL[0]}],mk:[pt(0,0,'r','(0, 0)')]})],
+ ['<p>Periksa dengan titik lain di daerah arsiran, misalnya (6, 0) → 6 − 0 = 6 dan 6 &gt; 4 → benar.</p>','Titik di daerah arsiran memang memenuhi.',vw({lines:[L_X2Y],half:[{q:Q_X2Y,col:COL[0]}],mk:[pt(6,0,'g','(6, 0)')]}),Pt(6,0)]]),
+scr('b3','B · Jika (0, 0) terletak pada garis: y ≥ 2x',SRC_K,[
+ ['<p>Garis batas y = 2x, <b>penuh</b> (tanda ≥). Garis ini melalui (0, 0).</p>','Garis y = 2x melalui titik (0, 0).',vw({lines:[L_Y2X],mk:[pt(0,0,'r','(0, 0)')]}),Pt(0,0)],
+ ['<p>Titik (0, 0) <b>tidak boleh</b> dipakai sebagai titik uji karena terletak pada garis, sebab 0 ≥ 0 tidak menunjukkan sisi mana yang benar.</p>','Titik uji tidak boleh berada pada garis.',null],
+ ['<p><b>UJI</b> titik lain, misalnya (1, 0) → y = 0 dan 2x = 2 → 0 ≥ 2 → <b>salah</b></p>','Uji (1, 0). Hasilnya 0 ≥ 2, salah.',vw({lines:[L_Y2X],mk:[pt(1,0,'r','(1, 0)')]}),Pt(1,0)],
+ ['<p>Salah → arsir sisi yang <b>tidak memuat</b> (1, 0), yaitu sisi kiri-atas garis.</p>'+ingat('Jika garis melalui (0, 0), pilih titik uji lain, misalnya (1, 0) atau (0, 1).'),'Arsir sisi seberang dari (1, 0).',vw({lines:[L_Y2X],half:[{q:Q_Y2X,col:COL[0]}],mk:[pt(1,0,'r','(1, 0)')]})]]),
+CK_B,
+scr('c0','C · DP sistem adalah irisan',SRC_K,[
+ ['<p>DP <b>sistem</b> pertidaksamaan adalah daerah yang memenuhi <b>semua</b> pertidaksamaan sekaligus, yaitu <b>irisan</b> semua arsiran.</p>','DP sistem = irisan semua arsiran.',vw({lines:vSys(S_P),half:[{q:S_P[0],col:COL[0]},{q:S_P[1],col:COL[1]}]})],
+ [ol(['Gambar DP setiap pertidaksamaan (GAMBAR • UJI • ARSIR).','Cari daerah tempat semua arsiran bertumpuk.','Periksa dengan satu titik di dalamnya: semua pertidaksamaan harus benar.']),'Kerjakan satu per satu, lalu cari irisannya.',vw({lines:vSys(S_P),shade:S_P}),DPT]]),
+scr('c1','C · Contoh 2x + y ≥ 4 dan x + 2y ≤ 8',SRC_K,[
+ ['<p>(1) Garis 2x + y = 4, penuh.</p>'+tabXY('',[0,2],[4,0])+'<p>Uji (0, 0) → 0 ≥ 4 <b>salah</b> → arsir sisi yang tidak memuat (0, 0).</p>','Pertidaksamaan (1). Uji (0, 0) salah.',vw({lines:[vLine(S_P[0],0)],half:[{q:S_P[0],col:COL[0]}],mk:[pt(0,4),pt(2,0),pt(0,0,'r','(0, 0)')]})],
+ ['<p>(2) Garis x + 2y = 8, penuh.</p>'+tabXY('',[0,8],[4,0])+'<p>Uji (0, 0) → 0 ≤ 8 <b>benar</b> → arsir sisi yang memuat (0, 0).</p>','Pertidaksamaan (2). Uji (0, 0) benar.',vw({lines:vSys(S_P),half:[{q:S_P[0],col:COL[0]},{q:S_P[1],col:COL[1]}],mk:[pt(0,4),pt(8,0),pt(0,0,'g','(0, 0)')]})],
+ ['<p>DP sistem adalah <b>irisan</b> kedua arsiran, yaitu daerah hijau.</p>','Irisan kedua arsiran adalah DP-nya.',vw({lines:vSys(S_P),shade:S_P}),DPT],
+ ['<p>Periksa dengan (4, 1) → (1) 8 + 1 = 9 ≥ 4 benar; (2) 4 + 2 = 6 ≤ 8 benar.</p>','Titik (4, 1) memenuhi keduanya.',vw({lines:vSys(S_P),shade:S_P,mk:[pt(4,1,'g','(4, 1)')]}),Pt(4,1)]]),
+scr('c2','C · Contoh dengan sumbu koordinat',SRC_K,[
+ ['<p>Sistem <b>x + y ≤ 6, x ≥ 0, y ≥ 0</b>.</p><p>(1) Garis x + y = 6, penuh. Uji (0, 0) → 0 ≤ 6 benar → arsir sisi yang memuat (0, 0).</p>','Garis (1) melalui (0, 6) dan (6, 0).',vw({lines:[vLine(S_C2[0],0)],half:[{q:S_C2[0],col:COL[0]}],mk:[pt(0,6),pt(6,0)]})],
+ ['<p>(2) x ≥ 0 → sisi <b>kanan</b> sumbu-y. (3) y ≥ 0 → sisi <b>atas</b> sumbu-x. (0, 0) terletak pada kedua sumbu, jadi uji dengan (1, 1).</p>','Sumbu koordinat juga garis batas.',vw({lines:vSys(S_C2),half:[{q:S_C2[1],col:COL[1]},{q:S_C2[2],col:COL[2]}],mk:[pt(1,1,'g','(1, 1)')]})],
+ ['<p>DP sistem berupa <b>segitiga</b> dengan titik sudut (0, 0), (6, 0), dan (0, 6).</p>'+ingat('Syarat x ≥ 0 dan y ≥ 0 membatasi DP di kuadran I.'),'DP-nya segitiga di kuadran I.',vw({lines:vSys(S_C2),shade:S_C2,mk:cornersMk([[0,0],[6,0],[0,6]])}),DPT]]),
+scr('pk','C · Periksa DP dengan titik',SRC_K,[
+ ['<p>Sistem <b>x + y &gt; 2, x − y &lt; 4, y &lt; 5</b> (semua garis putus-putus).</p>','Semua garisnya putus-putus.',vw({lines:vSys(S_PK),shade:S_PK})],
+ ['<p>Titik di DP membuat <b>semua</b> pertidaksamaan benar. Titik pada garis putus-putus <b>tidak</b> termasuk DP.</p>'+tblE(['Titik','(1) x + y &gt; 2','(2) x − y &lt; 4','(3) y &lt; 5','Di DP?'],[RW(2,2,1,['(2, 2)','4 &gt; 2 ✓','0 &lt; 4 ✓','2 &lt; 5 ✓','Ya']),RW(1,1,0,['(1, 1)','2 &gt; 2 ✗','0 &lt; 4 ✓','1 &lt; 5 ✓','Tidak (pada garis putus-putus)']),RW(6,0,0,['(6, 0)','6 &gt; 2 ✓','6 &lt; 4 ✗','0 &lt; 5 ✓','Tidak']),RW(0,5,0,['(0, 5)','5 &gt; 2 ✓','−5 &lt; 4 ✓','5 &lt; 5 ✗','Tidak (pada garis putus-putus)'])],'tuji')+'<p class="muted">Ketuk satu baris untuk melihat titiknya di grafik.</p>','Ketuk baris tabel untuk melihat titiknya.']]),
+CK_C,
+scr('r','Rangkuman langkah',SRC_K,[
+ [tblE(['Langkah','Yang dilakukan','Catatan'],[{c:['<b>1. GAMBAR</b>','Ubah tanda menjadi =, cari dua titik dengan tabel x | y','x = 0 dan y = 0; garis melalui (0, 0) pakai x = 0 dan x = 2']},{c:['<b>2. JENIS GARIS</b>','Tentukan penuh atau putus-putus','≤ ≥ → penuh; &lt; &gt; → putus-putus']},
+   {c:['<b>3. UJI</b>','Substitusikan satu titik yang tidak terletak pada garis','(0, 0) paling mudah jika tidak terletak pada garis']},{c:['<b>4. ARSIR</b>','Benar → sisi yang memuat titik uji; salah → sisi seberangnya','Ulangi untuk setiap pertidaksamaan']},{c:['<b>5. IRISAN</b>','DP sistem = irisan semua arsiran','Periksa dengan satu titik di dalam DP']}]),'Lima langkah menggambar DP sistem.',vw({lines:vSys(S_P),shade:S_P})],
+ ['<p class="ans">Siap berlatih! Kerjakan soal di tab Latihan Mandiri, lalu ikuti Kuis.</p>','Siap berlatih? Ayo ke Latihan Mandiri!']],true),
+/* ---- temukan kesalahan ---- */
+{t:'k',k:1,jd:'Kasus 1 · Jenis garis',src:'Kesalahan umum menggambar DP',sys:[LQ(2,1,6,'<')],pts:[[0,6],[3,0]],test:[0,0],
+ soal:'Seorang siswa menggambar DP dari 2x + y &lt; 6.',
+ lines:['1. Garis batas 2x + y = 6 melalui (0, 6) dan (3, 0).','2. Tanda &lt; → garis digambar penuh.','3. Uji (0, 0) → 0 &lt; 6 benar.','4. Arsir sisi yang memuat (0, 0).'],
+ err:1,ws:'Kesalahannya di baris 2: tanda < memakai garis putus-putus.',
+ why:'Tanda &lt; tidak memuat “sama dengan”, jadi titik pada garis <b>bukan</b> penyelesaian. Garisnya harus <b>putus-putus</b>.',
+ gr:[B('Garisnya seharusnya putus-putus.',Ln(0))],fix:'Gambar garis 2x + y = 6 <b>putus-putus</b>, lalu arsir sisi yang memuat (0, 0).'},
+{t:'k',k:1,jd:'Kasus 2 · Titik uji terletak pada garis',src:'Susunan Kategori Soal, Tipe 1 HOTS',sys:[LQ(2,-1,0,'<')],pts:[[0,0]],test:[0,1],
+ soal:'Seorang siswa menggambar DP dari y &gt; 2x.',
+ lines:['1. Garis batas y = 2x, putus-putus.','2. Uji (0, 0) → 0 &gt; 0 salah.','3. Jadi arsir sisi yang tidak memuat (0, 0).'],
+ err:1,ws:'Kesalahan ada di baris kedua. Titik (0, 0) terletak pada garis y = 2x.',
+ why:'Titik (0, 0) berada <b>pada garis</b>, sehingga tidak bisa menunjukkan sisi mana yang benar. Pilih titik uji lain, misalnya (0, 1).',
+ gr:[B('Titik (0, 0) ada tepat di garis.',Pt(0,0))],fix:'Uji (0, 1) → 1 &gt; 0 benar → arsir sisi yang memuat (0, 1), yaitu sisi kiri-atas garis.'},
+{t:'k',k:1,jd:'Kasus 3 · Arah arsiran terbalik',src:'Kesalahan umum menggambar DP',sys:[LQ(1,1,4,'≤')],pts:[[0,4],[4,0]],test:[0,0],
+ soal:'Seorang siswa menggambar DP dari x + y ≤ 4.',
+ lines:['1. Garis batas x + y = 4, penuh.','2. Uji (0, 0) → 0 ≤ 4 benar.','3. Arsir sisi yang tidak memuat (0, 0).'],
+ err:2,ws:'Kesalahannya di baris 3: hasil uji benar berarti arsir sisi yang memuat (0, 0).',
+ why:'Hasil uji <b>benar</b> berarti (0, 0) termasuk penyelesaian, jadi yang diarsir adalah sisi yang <b>memuat</b> (0, 0).',
+ gr:[B('Titik (0, 0) ada di DP.',Pt(0,0))],fix:'Arsir sisi yang memuat (0, 0), yaitu sisi kiri-bawah garis.'},
+{t:'k',k:1,jd:'Kasus 4 · Salah hitung tabel x | y',src:'Kesalahan umum menggambar DP',sys:[LQ(3,2,12,'≤')],pts:[[0,6],[4,0]],bp:[[0,4]],
+ soal:'Seorang siswa mencari dua titik pada garis batas 3x + 2y ≤ 12.',
+ lines:['1. Garis batas 3x + 2y = 12.','2. x = 0 → 2y = 12 → y = 4.','3. y = 0 → 3x = 12 → x = 4.','4. Garis melalui (0, 4) dan (4, 0), penuh.'],
+ err:1,ws:'Kesalahan ada di baris kedua. 12 dibagi 2 adalah 6, bukan 4.',
+ why:'Dari 2y = 12, bagi kedua ruas dengan 2 sehingga y = <b>6</b>. Titik potong dengan sumbu-y adalah (0, 6).',
+ gr:[B('Titik potong sumbu-y seharusnya (0, 6).',Pt(0,6))],fix:'x = 0 → 2y = 12 → y = 6. Garis melalui <b>(0, 6)</b> dan (4, 0).'},
+{t:'k',k:1,jd:'Kasus 5 · Gabungan, bukan irisan',src:'Kesalahan umum menggambar DP',sys:S_C2,
+ soal:'Seorang siswa menentukan DP sistem x + y ≤ 6, x ≥ 0, y ≥ 0.',
+ lines:['1. x + y ≤ 6 → sisi kiri-bawah garis.','2. x ≥ 0 → sisi kanan sumbu-y.','3. y ≥ 0 → sisi atas sumbu-x.','4. DP sistem = semua daerah yang terkena salah satu arsiran.'],
+ err:3,ws:'Kesalahannya di baris 4: DP sistem adalah irisan, bukan gabungan.',
+ why:'DP sistem harus memenuhi <b>semua</b> pertidaksamaan sekaligus, jadi yang diambil adalah <b>irisan</b> (daerah yang terkena semua arsiran).',
+ gr:[B('DP sistem hanya segitiga hijau ini.',DPT)],fix:'DP sistem = irisan, yaitu segitiga dengan titik sudut (0, 0), (6, 0), dan (0, 6).'},
+{t:'k',k:1,jd:'Kasus 6 · Ada tidaknya DP',src:'Susunan Kategori Soal, Tipe 1 HOTS',sys:[LQ(1,1,2,'≤'),LQ(1,1,5,'≥')],noDp:1,hf:[{q:LQ(1,1,2,'≤'),col:COL[0]},{q:LQ(1,1,5,'≥'),col:COL[1]}],
+ soal:'Seorang siswa menyelidiki DP sistem x + y ≤ 2 dan x + y ≥ 5.',
+ lines:['1. Ruas kiri kedua pertidaksamaan sama, jadi garisnya sejajar.','2. x + y ≤ 2 → di bawah garis x + y = 2.','3. x + y ≥ 5 → di atas garis x + y = 5.','4. Jadi DP adalah jalur di antara kedua garis.'],
+ err:3,ws:'Kesalahannya di baris 4: kedua arsiran tidak bertumpuk.',
+ why:'Tidak ada nilai x + y yang sekaligus ≤ 2 dan ≥ 5. Daerah di bawah garis pertama dan di atas garis kedua tidak bertumpuk, jadi sistem ini <b>tidak memiliki DP</b>.',
+ gr:[B('Garis x + y = 2...',Ln(0)),B('...sejajar dengan garis x + y = 5.',Ln(1))],fix:'Sistem x + y ≤ 2 dan x + y ≥ 5 <b>tidak memiliki DP</b>.'}
+];
+
+/* ---------- Latihan Mandiri (sistem-ptldv.html): Tipe 1 · Menggambar DP ---------- */
+var PAGE={
+  jd:'Tipe 1 · Menggambar DP',kkoM:'menggambar, menerapkan, mengarsir',
+  tipe:[['1','1 pertidaksamaan'],['2','Sistem 2 pertidaksamaan'],['3','Sistem 3 pertidaksamaan'],['C','Campuran']],
+  levelTipe:{'1':'LMH','2':'MH','3':'M'},
+  gen:function(t,l){var r=Math.random;if(l==='L')return GEN.g1L(r);if(t==='2')return GEN.g1H(r,'b');return GEN.g1H(r,r()<.5?'a':'c');},
+  muatMots:function(t){setSystem(genSystem(+t),'lv');},
+  mulaiMots:function(){startI(0);},
+  ulangMots:function(){setSystem(st.raw,'lv');},
+  notaMots:function(){var k=st.sys.length;return '<p>'+(k>1?'Sistem ini terdiri dari <b>'+k+' pertidaksamaan</b>. Daerah penyelesaiannya adalah <b>irisan</b>, yaitu daerah yang memenuhi semua pertidaksamaan sekaligus.':'Soal ini terdiri dari <b>1 pertidaksamaan</b>.')+'</p>'
+    +'<p><b>Rencana:</b> '+(k>1?'kerjakan pertidaksamaan satu per satu (tabel titik → letak titik → jenis garis → uji titik → arsir), lalu cari irisannya.':'tabel titik → letak titik → jenis garis → uji titik → arsir.')+'</p>';},
+  ingatMots:function(){return '<div class="rule"><b>Ingat aturan garis:</b><br>tanda <b>≤</b> atau <b>≥</b> → garis <b>penuh</b><br>tanda <b>&lt;</b> atau <b>&gt;</b> → garis <b>putus-putus</b></div>';},
+  kunci:function(){return st.mode==='learn'?kunciSistem():false;}
+};
+/* pesan pengarah Plus saat salah (alur langkah) */
+function plusGuide(){
+  if(st.stage==='ineq'){var ph=cur().phase;return ph==='table'?'Substitusikan nilai yang diketahui, ya':ph==='place'?'Baca x dulu, lalu y':ph==='type'?'Perhatikan tandanya, ya':ph==='test'?'Hitung pelan-pelan, ya':'Ingat hasil uji titiknya';}
+  if(st.stage==='inter')return 'Cari daerah yang memenuhi semua';
+  return plusPick(PLUS.salah);
+}
+/* 🔑 Lihat jawaban: isi jawaban benar ke langkah yang sedang dikerjakan, lalu periksa */
+function kunciSistem(){
+  if(st.stage==='ineq'){
+    var q=cur(),p=P();
+    if(q.phase==='table'){document.querySelectorAll('#panel input.num').forEach(function(inp){inp.value=String(p.rows[+inp.dataset.i].ans);});checkTable();return true;}
+    if(q.phase==='place'){q.drag.A={x:p.A.x,y:p.A.y};q.drag.B={x:p.B.x,y:p.B.y};updateCoordChips();checkPlace();return true;}
+    if(q.phase==='type'){q.type=p.solid?'solid':'dash';checkType();return true;}
+    if(q.phase==='test'){
+      if(!q.test){$('#tx').value=p.sug.x;$('#ty').value=p.sug.y;useTest();return true;}
+      var t=q.test;
+      if(q.sub==='val'){$('#vIn').value=String(t.v);checkVal();return true;}
+      if(q.sub==='cmp'){checkRel(t.v<p.c?'<':t.v>p.c?'>':'=');return true;}
+      if(q.sub==='concl'){answerTest(holds(t.v,p.c,p.op));return true;}
+      return false;
+    }
+    if(q.phase==='shade'){q.side=sideOf(p.op);checkShade();return true;}
+  }
+  if(st.stage==='inter'){
+    var I=st.inter;
+    if(I.phase==='shade'){I.tap={x:I.inside.x,y:I.inside.y};checkInter();return true;}
+    var c=I.cand[I.qi];answerQ(holdsAll(st.sys,c.x,c.y));return true;
+  }
+  return false;
+}
+/* penyelesaian bertahap tabel titik */
+function tSuku(k,v,first){if(!k)return '';var m=Math.abs(k),kali=v.charAt(0)==='\\',b=(m===1&&!kali?'':tn(m)+(kali?' ':''))+v;return first?(k<0?'-':'')+b:(k<0?' - ':' + ')+b;}
+function pnyTabel(p){
+  return p.rows.map(function(r,i){
+    var k='AB'[i],L1,L2,L3,T1,T2,T3;
+    if(r.g==='x'){
+      var rest=p.c-p.a*r.v;
+      L1=(p.a?tSuku(p.a,'\\cdot '+tk(r.v),true)+tSuku(p.b,'y',false):tSuku(p.b,'y',true))+' &= '+tn(p.c);
+      L2=tSuku(p.b,'y',true)+' &= '+tn(rest);L3='y &= '+tn(r.ans);
+      T1=(p.a?par(p.a)+'·('+n(r.v)+') + ':'')+coefStr(p.b)+'y = '+n(p.c);T2=coefStr(p.b)+'y = '+n(rest);T3='y = '+frac(r.ans);
+    }else{
+      var rest2=p.c-p.b*r.v;
+      L1=(p.b?tSuku(p.a,'x',true)+tSuku(p.b,'\\cdot '+tk(r.v),false):tSuku(p.a,'x',true))+' &= '+tn(p.c);
+      L2=tSuku(p.a,'x',true)+' &= '+tn(rest2);L3='x &= '+tn(r.ans);
+      T1=coefStr(p.a)+'x'+(p.b?' + '+par(p.b)+'·('+n(r.v)+')':'')+' = '+n(p.c);T2=coefStr(p.a)+'x = '+n(rest2);T3='x = '+frac(r.ans);
+    }
+    var tex=[L1],txt=[T1];
+    if(L2!==L1){tex.push(L2);txt.push(T2);}
+    if(L3.split(' &= ')[0]!==L2.split(' &= ')[0]){tex.push(L3);txt.push(T3);}
+    return {judul:'Titik '+k+' ('+r.g+' = '+n(r.v)+')',tex:tex,txt:txt};
+  });
+}
+/* 📍 Di mana salahku? (alur langkah) */
+function whereShow(){
+  var w=st.lw;if(!w||st.mode!=='learn')return;
+  var t=null,msg='',p=st.stage==='ineq'?P():null,q=st.stage==='ineq'?cur():null;
+  if(w.k==='table'){t={el:'#panel input.num[data-i="'+w.row+'"]'};var r=p.rows[w.row];msg='Nilai untuk titik '+'AB'[w.row]+' belum tepat. Substitusikan '+r.g+' = '+n(r.v)+' ke '+fmt(p,true)+', lalu hitung.';}
+  else if(w.k==='place'){var k=w.bad[0],d=w[k];t={pt:[d.x,d.y]};msg='Titik '+k+' sekarang di ('+n(d.x)+', '+n(d.y)+'), belum sesuai pasangan (x, y) pada tabel. Baca x dulu, lalu y.';}
+  else if(w.k==='type'){t={el:'#panel .segb.on'};msg='Perhatikan tanda '+p.op+': apakah titik pada garis ikut menjadi penyelesaian?';}
+  else if(w.k==='val'){t={el:'#vIn'};msg='Hasil substitusi belum tepat. Hitung tiap suku, lalu jumlahkan.';}
+  else if(w.k==='rel'){t={el:'#panel .relb'};msg='Bandingkan hasil substitusi dengan '+n(p.c)+'. Mana yang lebih besar?';}
+  else if(w.k==='concl'){t={el:'#panel [data-a]'};msg='Cocokkan hasil perbandingan dengan tanda '+p.op+' pada soal.';}
+  else if(w.k==='shade'){var T=q.test;t={pt:[T.x,T.y]};msg='Titik uji T('+n(T.x)+', '+n(T.y)+') '+(q.testRes?'memenuhi':'tidak memenuhi')+' pertidaksamaan, jadi arsiran harus '+(q.testRes?'memuat':'tidak memuat')+' T.';}
+  else if(w.k==='inter'){t={pt:[w.x,w.y]};msg='Titik yang kamu ketuk berada di luar daerah pertidaksamaan ('+(w.kk+1)+'). DP sistem harus berada di dalam semua arsiran.';}
+  else if(w.k==='q'){t={pt:[w.c.x,w.c.y]};msg='Uji titik P('+n(w.c.x)+', '+n(w.c.y)+') pada setiap pertidaksamaan. Satu saja salah berarti P bukan penyelesaian.';}
+  var el=$('#whereTxt');if(el)el.textContent=msg;
+  if(t)plusGo(t,msg,9000);
+}
+
+window.__api={EX:EX,GEN:GEN,PAGE:PAGE,plusGo:plusGo,startExplain:startExplain,validSys:validSys,genSystem:genSystem,FIXED:FIXED,buildPack:CORE.buildPack,gradeTrace:CORE.gradeTrace,cek:CORE.cek,CORE:CORE};
+startExplain();
+})();
+</script>
+</body>
+</html>
