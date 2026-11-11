@@ -136,9 +136,9 @@ function doGet(e){
 }
 
 function doPost(e){
-  var out;
+  var out,lewatForm=!!(e&&e.parameter&&e.parameter.transport==='form');
   try{
-    var raw=(e&&e.postData&&e.postData.contents)||'';
+    var raw=lewatForm?String(e.parameter.payload||''):((e&&e.postData&&e.postData.contents)||'');
     if(raw.length>400000)throw gagal('besar','Data terlalu besar.');
     var req;
     try{req=JSON.parse(raw);}catch(x){throw gagal('format','Permintaan tidak valid.');}
@@ -152,7 +152,19 @@ function doPost(e){
     if(err&&err.kode)out={ok:false,kode:err.kode,pesan:err.pesan};
     else{out={ok:false,kode:'galat',pesan:'Terjadi galat di server. Coba lagi atau hubungi gurumu.'};console.error(err&&err.stack?err.stack:err);}
   }
+  if(lewatForm)return jawabForm(out,e.parameter);
   return ContentService.createTextOutput(JSON.stringify(out)).setMimeType(ContentService.MimeType.JSON);
+}
+/* Jawaban untuk SEB: formulir dikirim ke iframe tersembunyi, lalu hasilnya diteruskan lewat postMessage
+   hanya ke asal halaman pengirim. */
+function jawabForm(out,p){
+  var rid=String(p.rid||''),asal=String(p.asal||'');
+  if(!/^[A-Za-z0-9]{1,40}$/.test(rid)||!/^https:\/\/[A-Za-z0-9.-]+(:\d+)?$/.test(asal)){
+    return ContentService.createTextOutput(JSON.stringify({ok:false,kode:'format',pesan:'Permintaan tidak valid.'})).setMimeType(ContentService.MimeType.JSON);
+  }
+  var aman=function(x){return JSON.stringify(x).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');};
+  return HtmlService.createHtmlOutput('<script>window.top.postMessage('+aman({optimumRid:rid,data:out})+','+aman(asal)+');<\/script>')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
 var _cekCache=null;
