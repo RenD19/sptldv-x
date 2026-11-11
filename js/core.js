@@ -7,7 +7,7 @@
    ============================================================ */
 var CORE=(function(){
 'use strict';
-var VERSI='2026-11-06.1';
+var VERSI='2026-11-11.1';
 var OPS=['<','≤','>','≥'];
 var MAKS_COBA=2;          /* percobaan per langkah di Kuis: benar ke-1 = 2 poin, ke-2 = 1 poin, salah dua kali = 0 */
 var NSOAL=14,NLANGKAH=3;   /* NLANGKAH = banyak langkah paling banyak per soal; 3M-a hanya 2 langkah */
@@ -462,26 +462,39 @@ function genTkt(rng){
     teks:c.harga(p,q)+' '+c.r[0].kal(T,kw[0])+' '+c.r[1].kal(nm(K*s),kw[1])};
 }
 var TND=['≤','≥','<','>','='];
-var KAL=[['Andi ingin menghabiskan seluruh uangnya, yaitu Rp24.000.','='],['Berat muatan motor viar kurang dari 240 kg.','<'],['Penonton pentas seni lebih dari 100 orang.','>'],
-  ['Pendapatan bazar paling sedikit Rp400.000.','≥'],['Kapal memuat paling banyak 20 kendaraan.','≤'],['Waktu kerja tidak lebih dari 8 jam sehari.','≤'],['Panen jagung minimal 2 ton.','≥'],
-  ['Peserta lomba harus lebih dari 30 orang.','>'],['Ongkos kirim kurang dari Rp15.000.','<'],['Tiket yang terjual tepat 30 lembar.','='],
-  ['Pupuk yang dibeli sekurang-kurangnya 5 karung.','≥'],['Belanja Nisa tidak boleh melebihi Rp30.000.','≤']];
+/* Kata kunci tanda tegas dan sama dengan, dipakai untuk mengubah kalimat kendala dari soal yang sedang dikerjakan. */
+/* atas = kendala batas atas (semula ≤), bawah = kendala batas bawah (semula ≥); arah makna kalimat tetap wajar */
+var KW_LAIN={atas:[['kurang dari','<'],['tepat','=']],bawah:[['lebih dari','>'],['tepat','=']]};
+/* ambil kalimat yang memuat kata kunci saja (tanpa kalimat kebutuhan per benda) */
+function kalKW(teks,kw){
+  var ks=String(teks).split(/\.\s+/),k=teks;
+  for(var i=ks.length-1;i>=0;i--)if(ks[i].indexOf(kw)>=0){k=ks[i];break;}
+  k=k.replace(/^(Demi|Supaya|Agar|Karena)[^,]*,\s*/,'');
+  k=k.charAt(0).toUpperCase()+k.slice(1);
+  return /\.$/.test(k)?k:k+'.';
+}
 function cornerMk(cs){return cs.map(function(P){return M(P.x,P.y,'k');});}
 function modelS(sys){return sys.map(ineqS).join(' ; ');}
 
 /* ================= TIPE 3 · KASUS KONTEKSTUAL ================= */
 function g3L(rng){
-  var tk=rng()<.3,I,c,sen,op,teks;
-  if(tk){I=genTkt(rng);c=I.ctx;teks=I.teks;var j=ri(rng,0,1);sen=j?c.r[1].kal(nm(I.K),I.kw[1]):c.r[0].kal(I.T,I.kw[0]);op=j?'≤':'≥';}
-  else{c=pick(rng,CTX);I=genInst(rng,c);teks=story(I);var r=c.r[0];sen=r.kal(nm(I.co[0][0]*r.f),nm(I.co[0][1]*r.f),nm(I.ls[0].c*r.f),I.kw[0]);op=I.max?'≤':'≥';}
-  var k2=pick(rng,KAL),r0=c.r[0],r1=c.r[1];
+  var tk=rng()<.3,I,c,sen,op,teks,sen2,j,k2;
+  if(tk){I=genTkt(rng);c=I.ctx;teks=I.teks;j=ri(rng,0,1);
+    sen=kalKW(j?c.r[1].kal(nm(I.K),I.kw[1]):c.r[0].kal(I.T,I.kw[0]),I.kw[j]);op=j?'≤':'≥';
+    k2=pick(rng,KW_LAIN[j?'bawah':'atas']);
+    /* langkah 2 memakai kendala yang lain dari cerita yang sama, dengan kata kunci diganti */
+    sen2=kalKW(j?c.r[0].kal(I.T,k2[0]):c.r[1].kal(nm(I.K),k2[0]),k2[0]);}
+  else{c=pick(rng,CTX);I=genInst(rng,c);teks=story(I);var r=c.r[0],r2=c.r[1];k2=pick(rng,KW_LAIN[I.max?'atas':'bawah']);
+    sen=kalKW(r.kal(nm(I.co[0][0]*r.f),nm(I.co[0][1]*r.f),nm(I.ls[0].c*r.f),I.kw[0]),I.kw[0]);op=I.max?'≤':'≥';
+    sen2=kalKW(r2.kal(nm(I.co[1][0]*r2.f),nm(I.co[1][1]*r2.f),nm(I.ls[1].c*r2.f),k2[0]),k2[0]);}
+  var r0=c.r[0],r1=c.r[1];
   var dis=['x = harga satu '+c.X+', y = harga satu '+c.Y+' (rupiah)','x = banyak '+r0.nm+' ('+r0.sat+'), y = banyak '+r1.nm+' ('+r1.sat+')','x = banyak semua barang, y = total '+(c.ob?c.ob.nm:'pendapatan')+' (rupiah)'];
   return mkQ(3,'L','a',{kko:'menerjemahkan, mengidentifikasi',pl:I.box,
     soal:teks,
-    st:[F('Kata kunci','Terjemahkan kalimat berikut menjadi tanda.',[pg('“'+sen+'”',TND.slice(),TND.indexOf(op))],['Cari kata kunci seperti “paling banyak”, “paling sedikit”, atau “tidak lebih dari”.','paling banyak / tidak lebih dari / maksimal → ≤; paling sedikit / minimal → ≥.']),
-        F('Kata kunci','Terjemahkan kalimat berikut menjadi tanda.',[pg('“'+k2[0]+'”',TND.slice(),TND.indexOf(k2[1]))],['“kurang dari” → &lt;; “lebih dari” → &gt;; “tepat” atau “habis” → =.']),
+    st:[F('Kata kunci','Terjemahkan kalimat dari soal berikut menjadi tanda.',[pg('“'+sen+'”',TND.slice(),TND.indexOf(op))],['Cari kata kunci seperti “paling banyak”, “paling sedikit”, atau “tidak lebih dari”.','paling banyak / tidak lebih dari / maksimal → ≤; paling sedikit / minimal → ≥.']),
+        F('Kata kunci','Andaikan kalimat kendala yang lain pada soal diubah menjadi kalimat berikut. Terjemahkan menjadi tanda.',[pg('“'+sen2+'”',TND.slice(),TND.indexOf(k2[1]))],['“kurang dari” → &lt;; “lebih dari” → &gt;; “tepat” → =.','Tanpa “paling” atau “tidak”, batasnya sendiri tidak ikut, jadi tandanya tanpa garis bawah. “Tepat” berarti harus sama.']),
         F('Variabel','MISALKAN: pilih variabel yang tepat untuk masalah di atas.',[pgS(rng,'Variabel',vars(c),dis)],['Variabel menyatakan banyak benda yang dipilih, beserta satuannya.'])],
-    bahas:['“'+sen+'” → '+op+'.','“'+k2[0]+'” → '+k2[1]+'.','MISALKAN '+vars(c)+'.']});
+    bahas:['“'+sen+'” → '+op+'.','“'+sen2+'” → '+k2[1]+'.','MISALKAN '+vars(c)+'.']});
 }
 function g3M(rng){
   var tk=rng()<.3,I,c,teks,labs;
