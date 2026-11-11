@@ -1,17 +1,19 @@
 # Program Linear: dari Contoh Kontekstual ke Nilai Optimum
 
 Media pembelajaran Matematika Kelas X (Fase E) untuk bab Sistem Pertidaksamaan Linear Dua Variabel,
-terdiri atas tiga materi berurutan dan satu halaman kuis:
+terdiri atas tiga materi berurutan, satu halaman latihan soal TKA, dan satu halaman kuis:
 
 | No. | Halaman | Isi | Bagian berskor |
 |---|---|---|---|
 | 1 | **`sistem-ptldv.html`** | Daerah Penyelesaian SPtLDV: tab **Belajar**, **Latihan Mandiri**, **Kuis** | Kuis (server sendiri) |
 | 2 | **`balik-ptldv.html`** | Menyusun Sistem Pertidaksamaan dari Daerah Penyelesaian: tab **Belajar**, **Latihan Mandiri**, **Kuis** | Kuis (server sendiri) |
 | 3 | **`index.html`** | Contoh Kontekstual ke Nilai Optimum: tab **Belajar**, **Latihan Mandiri**, tombol **💬 Kritik & Saran** | tidak ada |
+| 4 | **`tka.html`** | Latihan soal bergaya TKA (pilihan ganda, pilih semua yang benar, Benar/Salah), mode Latihan dan Simulasi berwaktu | tidak ada (dinilai di peramban) |
 | – | **`kuis.html`** | Kuis Nilai Optimum saja | Kuis (server kuis optimum) |
 
-Ketiga halaman materi memiliki **menu urutan materi** yang sama di kepala halaman
-(1 Daerah Penyelesaian · 2 Menyusun dari DP · 3 Nilai Optimum); halaman yang sedang dibuka ditandai biru.
+Keempat halaman memiliki **menu urutan materi** yang sama di kepala halaman
+(1 Daerah Penyelesaian · 2 Menyusun dari DP · 3 Nilai Optimum · 4 Latihan TKA); halaman yang sedang dibuka ditandai biru.
+`kuis.html` hanya memiliki tautan kembali ke materi Nilai Optimum.
 Bila latihan/kuis berskor sedang berjalan atau skor belum terkirim, siswa diminta konfirmasi sebelum pindah halaman lewat menu.
 
 Halaman materi tidak menautkan ke `kuis.html`, jadi guru membagikan tautan kuis sendiri saat kuis dimulai.
@@ -20,15 +22,19 @@ Halaman materi tidak menautkan ke `kuis.html`, jadi guru membagikan tautan kuis 
 
 ```
 sptldv-x/
-├── sistem-ptldv.html     MATERI 1: Daerah Penyelesaian (file mandiri: CSS + JS + CORE + maskot Plus di dalamnya)
-├── balik-ptldv.html      MATERI 2: Menyusun dari DP (file mandiri: CSS + JS + CORE + maskot Plus di dalamnya)
+├── sistem-ptldv.html     MATERI 1: Daerah Penyelesaian (JS + CORE + maskot Plus di dalamnya; tampilan dari css/)
+├── balik-ptldv.html      MATERI 2: Menyusun dari DP (JS + CORE + maskot Plus di dalamnya; tampilan dari css/)
 ├── index.html            MATERI 3: Nilai Optimum, tab Belajar + Latihan Mandiri + Kritik & Saran
 ├── kuis.html             halaman KUIS Nilai Optimum: tab Kuis saja
+├── tka.html              LATIHAN TKA: bank soal tetap, mode Latihan / Simulasi, tanpa server
 ├── .nojekyll             berkas kosong; membuat GitHub Pages menyajikan file apa adanya
 ├── README.md             berkas ini
 ├── PANDUAN-APPS-SCRIPT.md  panduan lengkap memasang kedua server Apps Script
 ├── css/
-│   └── gaya.css          seluruh tampilan, disusun dalam lapisan (@layer)
+│   ├── token.css         TOKEN DESAIN: warna, ukuran huruf, sudut, jarak, bayangan (dimuat pertama oleh semua halaman)
+│   ├── gaya.css          tampilan index.html, kuis.html, tka.html, disusun dalam lapisan (@layer)
+│   ├── materi-ptldv.css  tampilan Materi 1 dan Materi 2 (dipakai bersama sistem-ptldv.html dan balik-ptldv.html)
+│   └── tka.css           tampilan khusus tka.html
 ├── js/
 │   ├── config.js         PENGATURAN: alamat server kuis dan server saran  ← biasanya hanya file ini yang diubah
 │   ├── core.js           CORE BERSAMA: pembangkit soal + penilai; ditempel utuh ke core.gs di Apps Script
@@ -40,6 +46,8 @@ sptldv-x/
 │   ├── latihan.js        perilaku tab Latihan Mandiri
 │   ├── kuis.js           perilaku tab Kuis (masuk, simpan progres, kirim skor)
 │   ├── saran.js          tombol dan form Kritik & Saran
+│   ├── tka-soal.js       BANK SOAL Latihan TKA (soal, kunci, pembahasan, kode tugas kecil T1–T11)
+│   ├── tka.js            perilaku tka.html (mode Latihan/Simulasi, waktu, keyakinan, hasil)
 │   └── main.js           pengatur tab (dipakai kedua halaman)
 └── server/               SALINAN kode server; dipasang di Google Apps Script, BUKAN dijalankan GitHub
     ├── Code.gs           server kuis (pasangannya: js/core.js sebagai core.gs)
@@ -51,6 +59,8 @@ sptldv-x/
 | Yang ingin diubah | File |
 |---|---|
 | Alamat server kuis atau server saran | `js/config.js` |
+| Warna, ukuran huruf, sudut, bayangan (semua halaman) | `css/token.css` |
+| Soal Latihan TKA, kunci, pembahasan, paket soal | `js/tka-soal.js` (tidak perlu menyentuh Apps Script) |
 | Menampilkan lagi tombol "Kuis ➜" di Latihan Mandiri | `css/gaya.css`, hapus baris `body[data-halaman="materi"] [data-aksi="ke-kuis"]` |
 | Teks materi, contoh, Pertanyaan Diskusi | `js/belajar-data.js` |
 | Teks petunjuk di Latihan Mandiri (nama rumus, petunjuk lanjutan) | `js/petunjuk.js` |
@@ -60,9 +70,9 @@ sptldv-x/
 | Perilaku tombol atau alur satu tab | `js/belajar.js`, `js/latihan.js`, atau `js/kuis.js` |
 | Aturan kuis (batas waktu, percobaan, PIN) | `server/Code.gs`, bagian `KONFIG` (lalu salin ke Apps Script) |
 | Soal, kunci, cara menilai | `js/core.js` **lalu** tempel ulang ke `core.gs` di Apps Script (lihat "Aturan penting") |
-| Menu urutan materi (nama, urutan, tautan) | blok `<nav class="nav-materi">` di **ketiga** halaman materi: `sistem-ptldv.html`, `balik-ptldv.html`, `index.html` |
-| Tampilan menu urutan materi | `css/gaya.css` (bagian `.nav-materi`) **dan** salinannya di `<style>` `sistem-ptldv.html` serta `balik-ptldv.html` |
-| Apa pun di Materi 1 atau Materi 2 (teks, soal, alamat server) | langsung di `sistem-ptldv.html` atau `balik-ptldv.html` (tidak memakai `css/` dan `js/`) |
+| Menu urutan materi (nama, urutan, tautan) | blok `<nav class="nav-materi">` di **keempat** halaman: `sistem-ptldv.html`, `balik-ptldv.html`, `index.html`, `tka.html` |
+| Tampilan menu urutan materi | `css/gaya.css` (bagian `.nav-materi`) **dan** `css/materi-ptldv.css` |
+| Teks, soal, atau alamat server Materi 1 / Materi 2 | langsung di `sistem-ptldv.html` atau `balik-ptldv.html` (tampilannya di `css/materi-ptldv.css`) |
 | Teks tab Belajar Materi 1 / Materi 2 | data `EX` di `sistem-ptldv.html` / `balik-ptldv.html` (cari `var EX=[`); contoh kontekstual di `CK_A` … `CK_E` |
 | Pilihan tipe dan level Latihan Mandiri | objek `PAGE` di masing-masing halaman |
 | Mesin tab Belajar, maskot Plus, soal LOTS/HOTS, petunjuk, 🔑, penyelesaian | blok `MODUL BERSAMA` — isinya **sama persis** di kedua halaman; ubah di keduanya |
@@ -161,17 +171,25 @@ Halaman masuk kuis juga menampilkan **"✔ Halaman dan server cocok"** bila kedu
   Simpan → terbitkan versi baru (Deploy → Kelola penerapan → pensil → Versi baru → Terapkan),
   lalu unggah `core.js` ke GitHub. Jangan menyunting `core.gs` sebagian di editor.
   Lakukan sebelum kuis dimulai: siswa yang sedang mengerjakan dengan versi lama tidak dapat melanjutkan.
-- **Setiap memperbarui file di GitHub, naikkan penanda versi** di `index.html` **dan** `kuis.html`
-  (misalnya `?v=2026-11-01.6` → `?v=2026-11-05.1` pada semua baris `<link>` dan `<script>`).
-  Tanpa ini, peramban siswa bisa tetap memakai salinan lama.
-  Cara cepat di GitHub: buka `index.html` → pensil → tekan Ctrl+F untuk mencari `?v=` → ubah semuanya → Commit.
-  `sistem-ptldv.html` dan `balik-ptldv.html` tidak memakai penanda versi karena semua isinya ada di satu file.
+- **Setiap memperbarui file di GitHub, naikkan penanda versi** (`?v=…`) pada baris `<link>` dan `<script>` di halaman yang memuat file itu
+  (misalnya `?v=2026-11-12.1` → `?v=2026-11-15.1`). Tanpa ini, peramban siswa bisa tetap memakai salinan lama.
+  - `css/token.css` dimuat oleh kelima halaman.
+  - `css/gaya.css` dan `js/…` dimuat oleh `index.html`, `kuis.html`, dan `tka.html`.
+  - `css/materi-ptldv.css` dimuat oleh `sistem-ptldv.html` dan `balik-ptldv.html`.
+  Cara cepat di GitHub: buka halamannya → pensil → tekan Ctrl+F untuk mencari `?v=` → ubah semuanya → Commit.
 - Skor tertunda tiap materi disimpan di peramban dengan kunci terpisah
   (`ptldv-skor-tertunda-sistem`, `ptldv-skor-tertunda-balik`, `optimum-skor-tertunda-optimum`), jadi ketiganya tidak saling menimpa
   meskipun berada di satu situs GitHub Pages.
+- **Mode guru.** Tambahkan `?guru` di akhir alamat halaman materi (misalnya `…/index.html?guru`) untuk menampilkan
+  sumber materi dan kode level (LOTS/MOTS/HOTS) beserta kata kerja operasional. Siswa melihat nama level Dasar / Terapan / Menantang.
+- **Latihan tanpa bantuan.** Di tab Latihan Mandiri siswa dapat memilih *Tanpa bantuan (seperti TKA)*: 💡 Petunjuk dan
+  📍 Di mana salahku? disembunyikan; 🔑 Lihat jawaban tetap muncul setelah dua kali salah. Pilihan ini diingat peramban.
+- **Latihan TKA (`tka.html`) tidak memakai server.** Kunci ada di `js/tka-soal.js`, jadi siswa yang membuka kode dapat melihatnya.
+  Pakai halaman ini untuk latihan dan diagnosis, bukan penilaian berskor.
 - Urutan `<script>` jangan diubah:
   - `index.html`: `config → core → komponen → petunjuk → penyelesaian → belajar-data → belajar → latihan → saran → main`
   - `kuis.html`: `config → core → komponen → kuis → main`
+  - `tka.html`: `tka-soal → tka`
 - Repositori bersifat publik, jadi isi `server/` dapat dibaca orang lain. Ini aman:
   kunci rahasia server dibuat otomatis dan disimpan di Script Properties, bukan di file.
   Daftar siswa dan PIN hanya ada di Google Sheet.
@@ -187,6 +205,6 @@ Jalankan keduanya setiap kali `core.js`, `petunjuk.js`, atau `penyelesaian.js` d
 
 ## Mencoba di komputer sendiri
 
-Klik dua kali `sistem-ptldv.html`, `balik-ptldv.html`, `index.html` (materi) atau `kuis.html` (kuis).
+Klik dua kali `sistem-ptldv.html`, `balik-ptldv.html`, `index.html` (materi), `tka.html` (latihan TKA), atau `kuis.html` (kuis).
 Semuanya berjalan langsung dari folder tanpa server, dan menu urutan materi berpindah antarhalaman di folder yang sama.
 Rumus KaTeX memerlukan internet; tanpa internet, rumus tampil sebagai teks biasa.

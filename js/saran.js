@@ -69,7 +69,7 @@ function kirim(){
       status('ok','Terima kasih! Kritik dan saranmu sudah terkirim.');
     })
     .catch(function(err){
-      status('bad',err&&err.name==='AbortError'?'Server tidak merespons. Coba lagi sebentar lagi.'
+      status('bad',err&&err.name==='AbortError'?'Pesan belum terkirim karena tidak ada jawaban (waktu habis). Tunggu sebentar, lalu coba lagi.'
         :(err&&err.message&&!/fetch|network|json/i.test(err.message)?err.message:'Tidak dapat terhubung. Periksa internet, lalu coba lagi.'));
     })
     .then(function(){if(tm)clearTimeout(tm);sibuk=false;bKirim.disabled=false;});
