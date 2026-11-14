@@ -1085,7 +1085,7 @@ function kirimRecapHtml(){
   if(!KIRIM.URL) return '';
   const i=S.id, kl=KIRIM.KELAS&&KIRIM.KELAS.length;
   const kelas=kl?`<select id="idKelas"><option value="">Pilih</option>${KIRIM.KELAS.map(k=>`<option${k===i.kelas?' selected':''}>${esc(k)}</option>`).join('')}</select>`
-    :`<input id="idKelas" maxlength="12" autocomplete="off" placeholder="X-2" value="${esc(i.kelas||'')}">`;
+    :`<input id="idKelas" maxlength="12" autocomplete="off" placeholder="X AL FATTAH" value="${esc(i.kelas||'')}">`;
   return `<section class="kirim" data-nomath aria-labelledby="kirimH">
     <h3 id="kirimH">Kirim progres ke guru</h3>
     <div class="idrow">
