@@ -2081,7 +2081,7 @@ function renderRecap(){
   const stg=$('stage'); stg.className='stage one';
   stg.innerHTML=`<section class="pane recap" aria-labelledby="recH">
     ${kirimOn()?`<div class="rhead"><div class="rleft"><h2 id="recH" style="font-size:1.5rem">Rekap perjalanan</h2>${lvP}</div>${kirimRecapHtml()}</div>`:`<h2 id="recH" style="font-size:1.5rem">Rekap perjalanan</h2>
-    <div><label class="lbl" for="sname">Nama dan kelas</label><input id="sname" class="name" value="${(S.name||'').replace(/"/g,'&quot;')}" placeholder="misalnya Andi, X-2"></div>`}
+    <div><label class="lbl" for="sname">Nama dan kelas</label><input id="sname" class="name" value="${(S.name||'').replace(/"/g,'&quot;')}" placeholder="misalnya Andi, X AL FATTAH"></div>`}
     ${kirimOn()?'':lvP}
     <div class="legend"><span>${ICON.m} Mandiri</span><span>${ICON.k} Dengan koreksi</span><span>${ICON.p} Dengan petunjuk</span><span>${ICON.d} Dibantu</span><span>${ICON.o} Belum</span></div>
     <div class="tscroll"><table><caption class="sr">Status setiap tantangan per misi</caption><thead><tr><th scope="col">Tantangan</th><th scope="col">Kode langkah</th><th scope="col">Status</th><th scope="col">Petunjuk dibuka</th><th scope="col">Jawaban salah</th></tr></thead><tbody>${rows}</tbody></table></div>
