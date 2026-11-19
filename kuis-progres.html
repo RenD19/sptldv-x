@@ -195,6 +195,8 @@ fieldset.dline{border:1.5px solid var(--kontrol);border-radius:10px;padding:6px 
 fieldset.dline.act{border:2.5px solid var(--teluk)}
 fieldset.dline legend{font-weight:700;padding:0 6px;font-size:.92rem}
 .dline .row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.9rem}
+.dline .dineq{margin:0;font-size:1.05rem;font-weight:600;padding:2px 8px;border-left:4px solid;border-radius:0 6px 6px 0;background:var(--langit)}
+.dline .dineq.g1{border-color:var(--g1)} .dline .dineq.g2{border-color:var(--g2)}
 .dline .dst{font-size:.82rem;color:var(--muted)}
 .dline select{border:2px solid var(--kontrol);background:var(--langit);border-radius:8px;padding:4px 8px;min-height:38px}
 .btn.small{padding:4px 10px;font-size:.85rem;min-height:38px}
@@ -519,7 +521,7 @@ body.v-tv .idcard .btn:focus{background:var(--layar);border-color:var(--layar);c
 let KM=false; // mode kelas: layar dipakai bersama, progres tidak dikirim ke guru
 function kirimOn(){return !!KIRIM.URL&&!KM;}
 const KIRIM={
-  URL:'https://script.google.com/macros/s/AKfycbxa0SIf01wJ22DfgbK56T8X8V-oEo5g0OTjMIkvsEi-o5hwMHxsmyVvtqxgQxhqUWyR/exec',
+  URL:'',
   KELAS:['X Al Fattah','X Al Alim','X Al Majid']
 };
 
@@ -1499,7 +1501,8 @@ function drawSvg(cfg){
 }
 function drawCtl(cfg){
   return `<div class="dctl"><p class="dnow" id="dnow"></p><div class="dlines">
-  ${cfg.lines.map((l,i)=>`<fieldset class="dline" data-l="${i}"><legend><span class="lbadge g${i+1}" aria-hidden="true">${i+1}</span>Garis ${i+1}, ${l.name}</legend>
+  ${cfg.lines.map((l,i)=>`<fieldset class="dline" data-l="${i}"><legend><span class="lbadge g${i+1}" aria-hidden="true">${i+1}</span>Garis ${i+1}</legend>
+    <p class="dineq g${i+1}">${l.name}</p>
     <p class="dst" id="dst${i}"></p>
     <div class="row"><label for="dtype${i}">Jenis garis</label><select id="dtype${i}" data-l="${i}"><option value="">pilih</option><option value="penuh">penuh</option><option value="putus">putus-putus</option></select></div>
     <div class="row"><button type="button" class="btn sec small" data-act="pilih" data-l="${i}">Kerjakan</button><button type="button" class="btn sec small" data-act="ulang" data-l="${i}">Ulang</button></div>
@@ -1512,10 +1515,11 @@ function setupDraw(cfg){
   if(!D||D.cid!==R.id) D={cid:R.id,act:0,cur:[0,0],lines:cfg.lines.map(()=>({pts:[],type:'',side:null}))};
   const svg=$('dsvg');
   const box=[[0,0],[cfg.xmax,0],[cfg.xmax,cfg.ymax],[0,cfg.ymax]];
+  const gb=()=>`<span class="lbadge g${D.act+1}" aria-hidden="true">${D.act+1}</span><span class="sr">Garis ${D.act+1}.</span> `;
   const instr=()=>{const L=D.lines[D.act],t=cfg.lines[D.act];
-    if(L.pts.length<2) return `Garis ${D.act+1}: klik titik ke-${L.pts.length+1} yang terletak pada ${fmt(t.name.replace(/[≤≥<>]/,'='))}.`;
-    if(!L.side) return `Garis ${D.act+1}: klik satu titik di sisi yang memenuhi ${fmt(t.name)}.`;
-    if(!L.type) return `Garis ${D.act+1}: pilih jenis garis.`;
+    if(L.pts.length<2) return `${gb()}Klik titik ke-${L.pts.length+1} yang terletak pada garis ${fmt(t.name.replace(/[≤≥<>]/,'='))}.`;
+    if(!L.side) return `${gb()}Klik satu titik di sisi yang memenuhi ${fmt(t.name)}.`;
+    if(!L.type) return `${gb()}Pilih jenis garisnya.`;
     const nx=D.lines.findIndex(l=>l.pts.length<2||!l.side||!l.type); return nx<0?'Semua garis lengkap. Tekan Periksa jawaban.':`Lanjutkan ke garis ${nx+1}.`;};
   const paint=()=>{
     let sh='',ln='',pt='',lb='',full=box.slice(),anyDone=false; const segs=[];
@@ -2081,7 +2085,7 @@ function renderRecap(){
   const stg=$('stage'); stg.className='stage one';
   stg.innerHTML=`<section class="pane recap" aria-labelledby="recH">
     ${kirimOn()?`<div class="rhead"><div class="rleft"><h2 id="recH" style="font-size:1.5rem">Rekap perjalanan</h2>${lvP}</div>${kirimRecapHtml()}</div>`:`<h2 id="recH" style="font-size:1.5rem">Rekap perjalanan</h2>
-    <div><label class="lbl" for="sname">Nama dan kelas</label><input id="sname" class="name" value="${(S.name||'').replace(/"/g,'&quot;')}" placeholder="misalnya Andi, X AL FATTAH"></div>`}
+    <div><label class="lbl" for="sname">Nama dan kelas</label><input id="sname" class="name" value="${(S.name||'').replace(/"/g,'&quot;')}" placeholder="misalnya Andi, X-2"></div>`}
     ${kirimOn()?'':lvP}
     <div class="legend"><span>${ICON.m} Mandiri</span><span>${ICON.k} Dengan koreksi</span><span>${ICON.p} Dengan petunjuk</span><span>${ICON.d} Dibantu</span><span>${ICON.o} Belum</span></div>
     <div class="tscroll"><table><caption class="sr">Status setiap tantangan per misi</caption><thead><tr><th scope="col">Tantangan</th><th scope="col">Kode langkah</th><th scope="col">Status</th><th scope="col">Petunjuk dibuka</th><th scope="col">Jawaban salah</th></tr></thead><tbody>${rows}</tbody></table></div>
